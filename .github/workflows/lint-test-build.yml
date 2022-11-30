@@ -1,0 +1,133 @@
+name: Lint, test and build
+
+on:
+  - push
+
+env:
+  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+  NEXT_PUBLIC_CONTACT_EMAIL: ${{ secrets.NEXT_PUBLIC_CONTACT_EMAIL }}
+  SCALEWAY_ACCESS_KEY: ${{ secrets.SCALEWAY_ACCESS_KEY }}
+  SCALEWAY_BUCKET_ID: ${{ secrets.SCALEWAY_BUCKET_ID }}
+  SCALEWAY_S3_BUCKET_LOCATION: ${{ secrets.SCALEWAY_S3_BUCKET_LOCATION }}
+  SCALEWAY_S3_HOST: ${{ secrets.SCALEWAY_S3_HOST }}
+  SCALEWAY_SECRET_KEY: ${{ secrets.SCALEWAY_SECRET_KEY }}
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    container: node:latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+  tsc:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    container: node:latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run tsc
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    container: node:latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run test
+        run: npm run test
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    container: node:latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: next-build
+          path: |
+            .next
+
+  e2e:
+    name: E2e
+    runs-on: ubuntu-latest
+    container: node:latest
+    needs: [lint, tsc, build] # TODO depend on Test also
+    # service containers to run with `postgres-job`
+    services:
+      # label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres:latest
+        # service environment variables
+        # `POSTGRES_HOST` is `postgres`
+        env:
+          # optional (defaults to `postgres`)
+          POSTGRES_DB: e2e
+          # required
+          POSTGRES_PASSWORD: pwd
+          # optional (defaults to `5432`)
+          POSTGRES_PORT: 5432
+          # optional (defaults to `postgres`)
+          POSTGRES_USER: test
+        ports:
+          # maps tcp port 5432 on service container to the host
+          - 5432:5432
+        # set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+
+      - name: Code Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Install PostgreSQL client
+        run: |
+          apt-get update
+          apt-get install --yes postgresql-client
+
+      # queries database with postgres client
+      - name: Query database
+        run: psql -h postgres -d e2e -U test -c 'SELECT 1;'
+        env:
+          # postgress password is required; alternatively, you can run:
+          # `PGPASSWORD=postgres_password psql ...`
+          PGPASSWORD: pwd

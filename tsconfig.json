@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@mec/web/*": ["apps/web/src/*"],
+      "@mec/e2e/*": ["e2e/cypress/*"],
+      "@mec/api": ["packages/api"],
+      "@mec/auth": ["packages/auth"],
+      "@mec/email": ["packages/email"],
+      "@mec/db": ["packages/db"]
+    }
+  },
+  "include": ["next-env.d.ts", "jest/jest.setup.ts"],
+  "exclude": ["node_modules", "e2e"],
+  "ts-node": {
+    // these options are overrides used only by ts-node
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
+}

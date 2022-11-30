@@ -1,0 +1,14 @@
+{
+  "name": "@pt/e2e",
+  "version": "1.0.0",
+  "description": "End to end tests for mon-espace-collectivite",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cypress": "^11.1.0"
+  }
+}

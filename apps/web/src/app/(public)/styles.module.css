@@ -1,0 +1,19 @@
+.cover {
+  background-size: cover;
+  background-position: center;
+  height: 55vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.jumboText {
+  color: white;
+  margin-top: -20vh;
+}
+
+.jumboCard {
+  margin-top: -30vh;
+  border: 1px solid var(--border-default-grey);
+}
