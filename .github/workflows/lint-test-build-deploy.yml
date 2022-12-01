@@ -1,4 +1,4 @@
-name: Lint, test and build
+name: 📦 Lint, test and build
 
 on:
   - push
@@ -6,15 +6,18 @@ on:
 env:
   NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
   NEXT_PUBLIC_CONTACT_EMAIL: ${{ secrets.NEXT_PUBLIC_CONTACT_EMAIL }}
-  SCALEWAY_ACCESS_KEY: ${{ secrets.SCALEWAY_ACCESS_KEY }}
-  SCALEWAY_BUCKET_ID: ${{ secrets.SCALEWAY_BUCKET_ID }}
-  SCALEWAY_S3_BUCKET_LOCATION: ${{ secrets.SCALEWAY_S3_BUCKET_LOCATION }}
-  SCALEWAY_S3_HOST: ${{ secrets.SCALEWAY_S3_HOST }}
-  SCALEWAY_SECRET_KEY: ${{ secrets.SCALEWAY_SECRET_KEY }}
+  CLEVER_TOOLS_DOWNLOAD_URL: https://clever-tools.clever-cloud.com/releases/latest/clever-tools-latest_linux.tar.gz
+  CLEVER_TAR_FILE: clever-tools-latest_linux.tar.gz
+  CLEVER_CLI: clever-tools-latest_linux/clever
+  CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
+  CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
+  REVIEW_APPS_ORGANIZATION_NAME: ANCT
+  BRANCH: $GITHUB_REF_NAME
+  PROTECTED: $GITHUB_REF_PROTECTED
 
 jobs:
   lint:
-    name: Lint
+    name: 🖍️ Lint
     runs-on: ubuntu-latest
     container: node:latest
     steps:
@@ -28,7 +31,7 @@ jobs:
         run: npm run lint
 
   tsc:
-    name: Typecheck
+    name: 🕵️️ Typecheck
     runs-on: ubuntu-latest
     container: node:latest
     steps:
@@ -42,7 +45,7 @@ jobs:
         run: npm run tsc
 
   test:
-    name: Test
+    name: 🤖 Test
     runs-on: ubuntu-latest
     container: node:latest
     steps:
@@ -56,7 +59,7 @@ jobs:
         run: npm run test
 
   build:
-    name: Build
+    name: 🏗️ Build
     runs-on: ubuntu-latest
     container: node:latest
     steps:
@@ -77,7 +80,7 @@ jobs:
             .next
 
   e2e:
-    name: E2e
+    name: 🐒 E2e
     runs-on: ubuntu-latest
     container: node:latest
     needs: [lint, tsc, build] # TODO depend on Test also

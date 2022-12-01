@@ -1,0 +1,48 @@
+name: 🕵 Review app update
+
+# Run this pipeline when a label is present and when a push is made on this PR.
+# `types: [ synchronize ]` targets a push event made on a PR.
+on:
+  pull_request:
+    types: [ synchronize ]
+
+env:
+  CLEVER_TOOLS_DOWNLOAD_URL: https://clever-tools.clever-cloud.com/releases/latest/clever-tools-latest_linux.tar.gz
+  CLEVER_TAR_FILE: clever-tools-latest_linux.tar.gz
+  CLEVER_CLI: clever-tools-latest_linux/clever
+  CLEVER_TOKEN: $
+  CLEVER_SECRET: $
+  REVIEW_APPS_ORGANIZATION_NAME: …
+  BRANCH: $
+  PYTHON_VERSION: 3.9
+
+jobs:
+  redeploy:
+    runs-on: ubuntu-latest
+    # A push event when the 'recette-jetable' label is present triggers a new deployment.
+    if: github.event.action == 'synchronize' && contains( github.event.pull_request.labels.*.name, 'recette-jetable')
+
+    steps:
+      - name: 📥 Checkout to the PR branch
+        uses: actions/checkout@v2
+        with:
+          ref: $
+
+      - name: 📥 Fetch git branches
+        run: git fetch --prune --unshallow
+
+      - name: 🏷 Set review app name
+        run: echo "REVIEW_APP_NAME=`echo \"c1-review-$BRANCH\" | sed -r 's/[-;\\/._]+/-/g'`" >> $GITHUB_ENV
+
+      - name: 🤝 Find the application on Clever Cloud
+        run: |
+          curl $CLEVER_TOOLS_DOWNLOAD_URL > $CLEVER_TAR_FILE
+          tar -xvf $CLEVER_TAR_FILE
+          $CLEVER_CLI login --token $CLEVER_TOKEN --secret $CLEVER_SECRET
+          $CLEVER_CLI link $REVIEW_APP_NAME --org $REVIEW_APPS_ORGANIZATION_NAME
+
+      - name: ⏭ Skip fixtures
+        run: $CLEVER_CLI env set SKIP_FIXTURES true
+
+      - name: 🚀 Deploy to Clever Cloud
+        run: $CLEVER_CLI deploy --branch $BRANCH --force
