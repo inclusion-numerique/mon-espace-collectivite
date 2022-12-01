@@ -7,6 +7,12 @@ const middleware: NextMiddleware = (request) => {
   response.headers.append('X-XSS-Protection', '1; mode=block')
   response.headers.delete('X-Powered-By')
 
+  // TODO Redirect to HTTPS
+  // On clevercloud http or https is in the X-Forwarded-Proto header
+  if (request.headers.get('X-Forwarded-Proto') === 'http') {
+    // TODO Redirect to HTTPS with 301
+  }
+
   // TODO This CSP policy is too restrictive an account has been created in report-uri.com. Make this in another deployment.
   // https://report-uri.com
   // response.headers.append(

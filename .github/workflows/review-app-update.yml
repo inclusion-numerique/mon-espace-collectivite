@@ -10,8 +10,8 @@ env:
   CLEVER_TOOLS_DOWNLOAD_URL: https://clever-tools.clever-cloud.com/releases/latest/clever-tools-latest_linux.tar.gz
   CLEVER_TAR_FILE: clever-tools-latest_linux.tar.gz
   CLEVER_CLI: clever-tools-latest_linux/clever
-  CLEVER_TOKEN: $
-  CLEVER_SECRET: $
+  CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
+  CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
   REVIEW_APPS_ORGANIZATION_NAME: …
   BRANCH: $
   PYTHON_VERSION: 3.9
