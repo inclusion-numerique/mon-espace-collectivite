@@ -1,2 +1,0 @@
-echo "RUN WEB"
-env

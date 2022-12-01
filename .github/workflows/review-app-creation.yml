@@ -58,7 +58,12 @@ jobs:
           $CLEVER_CLI env import-vars DEPLOY_URL
           $CLEVER_CLI env set CC_NODE_BUILD_TOOL=custom
           $CLEVER_CLI env set CC_CUSTOM_BUILD_TOOL=pnpm
-          $CLEVER_CLI env set CC_RUN_COMMAND=clevercloud/run-web.sh
+          $CLEVER_CLI env set CC_PRE_BUILD_HOOK=clevercloud/web/pre-build.sh
+          $CLEVER_CLI env set CC_POST_BUILD_HOOK=clevercloud/web/post-build.sh
+          $CLEVER_CLI env set CC_PRE_RUN_HOOK=clevercloud/web/pre-run.sh
+          $CLEVER_CLI env set CC_RUN_COMMAND=clevercloud/web/run.sh
+          $CLEVER_CLI env set CC_RUN_SUCCEEDED_HOOK=clevercloud/web/run-succeeded.sh
+          $CLEVER_CLI env set CC_RUN_FAILED_HOOK=clevercloud/web/run-failed.sh
 
       - name: 🚀 Deploy to Clever Cloud
         run: $CLEVER_CLI deploy --branch $BRANCH --force
