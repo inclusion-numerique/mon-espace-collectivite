@@ -2,6 +2,7 @@
 
 var
 .next
+.turbo
 # dependencies
 node_modules
 .pnp
