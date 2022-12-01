@@ -57,7 +57,7 @@ jobs:
           $CLEVER_CLI env import-vars REVIEW_APP_DB_NAME
           $CLEVER_CLI env import-vars DEPLOY_URL
           $CLEVER_CLI env set CC_NODE_BUILD_TOOL=custom
-          $CLEVER_CLI env set CC_CUSTOM_BUILD_TOOL=pnpm
+          $CLEVER_CLI env set CC_CUSTOM_BUILD_TOOL='pnpm i --filter=!e2e --frozen-lockfile'
           $CLEVER_CLI env set CC_PRE_BUILD_HOOK=clevercloud/web/pre-build.sh
           $CLEVER_CLI env set CC_POST_BUILD_HOOK=clevercloud/web/post-build.sh
           $CLEVER_CLI env set CC_PRE_RUN_HOOK=clevercloud/web/pre-run.sh

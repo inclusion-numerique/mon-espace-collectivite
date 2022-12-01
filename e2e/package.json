@@ -4,6 +4,7 @@
   "description": "End to end tests for mon-espace-collectivite",
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf node_modules",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
