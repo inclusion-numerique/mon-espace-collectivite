@@ -8,6 +8,7 @@ import z from 'zod'
 import { District } from '@mec/web/projethoteque/legacyProjects'
 import { findLegacyProjects } from '@mec/web/projethoteque/findLegacyProjects'
 import { Category } from '@mec/web/anctProjects'
+import { searchCommunity } from '@mec/web/siren/siren'
 
 const t = initTRPC.context<AppContext>().create()
 
@@ -73,6 +74,17 @@ export const appRouter = t.router({
         return { project }
       },
     ),
+  searchCommunity: t.procedure
+    .input(
+      z.object({
+        query: z.string().min(1),
+        limit: z.number().min(1).max(20).optional(),
+        offset: z.number().min(1).optional(),
+      }),
+    )
+    .query(async ({ input: { query, offset, limit = 20 } }) => {
+      return searchCommunity(query)
+    }),
   findLegacyProject: t.procedure
     .input(
       z.object({

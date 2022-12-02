@@ -14,7 +14,8 @@
   "dependencies": {
     "encoding": "^0.1.13",
     "html-minifier": "^4.0.0",
-    "mjml": "^4.13.0"
+    "mjml": "^4.13.0",
+    "uglify-js": "^3.17.4"
   },
   "devDependencies": {
     "@types/html-minifier": "^4.0.2",

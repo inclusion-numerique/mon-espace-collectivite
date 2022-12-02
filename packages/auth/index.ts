@@ -5,4 +5,6 @@ export {
   sessionCookie,
   secureSessionCookie,
 } from './src/getSessionTokenFromCookies'
+export { signupUser } from './src/signupUser'
+export { nextAuthAdapter } from './src/nextAuthAdapter'
 export type { Session } from 'next-auth'

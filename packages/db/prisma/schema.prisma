@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["interactiveTransactions", "fullTextSearch"]
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -38,22 +38,81 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum UserRole {
+  Public
+  Municipality
+  Intercommunality
+  Prefecture
+  SubPrefecture
+  Administrator
+}
+
+enum UserStatus {
+  // Can signin
+  Active
+  // Is awaiting admin authorization
+  Pending
+  // Cannot signin temporarily for security reasons
+  Suspended
+  // Has not been allowed by admin to signin
+  Rejected
+}
+
 model User {
-  id            String    @id @default(uuid()) @db.Uuid
-  firstName     String?
-  lastName      String?
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  location      String?
-  title         String?
-  description   String?
-  accounts      Account[]
-  sessions      Session[]
+  id                    String                 @id @default(uuid()) @db.Uuid
+  firstName             String?
+  lastName              String?
+  name                  String?
+  email                 String                 @unique
+  emailVerified         DateTime?
+  image                 String?
+  location              String?
+  title                 String?
+  description           String?
+  accounts              Account[]
+  sessions              Session[]
+  roles                 UserRole[]
+  status                UserStatus
+  communityAccessLevels CommunityAccessLevel[]
 
   created DateTime @default(now())
   updated DateTime @default(now())
+}
+
+enum AccessLevel {
+  Owner
+  Write
+  Read
+}
+
+model CommunityAccessLevel {
+  userId      String      @db.Uuid
+  user        User        @relation(fields: [userId], references: [id])
+  level       AccessLevel
+  communityId String
+  community   Community   @relation(fields: [communityId], references: [id])
+  created     DateTime    @default(now())
+  updated     DateTime    @default(now())
+
+  @@id([userId, communityId])
+}
+
+model PreAuthorization {
+  email       String       @id
+  role        UserRole
+  communityId String?
+  community   Community?   @relation(fields: [communityId], references: [id])
+  level       AccessLevel?
+  allowSignup Boolean
+  firstName   String?
+  lastName    String?
+  name        String?
+  image       String?
+  location    String?
+  title       String?
+  description String?
+  created     DateTime     @default(now())
+  updated     DateTime     @default(now())
 }
 
 model VerificationToken {
@@ -65,31 +124,40 @@ model VerificationToken {
 }
 
 model Project {
-  id          String       @id @db.Uuid
-  reference   String       @unique
-  name        String
-  quality     String
-  email       String
-  phone       String?
-  domain      String
-  solution    String
-  description String
-  dates       String
-  partners    String
-  tech        String
-  attachments Attachment[]
-  created     DateTime     @default(now())
-  community   Community    @relation(fields: [communityId], references: [id])
-  communityId String
+  id              String       @id @db.Uuid
+  reference       String       @unique
+  name            String
+  // Tax included
+  totalAmount     Decimal
+  topic           String
+  secondaryTopics String[]
+  contactEmail    String
+  start           DateTime?    @db.Date
+  end             DateTime?    @db.Date
+  progress        String?
+  description     String?
+  attachments     Attachment[]
+  created         DateTime     @default(now())
+  community       Community    @relation(fields: [communityId], references: [id])
+  communityId     String
+
+  artificializedArea         Int
+  greenhouseGasEmissions     Int
+  waterConsumption           Int
+  selectiveSortingPercentage Int
+  bikePathLength             Int
+  energyConsumption          Int
 }
 
 model Community {
-  id       String    @id
-  name     String
-  text     String
-  scale    String
-  zipcodes String[]
-  projects Project[]
+  id                    String                 @id
+  name                  String
+  scale                 String
+  zipcodes              String[]
+  projects              Project[]
+  communityAccessLevels CommunityAccessLevel[]
+  preAuthorizations     PreAuthorization[]
+  inseeData             Json
 }
 
 model Attachment {
@@ -99,19 +167,4 @@ model Attachment {
   created   DateTime @default(now())
   projectId String   @db.Uuid
   project   Project  @relation(fields: [projectId], references: [id])
-}
-
-model LegacyProject {
-  id               String   @id
-  pageIndex        Int
-  itemIndexInPage  Int
-  imagePath        String
-  slug             String
-  imageAlt         String
-  district         String?
-  city             String?
-  title            String
-  program          String?
-  legacyCategories String[]
-  categories       String[]
 }

@@ -1,12 +1,13 @@
-import { prismaClient } from '@mec/web/prisma'
 import { projectsCsvFilename } from '@mec/web/project/projectsDownload'
 import Link from 'next/link'
+import { prisma } from '@mec/db'
+import { dashboardRootPath } from '@mec/web/dashboard/dashboard'
 
 const ProjectsPage = async () => {
-  const projectsCount = await prismaClient.project.count()
+  const projectsCount = await prisma.project.count()
   const downloadFilename = projectsCsvFilename()
 
-  const projects = await prismaClient.project.findMany({
+  const projects = await prisma.project.findMany({
     include: {
       attachments: true,
       community: true,
@@ -56,10 +57,8 @@ const ProjectsPage = async () => {
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Collectivité</th>
-                  <th>Solution</th>
+                  <th>Projet</th>
                   <th>Nom</th>
-                  <th>Qualité</th>
                   <th>Email</th>
                   <th></th>
                 </tr>
@@ -70,10 +69,8 @@ const ProjectsPage = async () => {
                     id,
                     created,
                     name,
+                    contactEmail,
                     community,
-                    email,
-                    quality,
-                    solution,
                     reference,
                   }) => (
                     <tr key={id}>
@@ -82,22 +79,20 @@ const ProjectsPage = async () => {
                         {created.toLocaleTimeString()}
                       </td>
                       <td>{community.name}</td>
-                      <td>{solution}</td>
                       <td>{name}</td>
-                      <td>{quality}</td>
                       <td>
                         <a
-                          href={`mailto:${email}`}
+                          href={`mailto:${contactEmail}`}
                           className="fr-link fr-link--sm"
                         >
-                          {email}
+                          {contactEmail}
                         </a>
                       </td>
                       <td>
                         <Link
                           prefetch={false}
                           className="fr-btn fr-btn--icon-left fr-btn--secondary fr-btn--sm fr-icon-eye-line"
-                          href={`/dashboard/${reference}`}
+                          href={`${dashboardRootPath}/${reference}`}
                         >
                           Détails
                         </Link>

@@ -15,39 +15,24 @@ const ErrorPage = async ({
 }) => {
   return (
     <main role="main" id="content">
-      <div className="fr-container fr-container--fluid fr-mb-md-14v">
-        <div className="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
-          <div className="fr-col-12 fr-col-md-8 fr-col-xl-6">
-            <div className="fr-container fr-background-alt--grey fr-px-md-0 fr-pt-10v fr-pt-md-14v fr-pb-6v fr-pb-md-10v">
-              <div className="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
-                <div className="fr-col-12 fr-col-md-9 fr-col-lg-8">
-                  <h4>Connexion à Mon espace collectivité</h4>
-
-                  <hr />
-                  <h5>
-                    <span className="fr-icon-error-line" />
-                    &nbsp;Connexion impossible
-                  </h5>
-                  <p>{errorMessage(error)}</p>
-                  <p>
-                    Ce service est reservé aux agents de l&apos;ANCT, merci de
-                    vous assurer que vous avez utilisé votre adresse email ANCT
-                    pour vous connecter.
-                  </p>
-                  <ul className="fr-btns-group">
-                    <li>
-                      <Link
-                        href="/auth/signin"
-                        target="_self"
-                        className="fr-btn"
-                      >
-                        Retour
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+      <div className="fr-container fr-container--fluid fr-mb-md-12v fr-mt-12v">
+        <div className="fr-grid-row fr-grid-row--center">
+          <div className="fr-col-12 fr-col-md-8 fr-col-xl-6 fr-background-alt--grey fr-px-4v fr-py-4v  fr-p-md-14v">
+            <h2 style={{ textAlign: 'center' }} className="fr-mb-12v">
+              Connexion à votre espace Collectivité
+            </h2>
+            <div className="fr-alert fr-alert--error fr-alert--sm fr-mb-6v">
+              <h6>Connexion impossible</h6>
+              <p>{errorMessage(error)}</p>
             </div>
+
+            <ul className="fr-btns-group fr-mt-12v">
+              <li>
+                <Link href="/auth/signin" target="_self" className="fr-btn">
+                  Retour
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

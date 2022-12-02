@@ -20,8 +20,12 @@ export const PrivateConfig = {
     accessKey: process.env.SCALEWAY_ACCESS_KEY ?? '',
     secretKey: process.env.SCALEWAY_SECRET_KEY ?? '',
   },
+  Insee: {
+    sirenAccessToken: process.env.SIREN_ACCESS_TOKEN,
+  },
 }
 
 export const PublicConfig = {
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
+  sirenApiKey: process.env.NEXT_PUBLIC_SIREN_API_KEY,
 }

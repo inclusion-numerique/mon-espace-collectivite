@@ -1,15 +1,15 @@
-import { prismaClient } from '@mec/web/prisma'
+import { prisma } from '@mec/db'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { dashboardRootPath } from '@mec/web/dashboard/dashboard'
-import { ViewAttachmentButton } from '@mec/web/app/dashboard/(projets)/[reference]/ViewAttachmentButton'
+import { ViewAttachmentButton } from '@mec/web/app/mon-espace/(projets)/[reference]/ViewAttachmentButton'
 
 const ProjectPage = async ({
   params: { reference },
 }: {
   params: { reference: string }
 }) => {
-  const project = await prismaClient.project.findUnique({
+  const project = await prisma.project.findUnique({
     where: { reference },
     include: { community: true, attachments: true },
   })
@@ -21,16 +21,10 @@ const ProjectPage = async ({
     created,
     community,
     attachments,
-    email,
     name,
-    solution,
-    quality,
-    dates,
     description,
-    domain,
-    partners,
-    phone,
-    tech,
+    contactEmail,
+    topic,
   } = project
 
   const onViewAttachment = ({}: { key: string; name: string }) => {}
@@ -57,7 +51,7 @@ const ProjectPage = async ({
                   <div className="fr-grid-row">
                     <h2 className="">
                       <span className="fr-icon-folder-2-fill fr-mr-2v" />
-                      Projet &#8220;{solution}&#8221;
+                      Projet &#8220;{name}&#8221;
                     </h2>
                   </div>
                   <div className="fr-grid-row fr-grid-row--gutters">
@@ -74,16 +68,12 @@ const ProjectPage = async ({
                               </td>
                             </tr>
                             <tr>
-                              <td>Nom</td>
-                              <td className="fr-text--bold">{solution}</td>
-                            </tr>
-                            <tr>
                               <td>Référence</td>
                               <td className="fr-text--bold">{reference}</td>
                             </tr>
                             <tr>
                               <td>Thématique</td>
-                              <td className="fr-text--bold">{domain}</td>
+                              <td className="fr-text--bold">{topic}</td>
                             </tr>
                             <tr>
                               <td>Collectivité</td>
@@ -104,28 +94,13 @@ const ProjectPage = async ({
                               <td className="fr-text--bold">{name}</td>
                             </tr>
                             <tr>
-                              <td>Qualité</td>
-                              <td className="fr-text--bold">{quality}</td>
-                            </tr>
-                            <tr>
-                              <td>Téléphone</td>
-                              <td className="fr-text--bold">
-                                <a
-                                  href={`telto:${phone}`}
-                                  className="fr-link fr-link--sm"
-                                >
-                                  {phone}
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
                               <td>Email</td>
                               <td className="fr-text--bold">
                                 <a
-                                  href={`mailto:${email}`}
+                                  href={`mailto:${contactEmail}`}
                                   className="fr-link fr-link--sm"
                                 >
-                                  {email}
+                                  {contactEmail}
                                 </a>
                               </td>
                             </tr>
@@ -136,18 +111,6 @@ const ProjectPage = async ({
                     <div className="fr-col-12 fr-col-lg-6">
                       <h5>Description</h5>
                       <p>{description}</p>
-                    </div>
-                    <div className="fr-col-12 fr-col-lg-6">
-                      <h5>Dates clefs</h5>
-                      <p>{dates}</p>
-                    </div>
-                    <div className="fr-col-12 fr-col-lg-6">
-                      <h5>Partenaires</h5>
-                      <p>{partners}</p>
-                    </div>
-                    <div className="fr-col-12 fr-col-lg-6">
-                      <h5>Aspects techniques</h5>
-                      <p>{tech}</p>
                     </div>
                     <div className="fr-col-12 fr-col-lg-6">
                       <h5>Pièces jointes</h5>

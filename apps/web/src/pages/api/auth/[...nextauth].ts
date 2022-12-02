@@ -1,13 +1,12 @@
 import '@mec/web/auth/nextAuthSetup'
 import EmailProvider from 'next-auth/providers/email'
 import NextAuth, { NextAuthOptions } from 'next-auth'
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { prismaClient } from '@mec/web/prisma'
 import { PrivateConfig } from '@mec/web/config'
 import { sendVerificationRequest } from '@mec/web/auth/sendVerificationRequest'
+import { nextAuthAdapter } from '@mec/auth'
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prismaClient),
+  adapter: nextAuthAdapter,
   pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
@@ -21,8 +20,8 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    signIn: ({ user }) => {
-      return !!user.email?.endsWith('@anct.gouv.fr')
+    signIn: () => {
+      return true
     },
     session: ({ session, user }) => {
       if (session.user) {

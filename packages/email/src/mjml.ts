@@ -4,6 +4,7 @@ import mjml2html from 'mjml'
 const MINIFIER_OPTIONS: Options = {
   collapseWhitespace: true,
   conservativeCollapse: false,
+  minifyJS: false,
 }
 
 export function compileMjml(mjmlTemplate: string): string {

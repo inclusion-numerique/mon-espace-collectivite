@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react'
 import { getSessionUser } from '@mec/web/auth/getSessionUser'
 import { redirect } from 'next/navigation'
-import PrivateHeader from '@mec/web/app/dashboard/PrivateHeader'
+import PrivateHeader from '@mec/web/app/mon-espace/PrivateHeader'
 import PublicFooter from '@mec/web/app/(public)/PublicFooter'
 
 const PrivateLayout = async ({ children, ...props }: PropsWithChildren) => {

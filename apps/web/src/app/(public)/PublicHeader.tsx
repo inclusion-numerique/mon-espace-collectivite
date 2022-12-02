@@ -32,6 +32,10 @@ const PublicHeader = () => {
                 </div>
                 <div className="fr-header__operator">
                   <h2>Mon espace collectivité</h2>
+                  <p>
+                    Une plateforme unique pour la relation entre État &
+                    collectivités
+                  </p>
                 </div>
                 <div className="fr-header__navbar">
                   <button
@@ -46,6 +50,20 @@ const PublicHeader = () => {
                     Menu
                   </button>
                 </div>
+              </div>
+            </div>
+            <div className="fr-header__tools">
+              <div className="fr-header__tools-links">
+                <ul className="fr-btns-group">
+                  <li>
+                    <a
+                      className="fr-btn fr-btn--tertiary fr-icon-account-circle-fill"
+                      href="/auth/signin/"
+                    >
+                      Accéder à mon espace
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -67,16 +85,12 @@ const PublicHeader = () => {
             Fermer
           </button>
           <div className="fr-header__menu-links">
-            <ul className="fr-btns-group" data-fr-js-header-links="true"></ul>
+            <ul className="fr-btns-group">
+              <Link className="fr-btn" href="/auth/signin">
+                Accéder à mon espace
+              </Link>
+            </ul>
           </div>
-          <nav
-            className="fr-nav"
-            id="fr-navigation"
-            aria-label="Menu principal"
-            data-fr-js-navigation="true"
-          >
-            <PublicHeaderNav />
-          </nav>
         </div>
       </div>
       <div
@@ -89,25 +103,14 @@ const PublicHeader = () => {
           <button
             aria-controls="modal-menu-mobile"
             className="fr-btn--close fr-btn"
-            data-fr-js-modal-button="true"
           >
             Fermer
           </button>
           <div className="fr-header__menu-links">
-            <ul className="fr-btns-group" data-fr-js-header-links="true">
+            <ul className="fr-btns-group">
               <li>
-                <Link className="fr-btn" href="/">
-                  Accueil
-                </Link>
-              </li>
-              <li>
-                <Link className="fr-btn" href="/projet">
-                  Partager
-                </Link>
-              </li>
-              <li>
-                <Link className="fr-btn" href="/projets">
-                  Voir les projets
+                <Link className="fr-btn" href="/auth/signin">
+                  Accéder à mon espace
                 </Link>
               </li>
             </ul>

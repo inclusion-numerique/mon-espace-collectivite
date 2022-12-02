@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv'
-dotenv.config({ path: '../..' })
+import { resolve } from 'path'
+dotenv.config({ path: resolve(__dirname, '../../.env') })
 
 // Next config does not work with es modules
 // nextJest()()().then((config) => console.log('NEXT CONFIG', config, config.transform))
@@ -32,7 +33,7 @@ const config = {
     nodeModulesTransformIgnorePattern,
     '^.+\\.module\\.(css|sass|scss)$',
   ],
-  setupFilesAfterEnv: ['<rootDir>/jest/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/../../jest/jest.setup.ts'],
   testMatch: [
     '**/*.spec.ts',
     '**/*.spec.tsx',
@@ -48,7 +49,11 @@ const config = {
       '<rootDir>/node_modules/next/dist/build/jest/__mocks__/fileMock.js',
     '^.+\\.(svg)$':
       '<rootDir>/node_modules/next/dist/build/jest/__mocks__/fileMock.js',
-    '^@pt/(.*)$': '<rootDir>/src/$1',
+    '^@mec/web/(.*)$': '<rootDir>/src/$1',
+    '^@mec/api': '<rootDir>/../packages/api',
+    '^@mec/auth': '<rootDir>/../packages/auth',
+    '^@mec/db': '<rootDir>/../packages/db',
+    '^@mec/email': '<rootDir>/../packages/email',
   },
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
   watchPathIgnorePatterns: ['/.next/'],
@@ -63,7 +68,7 @@ const config = {
   testEnvironment: 'node',
   transform: {
     '^.+\\.(js|jsx|ts|tsx|mjs)$': [
-      '<rootDir>/apps/web/node_modules/next/dist/build/swc/jest-transformer.js',
+      '<rootDir>/node_modules/next/dist/build/swc/jest-transformer.js',
       {
         nextConfig: undefined,
         jsConfig: undefined,
