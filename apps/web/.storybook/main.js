@@ -11,11 +11,11 @@ module.exports = {
     {
       name: 'storybook-addon-next',
       options: {
-        nextConfigPath: resolve(__dirname, '../../web/next.config.js'),
+        nextConfigPath: resolve(__dirname, '../next.config.js'),
       },
     },
   ],
-  staticDirs: ['../../web/public'],
+  staticDirs: ['../public'],
   framework: '@storybook/react',
   core: {
     builder: 'webpack5',

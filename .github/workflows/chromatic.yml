@@ -18,5 +18,5 @@ jobs:
           #👇 Chromatic projectToken,
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          buildScriptName: build
-          workingDir: apps/storybook
+          buildScriptName: build:storybook
+          workingDir: apps/web
