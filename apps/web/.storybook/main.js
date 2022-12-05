@@ -1,18 +1,17 @@
+const { parse } = require('dotenv')
 const { resolve } = require('path')
+const { readFileSync } = require('fs')
+const dotenvFile = resolve(__dirname, '../../../.env')
+const parsedDotenv = parse(readFileSync(dotenvFile))
 
 module.exports = {
-  stories: [
-    '../stories/**/*.stories.mdx',
-    '../stories/**/*.stories.@(js|jsx|ts|tsx)',
-  ],
+  stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     {
       name: 'storybook-addon-next',
-      options: {
-        nextConfigPath: resolve(__dirname, '../next.config.js'),
-      },
+      options: {},
     },
   ],
   staticDirs: ['../public'],
@@ -20,4 +19,8 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
+  env: (config) => ({
+    ...config,
+    ...parsedDotenv,
+  }),
 }

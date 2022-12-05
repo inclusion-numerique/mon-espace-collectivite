@@ -24,7 +24,7 @@
       "@mec/db": ["packages/db"]
     }
   },
-  "include": ["next-env.d.ts", "jest/jest.setup.ts"],
+  "include": ["jest/jest.setup.ts"],
   "exclude": ["node_modules", "e2e"],
   "ts-node": {
     // these options are overrides used only by ts-node

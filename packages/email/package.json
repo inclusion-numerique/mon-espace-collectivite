@@ -9,7 +9,8 @@
     "with-env": "dotenv -e ../../.env --",
     "dev": "npm with-env prisma studio --port 5556",
     "prisma:db:push": "npm run with-env prisma db push",
-    "prisma:generate": "npm run with-env prisma generate"
+    "prisma:generate": "npm run with-env prisma generate",
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "encoding": "^0.1.13",

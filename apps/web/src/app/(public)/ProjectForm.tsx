@@ -17,7 +17,7 @@ import { CommunitySearchFormField } from '@mec/web/form/CommunitySearchFormField
 import Link from 'next/link'
 
 const ProjectForm = () => {
-  const createProject = trpc.createProject.useMutation()
+  const createProject = trpc.project.createProject.useMutation()
   // Unique client side reference for this forms
   const reference = useMemo(generateReference, [])
 

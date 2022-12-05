@@ -1,0 +1,20 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
+import { Onboarding } from './Onboarding'
+
+<Meta title="Authentication/Onboarding" component={Onboarding} />
+
+# Onboarding
+
+Onboarding screen
+
+## Props
+
+<ArgsTable of={Onboarding} />
+
+## Examples
+
+<Canvas>
+  <Story name="Default">
+    <Onboarding name="Vincent Dupont" role="Maire de Abancourt" />
+  </Story>
+</Canvas>

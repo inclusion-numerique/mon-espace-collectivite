@@ -8,10 +8,10 @@ import { nextAuthAdapter } from '@mec/auth'
 export const authOptions: NextAuthOptions = {
   adapter: nextAuthAdapter,
   pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-    error: '/auth/error',
-    verifyRequest: '/auth/verify',
+    signIn: '/connexion/login',
+    signOut: '/connexion/logout',
+    error: '/connexion/erreur',
+    verifyRequest: '/connexion/verification',
   },
   providers: [
     EmailProvider({

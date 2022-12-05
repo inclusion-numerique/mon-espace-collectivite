@@ -65,6 +65,8 @@ model User {
   name                  String?
   email                 String                 @unique
   emailVerified         DateTime?
+  // User has seen onboarding info and acknowledged it
+  onboarded             DateTime?
   image                 String?
   location              String?
   title                 String?

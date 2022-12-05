@@ -21,6 +21,9 @@ export const EmailSigninForm = ({ error }: { error?: string }) => {
     return signIn('email', { email })
   }
 
+  const disabled =
+    form.formState.isSubmitting || form.formState.isSubmitSuccessful
+
   return (
     <form id="login-with-email" onSubmit={form.handleSubmit(onSubmit)}>
       {error ? (
@@ -35,15 +38,11 @@ export const EmailSigninForm = ({ error }: { error?: string }) => {
         path="email"
         label="Adresse électronique"
         hint="Cette adresse est utilisée uniquement pour la connexion au service. Format attendu : nom@domaine.fr"
-        disabled={form.formState.isSubmitting}
+        disabled={disabled}
       />
       <ul className="fr-btns-group fr-btns-group--icon-left fr-mt-12v">
         <li>
-          <button
-            type="submit"
-            className="fr-btn"
-            disabled={form.formState.isSubmitting}
-          >
+          <button type="submit" className="fr-btn" disabled={disabled}>
             Se connecter
           </button>
         </li>

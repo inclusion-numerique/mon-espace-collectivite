@@ -11,7 +11,8 @@
     "prisma:db:push": "pnpm with-env prisma db push",
     "prisma:migrate:dev": "pnpm with-env prisma migrate dev",
     "prisma:generate": "pnpm with-env prisma generate",
-    "prisma:format": "pnpm with-env prisma format"
+    "prisma:format": "pnpm with-env prisma format",
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "^4.7.1",

@@ -52,17 +52,19 @@ export const CommunitySearchBar = ({
     setSearchQuery(event.target.value)
   }
 
-  const onClick = ({ id, name, text, scale, zipcodes }: Etablissement) => {
-    const value: ProjectData['community'] = {
-      id,
-      name,
-      text,
-      scale,
-      zipcodes,
-    }
-    onSelect(value)
-    setSearchQuery('')
+  const onClick = (item: unknown) => {
+    console.log('ITEM', item)
+    // const value: ProjectData['community'] = {
+    //   id,
+    //   name,
+    //   text,
+    //   scale,
+    //   zipcodes,
+    // }
+    // onSelect(value)
+    // setSearchQuery('')
   }
+  console.log('DATA', data)
 
   return (
     <div
@@ -103,32 +105,32 @@ export const CommunitySearchBar = ({
             </div>
           ) : null}
           {error ? <p>{error.message}</p> : null}
-          {data ? (
-            data.results.length === 0 ? (
-              <p>Aucun résultat pour &quot;{deferredQuery}&quot;</p>
-            ) : (
-              <div style={{ width: '100%' }}>
-                {data.results.map((result) => (
-                  <SearchResult
-                    onClick={() => onClick(result)}
-                    key={result.id}
-                    className="fr-py-2v fr-px-4v"
-                  >
-                    <span style={{ flex: 1 }}>
-                      <strong>{result.name}</strong>
-                      <span className="fr-my-0 fr-ml-2v fr-text--sm">
-                        {result.zipcodes?.join(', ')}
-                      </span>
-                    </span>
+          {/*{data ? (*/}
+          {/*  data.results.length === 0 ? (*/}
+          {/*    <p>Aucun résultat pour &quot;{deferredQuery}&quot;</p>*/}
+          {/*  ) : (*/}
+          {/*    <div style={{ width: '100%' }}>*/}
+          {/*      {data.results.map((result) => (*/}
+          {/*        <SearchResult*/}
+          {/*          onClick={() => onClick(result)}*/}
+          {/*          key={result.id}*/}
+          {/*          className="fr-py-2v fr-px-4v"*/}
+          {/*        >*/}
+          {/*          <span style={{ flex: 1 }}>*/}
+          {/*            <strong>{result.name}</strong>*/}
+          {/*            <span className="fr-my-0 fr-ml-2v fr-text--sm">*/}
+          {/*              {result.zipcodes?.join(', ')}*/}
+          {/*            </span>*/}
+          {/*          </span>*/}
 
-                    <span className="fr-badge fr-badge--sm fr-badge--blue-cumulus">
-                      {result.scale}
-                    </span>
-                  </SearchResult>
-                ))}
-              </div>
-            )
-          ) : null}
+          {/*          <span className="fr-badge fr-badge--sm fr-badge--blue-cumulus">*/}
+          {/*            {result.scale}*/}
+          {/*          </span>*/}
+          {/*        </SearchResult>*/}
+          {/*      ))}*/}
+          {/*    </div>*/}
+          {/*  )*/}
+          {/*) : null}*/}
         </div>
       ) : null}
     </div>

@@ -1,9 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "include": [
-    "src",
-    "index.ts",
-    "transformer.ts",
-    "node_modules/@mec/auth/next-auth.d.ts"
+    "src/**/*.ts",
+    "index.ts"
   ]
 }

@@ -8,11 +8,11 @@
     ]
   },
   "include": [
-    "../../packages/auth/next-auth.d.ts",
     "next-env.d.ts",
     "../../jest/jest.setup.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts",
+    "./next-auth.d.ts",
   ]
 }

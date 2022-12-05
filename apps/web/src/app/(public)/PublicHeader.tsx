@@ -58,7 +58,7 @@ const PublicHeader = () => {
                   <li>
                     <a
                       className="fr-btn fr-btn--tertiary fr-icon-account-circle-fill"
-                      href="/auth/signin/"
+                      href="/connexion/login/"
                     >
                       Accéder à mon espace
                     </a>
@@ -86,7 +86,7 @@ const PublicHeader = () => {
           </button>
           <div className="fr-header__menu-links">
             <ul className="fr-btns-group">
-              <Link className="fr-btn" href="/auth/signin">
+              <Link className="fr-btn" href="/connexion/login">
                 Accéder à mon espace
               </Link>
             </ul>
@@ -109,7 +109,7 @@ const PublicHeader = () => {
           <div className="fr-header__menu-links">
             <ul className="fr-btns-group">
               <li>
-                <Link className="fr-btn" href="/auth/signin">
+                <Link className="fr-btn" href="/connexion/login">
                   Accéder à mon espace
                 </Link>
               </li>

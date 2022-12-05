@@ -1,1 +1,1 @@
-export const dashboardRootPath = '/mon-espace'
+export const dashboardRootPath = '/mon-espace' as const

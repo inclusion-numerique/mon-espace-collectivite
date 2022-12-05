@@ -15,3 +15,10 @@ export const getUserDisplayName = (
 
   return user.email
 }
+
+export const getUserFullDisplayRole = (
+  user: Pick<SessionUser, 'roles'>,
+): string => {
+  // TODO
+  return ''
+}

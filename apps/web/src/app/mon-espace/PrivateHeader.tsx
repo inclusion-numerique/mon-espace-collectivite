@@ -82,11 +82,11 @@ const PrivateHeader = ({ user }: { user: SessionUser }) => {
             <ul className="fr-links-group" data-fr-js-header-links="true">
               <li>
                 <Link
-                  href="/auth/signin"
+                  href=""
                   target="_self"
                   className="fr-btn fr-btn--icon-left fr-icon-account-line"
                 >
-                  Espace ANCT
+                  TODO
                 </Link>
               </li>
             </ul>
