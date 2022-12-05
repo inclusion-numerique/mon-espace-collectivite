@@ -7,6 +7,11 @@ export const sendVerificationRequest = async ({
   provider,
   identifier,
 }: SendVerificationRequestParams) => {
+  // For quicker dev UX, display url in console in dev environment
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`Email magic link: ${url}`)
+  }
+
   const { host } = new URL(url)
   const transport = createTransport(provider.server)
   const result = await transport.sendMail({
