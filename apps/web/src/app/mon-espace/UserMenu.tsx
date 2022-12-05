@@ -10,7 +10,7 @@ export const UserMenu = ({ user }: { user: SessionUser }) => {
     <Link
       href={dashboardRootPath}
       target="_self"
-      className="fr-btn fr-btn--sm fr-btn--icon-left fr-icon-account-line"
+      className="fr-btn fr-btn--sm fr-btn--icon-left fr-icon-account-circle-fill"
     >
       {getUserDisplayName(user)}
     </Link>

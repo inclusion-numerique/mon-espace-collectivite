@@ -1,7 +1,42 @@
 import Link from 'next/link'
 import { PublicHeaderNav } from '@mec/web/app/(public)/PublicHeaderNav'
+import { ReactNode } from 'react'
 
-const PublicHeader = () => {
+const PublicHeader = ({
+  headerTools = (
+    <div className="fr-header__tools">
+      <div className="fr-header__tools-links">
+        <ul className="fr-btns-group">
+          <li>
+            <a
+              className="fr-btn fr-btn--tertiary fr-icon-account-circle-fill"
+              href="/connexion/login/"
+            >
+              Accéder à mon espace
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  ),
+  mobileMenuLinks = (
+    <div className="fr-header__menu-links">
+      <ul className="fr-btns-group">
+        <li>
+          <Link
+            className="fr-btn fr-btn--icon-left fr-icon-account-circle-fill"
+            href="/connexion/login"
+          >
+            Accéder à mon espace
+          </Link>
+        </li>
+      </ul>
+    </div>
+  ),
+}: {
+  headerTools?: ReactNode
+  mobileMenuLinks?: ReactNode
+}) => {
   return (
     <header role="banner" className="fr-header">
       <div className="fr-header__body">
@@ -52,44 +87,7 @@ const PublicHeader = () => {
                 </div>
               </div>
             </div>
-            <div className="fr-header__tools">
-              <div className="fr-header__tools-links">
-                <ul className="fr-btns-group">
-                  <li>
-                    <a
-                      className="fr-btn fr-btn--tertiary fr-icon-account-circle-fill"
-                      href="/connexion/login/"
-                    >
-                      Accéder à mon espace
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        className="fr-header__menu fr-modal"
-        id="fr-menu-mobile"
-        data-fr-js-modal="true"
-        data-fr-js-header-modal="true"
-      >
-        <div className="fr-container">
-          <button
-            type="button"
-            className="fr-btn--close fr-btn"
-            aria-controls="fr-menu-mobile"
-            data-fr-js-modal-button="true"
-          >
-            Fermer
-          </button>
-          <div className="fr-header__menu-links">
-            <ul className="fr-btns-group">
-              <Link className="fr-btn" href="/connexion/login">
-                Accéder à mon espace
-              </Link>
-            </ul>
+            {headerTools}
           </div>
         </div>
       </div>
@@ -106,15 +104,10 @@ const PublicHeader = () => {
           >
             Fermer
           </button>
-          <div className="fr-header__menu-links">
-            <ul className="fr-btns-group">
-              <li>
-                <Link className="fr-btn" href="/connexion/login">
-                  Accéder à mon espace
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {mobileMenuLinks}
+          <nav role="navigation" aria-label="Menu principal" className="fr-nav">
+            <PublicHeaderNav />
+          </nav>
         </div>
       </div>
     </header>
