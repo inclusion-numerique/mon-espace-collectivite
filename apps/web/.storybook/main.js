@@ -1,8 +1,15 @@
 const { parse } = require('dotenv')
 const { resolve } = require('path')
-const { readFileSync } = require('fs')
-const dotenvFile = resolve(__dirname, '../../../.env')
-const parsedDotenv = parse(readFileSync(dotenvFile))
+const { readFileSync, existsSync } = require('fs')
+
+const dotenvVars = () => {
+  const dotenvFile = resolve(__dirname, '../../../.env')
+  if (!existsSync(dotenvFile)) {
+    return null
+  }
+
+  return parse(readFileSync(dotenvFile))
+}
 
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -21,6 +28,6 @@ module.exports = {
   },
   env: (config) => ({
     ...config,
-    ...parsedDotenv,
+    ...dotenvVars(),
   }),
 }
