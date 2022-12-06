@@ -1,6 +1,6 @@
 import { searchCommunity } from '@mec/web/siren/siren'
 
-describe('siren', () => {
+describe.skip('siren', () => {
   it('Searches city', async () => {
     const query = 'lyon'
     const result = await searchCommunity(query)

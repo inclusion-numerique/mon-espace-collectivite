@@ -4,8 +4,6 @@ import { v4 } from 'uuid'
 import z from 'zod'
 import { searchCommunity } from '@mec/web/siren/siren'
 import { protectedProcedure, router } from './trpc'
-import { createTRPCReact } from '@trpc/react-query'
-import { type } from 'os'
 
 const userRouter = router({
   acknowledgeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {

@@ -24,11 +24,14 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v3
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm i -F !e2e
 
       - name: Lint
-        run: npm run lint
+        run: pnpm lint
 
   tsc:
     name: 🕵️️ Typecheck
@@ -38,11 +41,14 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v3
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm i -F !e2e
 
       - name: Typecheck
-        run: npm run tsc
+        run: pnpm tsc
 
   test:
     name: 🤖 Test
@@ -52,32 +58,38 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v3
 
-      - name: Install Dependencies
-        run: npm ci
+      - name: Install pnpm
+        run: npm install -g pnpm
 
-      - name: Run test
-        run: npm run test
+      - name: Install Dependencies
+        run: pnpm i -F !e2e
+
+      - name: Run @mec/web tests
+        run: pnpm -F @mec/web test
 
   build:
-    name: 🏗️ Build
+    name: 🏗️ Build web app
     runs-on: ubuntu-latest
     container: node:latest
     steps:
       - name: Code Checkout
         uses: actions/checkout@v3
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm i -F !e2e
 
       - name: Build
-        run: npm run build
+        run: pnpm -F @mec/web build
 
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
           name: next-build
           path: |
-            .next
+            apps/web/.next
 
   e2e:
     name: 🐒 E2e
@@ -116,8 +128,11 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v3
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm i -F e2e
 
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3

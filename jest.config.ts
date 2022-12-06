@@ -17,6 +17,7 @@ const transformIgnorePackages = [
   'fetch-blob',
   'formdata-polyfill',
   '@aws-sdk/middleware-retry',
+  '@aws-sdk/client-s3',
   'axios',
   'ky',
   'ky-universal',
