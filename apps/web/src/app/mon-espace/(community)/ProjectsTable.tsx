@@ -28,7 +28,7 @@ export const ProjectsTable = ({
   projects: (Project & { community: Community })[]
 }) => {
   return (
-    <div className="fr-table fr-table--bordered">
+    <div className="fr-table fr-table--bordered" style={{ width: '100%' }}>
       <table>
         <thead>
           <tr>
