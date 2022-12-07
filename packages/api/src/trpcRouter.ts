@@ -4,6 +4,7 @@ import { v4 } from 'uuid'
 import z from 'zod'
 import { searchCommunity } from '@mec/web/siren/siren'
 import { protectedProcedure, router } from './trpc'
+import { generateReference } from '@mec/web/project/generateReference'
 
 const userRouter = router({
   acknowledgeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
@@ -15,7 +16,7 @@ const userRouter = router({
 })
 
 const communityRouter = router({
-  searchCommunity: protectedProcedure
+  search: protectedProcedure
     .input(
       z.object({
         query: z.string().min(1),
@@ -29,53 +30,42 @@ const communityRouter = router({
 })
 
 const projectRouter = router({
-  createProject: protectedProcedure
+  create: protectedProcedure
     .input(ProjectDataValidation)
-    .mutation(
-      async ({
-        input: {
+    .mutation(async ({ input: { communityId, ...data }, ctx: { user } }) => {
+      // TODO Check rights / role for user on community project creation
+      const id = v4()
+      const reference = generateReference()
+      const project = await prisma.project.create({
+        data: {
+          id,
           reference,
-          community,
-          quality,
-          name,
-          description,
-          domain,
-          email,
-          partners,
-          phone,
-          tech,
-          solution,
-          dates,
-          attachments,
+          communityId,
+          createdById: user.id,
+          ...data,
         },
-      }) => {
-        const id = v4()
-        // const project = await prisma.project.create({
-        //   data: {
-        //     id,
-        //     reference,
-        //     community: {
-        //       connectOrCreate: {
-        //         where: { id: community.id },
-        //         create: { ...community, zipcodes: community.zipcodes ?? [] },
-        //       },
-        //     },
-        //     quality,
-        //     name,
-        //     description,
-        //     domain,
-        //     email,
-        //     partners,
-        //     phone,
-        //     tech,
-        //     solution,
-        //     dates,
-        //     attachments: { createMany: { data: attachments } },
-        //   },
-        //   include: { attachments: true, community: true },
-        // })
-        //
-        // return { project }
+        include: { attachments: true, community: true },
+      })
+
+      return { project }
+    }),
+  update: protectedProcedure
+    .input(ProjectDataValidation.extend({ id: z.string().uuid() }))
+    .mutation(
+      async ({ input: { id, communityId, ...data }, ctx: { user } }) => {
+        // TODO Check rights / role for user on community project creation
+        // TODO Check right on write on this project
+        const project = await prisma.project.update({
+          where: { id },
+          data: {
+            id,
+            updated: new Date(),
+            ...data,
+          },
+          include: { attachments: true, community: true },
+        })
+
+        return { project }
       },
     ),
 })

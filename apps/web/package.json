@@ -94,15 +94,18 @@
     "@types/styled-components": "^5.1.26",
     "@types/uuid": "^9.0.0",
     "babel-loader": "^8.3.0",
+    "css-loader": "^6.7.2",
     "modclean": "^3.0.0-beta.1",
     "postcss": "^8.4.19",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-import": "^15.0.1",
+    "postcss-loader": "^7.0.2",
     "postcss-nested": "^6.0.0",
     "postcss-preset-env": "^7.8.3",
     "react-is": "^18.2.0",
     "sass": "^1.56.1",
     "storybook-addon-next": "^1.7.1",
+    "style-loader": "^3.3.1",
     "typescript": "^4.9.3"
   }
 }

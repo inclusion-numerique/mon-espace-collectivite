@@ -1,7 +1,26 @@
+'use client'
+
 import { HTMLInputTypeAttribute } from 'react'
 import { Control, Controller, FieldValues } from 'react-hook-form'
 import { FieldPath } from 'react-hook-form/dist/types/path'
 import TextareaAutosize from 'react-textarea-autosize'
+
+const getFieldValueAs = (
+  value: string | null | undefined,
+  {
+    valueAsNumber,
+    valueAsDate,
+  }: { valueAsNumber?: boolean; valueAsDate?: boolean },
+) =>
+  value === undefined || value === null
+    ? value
+    : valueAsNumber
+    ? value === ''
+      ? NaN
+      : +value
+    : valueAsDate
+    ? new Date(value)
+    : value
 
 // View design options here https://www.systeme-de-design.gouv.fr/elements-d-interface/composants/champ-de-saisie
 export function InputFormField<T extends FieldValues>({
@@ -12,16 +31,26 @@ export function InputFormField<T extends FieldValues>({
   type = 'text',
   hint,
   disabled,
-  multiple,
+  valueAsNumber,
+  valueAsDate,
+  max,
+  min,
+  step,
+  autoFocus,
 }: {
   control: Control<T>
   path: FieldPath<T>
   disabled?: boolean
   label?: string
   hint?: string
-  type?: Exclude<HTMLInputTypeAttribute, 'checkbox'> | 'textarea'
+  type?: Exclude<HTMLInputTypeAttribute, 'checkbox' | 'radio'> | 'textarea'
   placeholder?: string
-  multiple?: boolean
+  valueAsNumber?: boolean
+  valueAsDate?: boolean
+  min?: number
+  max?: number
+  step?: number
+  autoFocus?: boolean
 }) {
   const id = `input-form-field__${path}`
 
@@ -55,6 +84,8 @@ export function InputFormField<T extends FieldValues>({
               onChange={onChange}
               value={value ?? ''}
               ref={ref}
+              name={name}
+              autoFocus={autoFocus}
             />
           ) : (
             <input
@@ -65,10 +96,21 @@ export function InputFormField<T extends FieldValues>({
               id={id}
               placeholder={placeholder}
               onBlur={onBlur}
-              onChange={onChange}
+              onChange={(event) =>
+                onChange(
+                  getFieldValueAs(event.target.value, {
+                    valueAsDate,
+                    valueAsNumber,
+                  }),
+                )
+              }
               value={value ?? ''}
               ref={ref}
-              multiple={multiple}
+              name={name}
+              min={min}
+              max={max}
+              step={step}
+              autoFocus={autoFocus}
             />
           )}
           {error ? (

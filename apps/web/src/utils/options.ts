@@ -1,5 +1,6 @@
 export type Option<T> = { name: string; value: T }
 export type Options<T = string> = Option<T>[]
+export type OptionsGroups = { [key: string]: Options }
 
 export const labelsToOptions = <T extends string>(
   object: Record<T, string>,

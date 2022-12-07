@@ -31,7 +31,7 @@ export function CommunitySearchFormField<T extends FieldValues>({
         field: { onChange, onBlur, value, name, ref },
         fieldState: { invalid, isTouched, isDirty, error },
       }) => {
-        const community = value as ProjectData['community']
+        const community = value
 
         return (
           <div

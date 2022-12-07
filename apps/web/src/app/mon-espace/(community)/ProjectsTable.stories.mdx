@@ -1,0 +1,59 @@
+import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs'
+import { ProjectsTable } from './ProjectsTable'
+
+<Meta title="Collectivité/ProjectsTable" component={ProjectsTable} />
+
+# ProjectsTable
+
+Liste des projets, chaque cellule est cliquable
+
+## Props
+
+<ArgsTable of={ProjectsTable} />
+
+## Examples
+
+<Canvas>
+  <Story name="Default">
+    <ProjectsTable
+      projects={[
+        {
+          id: 'test',
+          reference: '01',
+          name: 'Test A',
+          totalAmount: 50000000,
+          topic: 'Thématique',
+          contactEmail: 'hugues.maignol@beta.gouv.fr',
+          start: null,
+          end: null,
+          progress: "En phase d'investigation",
+          artificializedArea: null,
+          greenhouseGasEmissions: 8,
+          waterConsumption: null,
+          selectiveSortingPercentage: null,
+          bikePathLength: null,
+          energyConsumption: null,
+          community: { id: '69000', name: 'Métropole Grand Lyon' },
+        },
+          {
+              id: 'test',
+              reference: '02',
+              name: 'Test B',
+              totalAmount: 400000,
+              topic: 'Thématique',
+              contactEmail: 'hugues.maignol@beta.gouv.fr',
+              start: new Date('2022-11-11'),
+              end: new Date('2024-01-01'),
+              progress: "40%",
+              artificializedArea: -5000,
+              greenhouseGasEmissions: 500,
+              waterConsumption: 30,
+              selectiveSortingPercentage: 100,
+              bikePathLength: 3,
+              energyConsumption: 4000,
+              community: { id: '69002', name: 'Lyon 2ème' },
+          },
+      ]}
+    />
+  </Story>
+</Canvas>

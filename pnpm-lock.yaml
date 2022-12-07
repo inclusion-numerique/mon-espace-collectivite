@@ -81,6 +81,7 @@ importers:
       babel-loader: ^8.3.0
       chart.js: ^4.0.1
       client-only: ^0.0.1
+      css-loader: ^6.7.2
       csv-stringify: ^6.2.3
       date-fns: ^2.29.3
       env-var: ^7.3.0
@@ -99,6 +100,7 @@ importers:
       postcss: ^8.4.19
       postcss-flexbugs-fixes: ^5.0.2
       postcss-import: ^15.0.1
+      postcss-loader: ^7.0.2
       postcss-nested: ^6.0.0
       postcss-preset-env: ^7.8.3
       react: ^18.2.0
@@ -114,6 +116,7 @@ importers:
       sass: ^1.56.1
       server-only: ^0.0.1
       storybook-addon-next: ^1.7.1
+      style-loader: ^3.3.1
       styled-components: ^5.3.6
       superjson: ^1.11.0
       ts-node: ^10.9.1
@@ -192,15 +195,18 @@ importers:
       '@types/styled-components': 5.1.26
       '@types/uuid': 9.0.0
       babel-loader: 8.3.0_@babel+core@7.20.5
+      css-loader: 6.7.2
       modclean: 3.0.0-beta.1
       postcss: 8.4.19
       postcss-flexbugs-fixes: 5.0.2_postcss@8.4.19
       postcss-import: 15.0.1_postcss@8.4.19
+      postcss-loader: 7.0.2_postcss@8.4.19
       postcss-nested: 6.0.0_postcss@8.4.19
       postcss-preset-env: 7.8.3_postcss@8.4.19
       react-is: 18.2.0
       sass: 1.56.1
       storybook-addon-next: 1.7.1_il6zskqwlralxkbiwpz5vr5d6e
+      style-loader: 3.3.1
       typescript: 4.9.3
 
   e2e:
@@ -8167,6 +8173,22 @@ packages:
       schema-utils: 3.1.1
       semver: 7.3.8
       webpack: 5.75.0_uglify-js@3.17.4
+    dev: true
+
+  /css-loader/6.7.2:
+    resolution: {integrity: sha512-oqGbbVcBJkm8QwmnNzrFrWTnudnRZC+1eXikLJl0n4ljcfotgRifpg2a1lKy8jTrc4/d9A/ap1GFq1jDKG7J+Q==}
+    engines: {node: '>= 12.13.0'}
+    peerDependencies:
+      webpack: ^5.0.0
+    dependencies:
+      icss-utils: 5.1.0_postcss@8.4.19
+      postcss: 8.4.19
+      postcss-modules-extract-imports: 3.0.0_postcss@8.4.19
+      postcss-modules-local-by-default: 4.0.0_postcss@8.4.19
+      postcss-modules-scope: 3.0.0_postcss@8.4.19
+      postcss-modules-values: 4.0.0_postcss@8.4.19
+      postcss-value-parser: 4.2.0
+      semver: 7.3.8
     dev: true
 
   /css-prefers-color-scheme/6.0.3_postcss@8.4.19:
@@ -16236,6 +16258,13 @@ packages:
       loader-utils: 2.0.4
       schema-utils: 3.1.1
       webpack: 5.75.0_uglify-js@3.17.4
+    dev: true
+
+  /style-loader/3.3.1:
+    resolution: {integrity: sha512-GPcQ+LDJbrcxHORTRes6Jy2sfvK2kS6hpSfI/fXhPt+spVzxF6LJ1dHLN9zIGmVaaP044YKaIatFaufENRiDoQ==}
+    engines: {node: '>= 12.13.0'}
+    peerDependencies:
+      webpack: ^5.0.0
     dev: true
 
   /style-to-object/0.3.0:

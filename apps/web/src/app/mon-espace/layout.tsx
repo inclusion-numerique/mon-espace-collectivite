@@ -24,8 +24,14 @@ const PrivateLayout = async ({ children, ...props }: PropsWithChildren) => {
       style={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}
     >
       <PrivateHeader user={user} />
-      <div className="fr-container" style={{ flex: 1 }}>
-        <div>{children}</div>
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {children}
       </div>
       <PublicFooter />
     </div>

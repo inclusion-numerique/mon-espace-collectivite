@@ -1,0 +1,20 @@
+import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs';
+import {NoProjects} from "./NoProjects";
+
+<Meta title="Collectivité/NoProjects" component={NoProjects} />
+
+# NoProjects
+
+Affiché lorsqu'une collectivité n'a pas encore renseigné de projets CRTE
+
+## Props
+
+<ArgsTable of={NoProjects} />
+
+## Examples
+
+<Canvas>
+    <Story name="Default">
+        <NoProjects />
+    </Story>
+</Canvas>

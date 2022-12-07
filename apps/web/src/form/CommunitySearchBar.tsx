@@ -5,11 +5,9 @@ import styled from 'styled-components'
 import { useQuery } from '@tanstack/react-query'
 import { Spinner } from '@mec/web/ui/Spinner'
 import {
-  Etablissement,
   searchCommunity,
   SirenCommunitySearchResponse,
 } from '@mec/web/siren/siren'
-import { ProjectData } from '@mec/web/project/project'
 
 const SearchResult = styled.div`
   width: 100%;
@@ -33,7 +31,7 @@ export const CommunitySearchBar = ({
   id?: string
   disabled?: boolean
   placeholder?: string
-  onSelect: (value: ProjectData['community']) => void | Promise<void>
+  onSelect: (value: unknown) => void | Promise<void>
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
 

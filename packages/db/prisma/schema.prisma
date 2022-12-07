@@ -77,8 +77,9 @@ model User {
   status                UserStatus
   communityAccessLevels CommunityAccessLevel[]
 
-  created DateTime @default(now())
-  updated DateTime @default(now())
+  created         DateTime  @default(now())
+  updated         DateTime  @default(now())
+  createdProjects Project[]
 }
 
 enum AccessLevel {
@@ -140,15 +141,18 @@ model Project {
   description     String?
   attachments     Attachment[]
   created         DateTime     @default(now())
+  createdBy       User?        @relation(fields: [createdById], references: [id])
+  createdById     String?      @db.Uuid
+  updated         DateTime     @default(now())
   community       Community    @relation(fields: [communityId], references: [id])
   communityId     String
 
-  artificializedArea         Int
-  greenhouseGasEmissions     Int
-  waterConsumption           Int
-  selectiveSortingPercentage Int
-  bikePathLength             Int
-  energyConsumption          Int
+  artificializedArea         Int?
+  greenhouseGasEmissions     Int?
+  waterConsumption           Int?
+  selectiveSortingPercentage Int?
+  bikePathLength             Int?
+  energyConsumption          Int?
 }
 
 model Community {
