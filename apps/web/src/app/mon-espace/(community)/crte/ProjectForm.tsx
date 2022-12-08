@@ -17,6 +17,7 @@ import { Project, Community } from '@mec/db'
 import { DefaultValues } from 'react-hook-form/dist/types/form'
 import { FieldPath } from 'react-hook-form/dist/types/path'
 import { removeNullValues } from '@mec/web/utils/removeNullValues'
+import { ProjectDeletion } from '@mec/web/app/mon-espace/(community)/crte/[reference]/ProjectDeletion'
 
 // Todo extract this ? Or make prop type of project data ?
 // FIXME Serialization is broken, use superjson ?
@@ -270,17 +271,20 @@ const ProjectForm = ({
                 >
                   Enregistrer le projet
                 </button>
-                <button
+                <Link
                   className="fr-btn fr-btn--tertiary fr-mt-4v fr-icon-arrow-left-line"
-                  type="button"
-                  onClick={() => {
-                    router.back()
-                  }}
+                  href="/mon-espace"
                 >
-                  Retour
-                </button>
+                  Annuler
+                </Link>
               </div>
             </form>
+            {project ? (
+              <>
+                <hr className="fr-mt-6v" />
+                <ProjectDeletion project={project} />
+              </>
+            ) : null}
           </div>
         )}
       </div>

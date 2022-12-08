@@ -68,6 +68,17 @@ const projectRouter = router({
         return { project }
       },
     ),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .mutation(async ({ input: { id }, ctx: { user } }) => {
+      // TODO Check rights / role for user on community project creation
+      // TODO Check right on write on this project
+      const project = await prisma.project.delete({
+        where: { id },
+      })
+
+      return { project }
+    }),
 })
 
 export const appRouter = router({
