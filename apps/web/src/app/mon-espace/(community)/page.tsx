@@ -3,7 +3,6 @@ import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { getAuthenticatedSessionUser } from '@mec/web/auth/getSessionUser'
 import { NoProjects } from '@mec/web/app/mon-espace/(community)/NoProjects'
 import { ProjectsTable } from '@mec/web/app/mon-espace/(community)/ProjectsTable'
-import { unstable_renderSubtreeIntoContainer } from 'react-dom'
 import Link from 'next/link'
 
 const ProjectsPage = async () => {
