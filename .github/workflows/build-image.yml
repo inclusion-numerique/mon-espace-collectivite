@@ -2,12 +2,16 @@ name: '🐳 Build docker image'
 
 on: push
 
+env:
+  CLEAN_BRANCH_NAME: ${BRANCH_NAME//\//-}
+
 jobs:
   build:
     name: 🏗️ Build
     runs-on: ubuntu-latest
 
     steps:
+      - run: echo $CLEAN_BRANCH_NAME
       - uses: actions/checkout@v3
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
@@ -15,4 +19,4 @@ jobs:
         #continue-on-error: true
 
       - name: Build the Docker image
-        run: docker build . --file docker/web/Dockerfile --tag mec:$(date +%s)
+        run: docker build . --file docker/web/Dockerfile --tag mec-$CLEAN_BRANCH_NAME:$(date +%s)
