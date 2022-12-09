@@ -11,10 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo ${GITHUB_REF##*/}
-      - run: echo $GITHUB_REF
-      - run: echo mec-$CLEAN_BRANCH_NAME:latest
-      - run: echo "mec-$CLEAN_BRANCH_NAME:latest"
+      - name: Add clean branch name in env
+        # First sed is to get branch name, second is to replace "/" with "-" in branch names
+        run: echo "BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,' | sed -e 's/\//-/g')" >> $GITHUB_ENV
       - uses: actions/checkout@v3
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
@@ -22,4 +21,4 @@ jobs:
         #continue-on-error: true
 
       - name: Build the Docker image
-        run: docker build . --file docker/web/Dockerfile --tag mec-$CLEAN_BRANCH_NAME:latest
+        run: docker build . --file docker/web/Dockerfile --tag mec-$BRANCH:latest
