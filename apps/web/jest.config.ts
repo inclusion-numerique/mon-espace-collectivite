@@ -52,10 +52,6 @@ const config = {
     '^.+\\.(svg)$':
       '<rootDir>/node_modules/next/dist/build/jest/__mocks__/fileMock.js',
     '^@mec/web/(.*)$': '<rootDir>/src/$1',
-    '^@mec/api': '<rootDir>/../packages/api',
-    '^@mec/auth': '<rootDir>/../packages/auth',
-    '^@mec/db': '<rootDir>/../packages/db',
-    '^@mec/email': '<rootDir>/../packages/email',
   },
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
   watchPathIgnorePatterns: ['/.next/'],

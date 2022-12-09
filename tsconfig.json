@@ -18,10 +18,8 @@
     "paths": {
       "@mec/web/*": ["apps/web/src/*"],
       "@mec/e2e/*": ["e2e/cypress/*"],
-      "@mec/api": ["packages/api"],
-      "@mec/auth": ["packages/auth"],
-      "@mec/email": ["packages/email"],
-      "@mec/db": ["packages/db"]
+      "@mec/cdk/*": ["packages/cdk/src/*"],
+      "@mec/scaleway/*": ["packages/cdk/.gen/providers/scaleway/*"]
     }
   },
   "include": ["jest/jest.setup.ts"],

@@ -1,6 +1,7 @@
 import { SendVerificationRequestParams } from 'next-auth/providers'
 import { createTransport } from 'nodemailer'
-import { emailSignin, compileMjml } from '@mec/email'
+import { emailSignin } from '@mec/web/email/templates/emailSignin'
+import { compileMjml } from '@mec/web/email/mjml'
 
 export const sendVerificationRequest = async ({
   url,

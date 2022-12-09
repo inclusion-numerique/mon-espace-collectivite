@@ -14,11 +14,11 @@ export const PrivateConfig = {
     tableId: process.env.GRIST_TABLE_ID ?? '',
   },
   S3: {
-    host: process.env.SCALEWAY_S3_HOST ?? '',
-    bucketId: `${process.env.SCALEWAY_BUCKET_ID}`,
-    bucketLocation: process.env.SCALEWAY_S3_BUCKET_LOCATION ?? '',
-    accessKey: process.env.SCALEWAY_ACCESS_KEY ?? '',
-    secretKey: process.env.SCALEWAY_SECRET_KEY ?? '',
+    host: process.env.SCW_S3_HOST ?? '',
+    bucketId: `${process.env.SCW_BUCKET_ID}`,
+    bucketLocation: process.env.SCW_S3_BUCKET_LOCATION ?? '',
+    accessKey: process.env.SCW_ACCESS_KEY ?? '',
+    secretKey: process.env.SCW_SECRET_KEY ?? '',
   },
   Insee: {
     sirenAccessToken: process.env.SIREN_ACCESS_TOKEN,

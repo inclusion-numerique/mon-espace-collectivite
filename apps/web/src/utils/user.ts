@@ -1,4 +1,4 @@
-import { SessionUser } from '@mec/auth'
+import { SessionUser } from '@mec/web/auth/sessionUser'
 
 export const getUserDisplayName = (
   user: Pick<SessionUser, 'firstName' | 'lastName' | 'email' | 'name'>,

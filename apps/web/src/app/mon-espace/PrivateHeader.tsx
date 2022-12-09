@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { UserMenu } from '@mec/web/app/mon-espace/UserMenu'
-import { SessionUser } from '@mec/auth'
+import { SessionUser } from '@mec/web/auth/sessionUser'
 import PublicHeader from '@mec/web/app/(public)/PublicHeader'
 
 const PrivateHeader = ({ user }: { user: SessionUser }) => {

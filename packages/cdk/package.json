@@ -1,0 +1,31 @@
+{
+  "name": "@mec/cdk",
+  "version": "0.1.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "with-env": "dotenv -e ../../.env --",
+    "tsc": "tsc --noEmit",
+    "synth": "npm run with-env cdktf synth",
+    "deploy:web": "npm run with-env cdktf deploy web",
+    "cdktf": "cdktf",
+    "tf:web:backend-reconfigure": "cd cdktf.out/stacks/web && terraform init -reconfigure"
+  },
+  "dependencies": {
+    "cdktf": "^0.14.3",
+    "cdktf-cli": "^0.14.3",
+    "constructs": "^10.1.183",
+    "dotenv": "^16.0.3",
+    "dotenv-cli": "^6.0.0",
+    "git-rev-sync": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/git-rev-sync": "^2.0.0",
+    "@types/node": "^18.11.11",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.1",
+    "typescript": "^4.9.4"
+  }
+}

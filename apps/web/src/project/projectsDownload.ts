@@ -1,6 +1,6 @@
 import { getUrl } from '@mec/web/utils/baseUrl'
 import { dashboardRootPath } from '@mec/web/dashboard/dashboard'
-import { prisma } from '@mec/db'
+import { prisma } from '@mec/web/prisma'
 
 export const projectsCsvFilename = () =>
   `Mon espace collectivité - ${new Date().toISOString().slice(0, 10)}.csv`

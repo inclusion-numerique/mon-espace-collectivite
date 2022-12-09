@@ -1,4 +1,4 @@
-import { SessionUser } from '@mec/auth'
+import { SessionUser } from '@mec/web/auth/sessionUser'
 import { dashboardRootPath } from '@mec/web/dashboard/dashboard'
 
 export const getUserAuthFlowStep = (user: SessionUser | null) => {

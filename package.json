@@ -2,10 +2,24 @@
   "name": "mec",
   "description": "Mon espace collectivité - Monorepo",
   "version": "0.1.0",
-  "license": "AGPL",
-  "packageManager": "pnpm@7.13.0",
+  "license": "AGPL-3.0-or-later",
+  "private": true,
+  "packageManager": "npm@8.19.0",
   "engines": {
-    "node": "^19.1"
+    "node": "^19.1",
+    "npm": "^8.19"
+  },
+  "workspaces": {
+    "packages": [
+      "apps/web",
+      "packages/api",
+      "packages/auth",
+      "packages/db",
+      "packages/email"
+    ],
+    "nohoist": [
+      "**/web/**"
+    ]
   },
   "scripts": {
     "build": "turbo build",
@@ -18,16 +32,19 @@
     "lint": "turbo lint && manypkg check",
     "manypkg": "manypkg",
     "eslint": "eslint",
-    "tsc": "turbo tsc"
+    "tsc": "turbo tsc",
+    "docker:build:web": "docker build -t mec:0.1.0 -f docker/web/Dockerfile .",
+    "docker:build:web:debug": "DOCKER_BUILDKIT=0 docker build -t mec:0.1.0 -f docker/web/Dockerfile ."
   },
   "dependencies": {
     "@manypkg/cli": "^0.19.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/jest": "^29.2.4",
-    "@types/node": "^18.11.11",
+    "@types/node": "^18.11.12",
     "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^5.46.0",
     "dotenv": "^16.0.3",
+    "dotenv-cli": "^6.0.0",
     "eslint": "^8.29.0",
     "eslint-config-next": "13.0.5",
     "eslint-config-prettier": "^8.5.0",
@@ -42,5 +59,8 @@
     "ts-jest": "^29.0.3",
     "turbo": "^1.6.3",
     "typescript": "^4.9.4"
+  },
+  "optionalDependencies": {
+    "turbo-linux-arm64": "^1.6.3"
   }
 }

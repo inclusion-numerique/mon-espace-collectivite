@@ -10,7 +10,7 @@ import { getUrl } from '@mec/web/utils/baseUrl'
 import { trpc } from '@mec/web/trpc'
 import { FunctionComponentWithChildren } from '@mec/web/utils/componentHelpers'
 import { withProvider } from '@mec/web/utils/withProvider'
-import { type AppRouter } from '@mec/api'
+import { type AppRouter } from '@mec/web/trpc/trpcRouter'
 import superjson from 'superjson'
 
 // TODO make a global singleton like prisma ? So same value is used in different provider wraps

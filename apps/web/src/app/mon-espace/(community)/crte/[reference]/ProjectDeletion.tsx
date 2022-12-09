@@ -1,6 +1,6 @@
 'use client'
 
-import { Project } from '@mec/db'
+import { Project } from '@prisma/client'
 import { trpc } from '@mec/web/trpc'
 import { useRouter } from 'next/navigation'
 

@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import { dashboardRootPath } from '@mec/web/dashboard/dashboard'
-import { Community, Project } from '@mec/db'
+import { Community, Project } from '@prisma/client'
 import { PropsWithChildren } from 'react'
 import styles from './ProjectsTable.module.css'
 

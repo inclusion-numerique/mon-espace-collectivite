@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { getUserDisplayName } from '@mec/web/utils/user'
 import { dashboardRootPath } from '@mec/web/dashboard/dashboard'
-import { SessionUser } from '@mec/auth'
+import { SessionUser } from '@mec/web/auth/sessionUser'
 
 export const UserMenu = ({ user }: { user: SessionUser }) => {
   return (

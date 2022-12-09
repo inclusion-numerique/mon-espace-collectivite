@@ -3,7 +3,7 @@ import EmailProvider from 'next-auth/providers/email'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import { PrivateConfig } from '@mec/web/config'
 import { sendVerificationRequest } from '@mec/web/auth/sendVerificationRequest'
-import { nextAuthAdapter } from '@mec/auth'
+import { nextAuthAdapter } from '@mec/web/auth/nextAuthAdapter'
 
 export const authOptions: NextAuthOptions = {
   adapter: nextAuthAdapter,

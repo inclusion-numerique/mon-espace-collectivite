@@ -4,10 +4,8 @@ import {
   generateProjectsCsvData,
   projectsCsvFilename,
 } from '@mec/web/project/projectsDownload'
-import {
-  getSessionTokenFromCookies,
-  getSessionUserFromSessionToken,
-} from '@mec/auth'
+import { getSessionUserFromSessionToken } from '@mec/web/auth/getSessionUserFromSessionToken'
+import { getSessionTokenFromCookies } from '@mec/web/auth/getSessionTokenFromCookies'
 
 const download: NextApiHandler = async (req, res) => {
   if (req.method !== 'GET') {

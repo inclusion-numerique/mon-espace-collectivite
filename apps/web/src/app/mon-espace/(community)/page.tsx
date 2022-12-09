@@ -1,4 +1,4 @@
-import { prisma } from '@mec/db'
+import { prisma } from '@mec/web/prisma'
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { getAuthenticatedSessionUser } from '@mec/web/auth/getSessionUser'
 import { NoProjects } from '@mec/web/app/mon-espace/(community)/NoProjects'
