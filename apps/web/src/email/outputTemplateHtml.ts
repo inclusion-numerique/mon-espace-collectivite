@@ -2,7 +2,7 @@ import { existsSync, promises as fs } from 'fs'
 import { resolve } from 'path'
 import { compileMjml } from './mjml'
 
-const varDir = resolve(__dirname, '../var/email')
+const varDir = resolve(__dirname, '../../var/email')
 
 async function createEmailVarDirIfItDoesNotExist(): Promise<void> {
   if (existsSync(varDir)) {

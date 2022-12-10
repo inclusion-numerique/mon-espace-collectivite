@@ -24,14 +24,11 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v3
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
       - name: Install Dependencies
-        run: yarn install --ignore-engines --frozen-lockfile
+        run: npm ci
 
       - name: Lint
-        run: pnpm lint
+        run: npm run lint
 
   tsc:
     name: 🕵️️ Typecheck
@@ -41,17 +38,14 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v3
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
       - name: Install Dependencies
-        run: yarn install --ignore-engines --frozen-lockfile
+        run: npm ci
 
       - name: Generate prisma client
-        run: pnpm -F @mec/db prisma:generate
+        run: npm -w @mec/db run prisma:generate
 
       - name: Typecheck
-        run: pnpm tsc
+        run: npm run tsc
 
   test:
     name: 🤖 Test
@@ -61,14 +55,14 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v3
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
       - name: Install Dependencies
-        run: yarn install --ignore-engines --frozen-lockfile
+        run: npm ci
+
+      - name: Generate prisma client
+        run: npm -w @mec/db run prisma:generate
 
       - name: Run @mec/web tests
-        run: pnpm -F @mec/web test
+        run: npm -w @mec/web run test
 
   build:
     name: 🏗️ Build web app
@@ -78,17 +72,14 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v3
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
       - name: Install Dependencies
-        run: yarn install --ignore-engines --frozen-lockfile
+        run: npm ci
 
       - name: Generate prisma client
-        run: pnpm -F @mec/db prisma:generate
+        run: npm -w @mec/db run prisma:generate
 
       - name: Build
-        run: pnpm -F @mec/web build
+        run: npm -w @mec/web run build
 
       - name: Upload build
         uses: actions/upload-artifact@v3
@@ -134,11 +125,8 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v3
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
       - name: Install Dependencies
-        run: yarn install --ignore-engines --frozen-lockfile
+        run: npm ci
 
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3

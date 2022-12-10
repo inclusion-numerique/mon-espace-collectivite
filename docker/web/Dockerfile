@@ -7,43 +7,32 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y openssl
 
-# Install pnpm
-#RUN wget "https://github.com/pnpm/pnpm/releases/latest/download/pnpm-linuxstatic-x64" -O /bin/pnpm; chmod +x /bin/pnpm;
-
-COPY yarn.lock package.json tsconfig.json ./
+COPY package-lock.json package.json tsconfig.json ./
 COPY apps/web/package.json ./apps/web/package.json
-
-RUN yarn install --ignore-engines --frozen-lockfile
-
+# TODO https://darekkay.com/blog/storybook-separate-folder/
+# Only install apps/web dependencies
+RUN npm -w @mec/web ci \
+    && npm -w @mec/web run modclean:root \
+    && npm -w @mec/web run modclean
 
 # Rebuild the source code only when needed
 FROM node:19-slim AS builder
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y openssl jq
+RUN apt-get update && apt-get install -y openssl
 
-# Install pnpm
-#RUN wget "https://github.com/pnpm/pnpm/releases/latest/download/pnpm-linuxstatic-x64" -O /bin/pnpm; chmod +x /bin/pnpm;
-
-#COPY --from=deps /root/.local/share/pnpm/store/v3 /root/.local/share/pnpm/store/v3
 COPY --from=deps /app/node_modules/ ./node_modules/
 COPY --from=deps /app/apps/web/node_modules/ ./apps/web/node_modules/
 
 # Here dependencies and unneeded files are skiped thanks to .dockerignore file
-COPY package.json tsconfig.json ./
+COPY package-lock.json package.json tsconfig.json ./
 COPY apps/web ./apps/web
 
-RUN yarn workspace @mec/web setup:dsfr
-RUN yarn workspace @mec/web prisma:generate
-RUN yarn workspace @mec/web modclean
-RUN yarn workspace @mec/web build
-
-# Remove dev dependencies for lighter prod image
-# https://github.com/yarnpkg/yarn/issues/696#issuecomment-462014673
-# RUN yarn workspace @mec/web remove $(cat apps/web/package.json | jq -r '.devDependencies | keys | join(" ")') --ignore-engines
-RUN cd apps/web && npm prune --omit-dev
-
+RUN npm -w @mec/web run setup:dsfr \
+    && npm -w @mec/web run prisma:generate \
+    && npm -w @mec/web run build \
+    && npm -w @mec/web prune --omit=dev
 
 # Production image, copy all the files and run next
 FROM node:19-slim AS runner
@@ -54,11 +43,11 @@ RUN apt-get update && apt-get install -y openssl
 
 ENV NODE_ENV production
 
-RUN addgroup --system --gid 1001 webgroup
-RUN adduser --system --uid 1001 webuser
+RUN addgroup --system --gid 1001 webgroup \
+    && adduser --system --uid 1001 webuser
 
-# FIXME prod build 404 on every app pages trying to copy all sources but should not ...
-COPY --from=builder --chown=webuser:webgroup /app/apps/web ./
+# FIXME prod build 404 on every app pages without copying all src but should not ...
+COPY --from=builder --chown=webuser:webgroup /app ./
 
 # Copy deps
 #COPY --from=builder --chown=webuser:webgroup /app/apps/web/node_modules ./node_modules
@@ -81,4 +70,4 @@ USER webuser
 
 EXPOSE $PORT
 
-CMD ["yarn", "start"]
+CMD ["npm", "run", "start:web"]

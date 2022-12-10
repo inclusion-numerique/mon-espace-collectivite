@@ -1,0 +1,66 @@
+{
+  "name": "@mec/storybook",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-or-later",
+  "private": true,
+  "scripts": {
+    "lint": "next lint",
+    "tsc": "tsc --noEmit",
+    "storybook": "start-storybook -p 6006 --no-open --debug-webpack",
+    "build:storybook": "build-storybook",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "engines": {
+    "node": ">=19",
+    "npm": ">=8"
+  },
+  "overrides": {
+    "@storybook/addon-essentials": {
+      "react": "*"
+    }
+  },
+  "dependencies": {
+    "@mec/web": "*",
+    "@storybook/addon-actions": "^7.0.0-beta.3",
+    "@storybook/addon-essentials": "^7.0.0-beta.3",
+    "@storybook/addon-interactions": "^7.0.0-beta.3",
+    "@storybook/addon-links": "^7.0.0-beta.3",
+    "@storybook/builder-webpack5": "^7.0.0-beta.3",
+    "@storybook/cli": "^7.0.0-beta.3",
+    "@storybook/manager-webpack5": "^6.5.14",
+    "@storybook/react": "^7.0.0-beta.3",
+    "@storybook/testing-library": "^0.0.14-next.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sass": "^1.56.2",
+    "storybook-addon-next": "^1.7.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@types/file-saver": "^2.0.5",
+    "@types/html-minifier": "^4.0.2",
+    "@types/lodash-es": "^4.17.6",
+    "@types/mjml": "^4.7.0",
+    "@types/node": "^18.11.12",
+    "@types/nodemailer": "^6.4.6",
+    "@types/nprogress": "^0.2.0",
+    "@types/react": "18.0.26",
+    "@types/react-dom": "18.0.9",
+    "@types/styled-components": "^5.1.26",
+    "@types/uuid": "^9.0.0",
+    "babel-loader": "^8.3.0",
+    "css-loader": "^6.7.2",
+    "modclean": "^3.0.0-beta.1",
+    "postcss": "^8.4.19",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-import": "^15.1.0",
+    "postcss-loader": "^7.0.2",
+    "postcss-nested": "^6.0.0",
+    "postcss-preset-env": "^7.8.3",
+    "react-is": "^18.2.0",
+    "require-from-string": "^2.0.2",
+    "style-loader": "^3.3.1",
+    "typescript": "^4.9.4",
+    "webpack": "^5.75.0"
+  }
+}
