@@ -4,8 +4,14 @@ import Link from 'next/link'
 import { getUserDisplayName } from '@mec/web/utils/user'
 import { dashboardRootPath } from '@mec/web/dashboard/dashboard'
 import { SessionUser } from '@mec/web/auth/sessionUser'
+import { deserialize, Serialized } from '@mec/web/utils/serialization'
 
-export const UserMenu = ({ user }: { user: SessionUser }) => {
+export const UserMenu = ({
+  serializedUser,
+}: {
+  serializedUser: Serialized<SessionUser>
+}) => {
+  const user = deserialize(serializedUser)
   return (
     <Link
       href={dashboardRootPath}

@@ -3,7 +3,7 @@ import { getAuthenticatedSessionToken } from '@mec/web/auth/getSessionUser'
 import { Options } from '@mec/web/utils/options'
 import { prisma } from '@mec/web/prisma'
 import { notFound } from 'next/navigation'
-import ProjectForm from '@mec/web/app/mon-espace/(community)/crte/ProjectForm'
+import ProjectForm from '@mec/web/app/mon-espace/(municipality)/crte/ProjectForm'
 
 const EditCrtePage = async ({
   params: { reference },

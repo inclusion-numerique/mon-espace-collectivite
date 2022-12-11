@@ -17,7 +17,7 @@ import { Project, Community } from '@prisma/client'
 import { DefaultValues } from 'react-hook-form/dist/types/form'
 import { FieldPath } from 'react-hook-form/dist/types/path'
 import { removeNullValues } from '@mec/web/utils/removeNullValues'
-import { ProjectDeletion } from '@mec/web/app/mon-espace/(community)/crte/[reference]/ProjectDeletion'
+import { ProjectDeletion } from '@mec/web/app/mon-espace/(municipality)/crte/[reference]/ProjectDeletion'
 
 // Todo extract this ? Or make prop type of project data ?
 // FIXME Serialization is broken, use superjson ?

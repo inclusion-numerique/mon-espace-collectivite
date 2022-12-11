@@ -2,7 +2,7 @@ import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { getAuthenticatedSessionToken } from '@mec/web/auth/getSessionUser'
 import { Options } from '@mec/web/utils/options'
 import { prisma } from '@mec/web/prisma'
-import ProjectForm from '@mec/web/app/mon-espace/(community)/crte/ProjectForm'
+import ProjectForm from '@mec/web/app/mon-espace/(municipality)/crte/ProjectForm'
 
 const NewCrtePage = async () => {
   const sessionToken = getAuthenticatedSessionToken()

@@ -13,7 +13,10 @@ export const NoProjects = () => {
           style={{ textAlign: 'center', width: 96 }}
         />
       </picture>
-      <div className="fr-grid-row fr-grid-row--center">
+      <div
+        className="fr-grid-row fr-grid-row--center"
+        style={{ textAlign: 'center' }}
+      >
         <h2>Vous n&apos;avez pas encore de projets CRTE</h2>
         <p>
           Vous retrouverez dans cet espace l&apos;ensemble des projets CRTE de

@@ -22,3 +22,10 @@ export const getUserFullDisplayRole = (
   // TODO
   return ''
 }
+
+export const userHasSomeRole = (
+  user: Pick<SessionUser, 'roles'>,
+  oneOf: SessionUser['roles'][number][],
+) => {
+  return !!oneOf.find((role) => user.roles.includes(role))
+}

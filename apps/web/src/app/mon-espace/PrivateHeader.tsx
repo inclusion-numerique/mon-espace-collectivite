@@ -2,8 +2,10 @@ import Link from 'next/link'
 import { UserMenu } from '@mec/web/app/mon-espace/UserMenu'
 import { SessionUser } from '@mec/web/auth/sessionUser'
 import PublicHeader from '@mec/web/app/(public)/PublicHeader'
+import { serialize } from '@mec/web/utils/serialization'
 
 const PrivateHeader = ({ user }: { user: SessionUser }) => {
+  const serializedUser = serialize(user)
   return (
     <PublicHeader
       headerTools={
@@ -11,7 +13,7 @@ const PrivateHeader = ({ user }: { user: SessionUser }) => {
           <div className="fr-header__tools-links">
             <ul className="fr-links-group">
               <li>
-                <UserMenu user={user} />
+                <UserMenu serializedUser={serializedUser} />
               </li>
               <li>
                 <Link
@@ -30,7 +32,7 @@ const PrivateHeader = ({ user }: { user: SessionUser }) => {
         <div className="fr-header__menu-links">
           <ul className="fr-btns-group">
             <li>
-              <UserMenu user={user} />
+              <UserMenu serializedUser={serializedUser} />
             </li>
             <li>
               <Link

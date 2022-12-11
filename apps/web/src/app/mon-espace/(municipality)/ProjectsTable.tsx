@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { Community, Project } from '@prisma/client'
 import { PropsWithChildren } from 'react'
 import styles from './ProjectsTable.module.css'
+import { deserialize, Serialized } from '@mec/web/utils/serialization'
+import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
 
 // TODO class
 const Info = ({ children }: PropsWithChildren) => (
@@ -22,43 +24,44 @@ const FieldCell = ({ children, href }: PropsWithChildren<{ href: string }>) => {
 }
 
 export const ProjectsTable = ({
-  projects,
+  serializedProjects,
 }: {
-  projects: (Project & { community: Community })[]
+  serializedProjects: Serialized<(Project & { community: Community })[]>
 }) => {
+  const projects = deserialize(serializedProjects)
   return (
     <div className="fr-table fr-table--bordered" style={{ width: '100%' }}>
       <table>
         <thead>
           <tr>
-            <th>Nom du projet</th>
-            <th>Porteur du projet</th>
-            <th>Localisation</th>
-            <th>Montant TTC</th>
-            <th>Thématique principale</th>
-            {/*<th>Thématiques secondaires</th>*/}
-            <th>Email contact</th>
-            <th>Date de début</th>
-            <th>Date de fin</th>
-            <th>État d’avancement</th>
-            <th>
-              Surface artificialisée <Info>(m2)</Info>
-            </th>
-            <th>
-              Émissions GES <Info>(tonnes eq CO2)</Info>
-            </th>
-            <th>
-              Consommation d&apos;eau <Info>(m3)</Info>
-            </th>
-            <th>
-              Part de tri sélectif <Info>(%)</Info>
-            </th>
-            <th>
-              Pistes cyclables <Info>(km)</Info>
-            </th>
-            <th>
-              Consommation énergétique <Info>(kWh)</Info>
-            </th>
+            <OneLineTh title="Nom du projet" />
+            <OneLineTh title="Porteur du projet" />
+            <OneLineTh title="Localisation" />
+            <OneLineTh title="Montant TTC" />
+            <OneLineTh title="Thématique principale" />
+            {/*<OneLineTh title="Thématiques secondaires" />*/}
+            <OneLineTh title="Email contact" />
+            <OneLineTh title="Date de début" />
+            <OneLineTh title="Date de fin" />
+            <OneLineTh title="État d’avancement" />
+            <OneLineTh title="Surface artificialisée">
+              <Info>(m2)</Info>
+            </OneLineTh>
+            <OneLineTh title="Émissions GES">
+              <Info>(tonnes eq CO2)</Info>
+            </OneLineTh>
+            <OneLineTh title="Consommation d'eau">
+              <Info>(m3)</Info>
+            </OneLineTh>
+            <OneLineTh title="Part de tri sélectif">
+              <Info>(%)</Info>
+            </OneLineTh>
+            <OneLineTh title="Pistes cyclables">
+              <Info>(km)</Info>
+            </OneLineTh>
+            <OneLineTh title="Consommation énergétique">
+              <Info>(kWh)</Info>
+            </OneLineTh>
             <th></th>
           </tr>
         </thead>
