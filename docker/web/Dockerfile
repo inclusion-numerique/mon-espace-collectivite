@@ -1,5 +1,3 @@
-ARG PORT=3000
-
 # Install dependencies only when needed
 FROM node:19-slim AS deps
 
@@ -41,6 +39,7 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y openssl
 
+ENV PORT 8080
 ENV NODE_ENV production
 
 RUN addgroup --system --gid 1001 webgroup \
