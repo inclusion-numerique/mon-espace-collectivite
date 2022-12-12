@@ -34,6 +34,7 @@ export const ProjectsTable = ({
       <table>
         <thead>
           <tr>
+            <OneLineTh title="Référence" />
             <OneLineTh title="Nom du projet" />
             <OneLineTh title="Porteur du projet" />
             <OneLineTh title="Localisation" />
@@ -90,12 +91,15 @@ export const ProjectsTable = ({
 
               return (
                 <tr key={id}>
-                  <FieldCell href={fieldHref('name')}>{name}</FieldCell>
+                  <td>{reference}</td>
+                  <FieldCell href={fieldHref('name').replaceAll(' ', ' ')}>
+                    {name}
+                  </FieldCell>
                   <FieldCell href={fieldHref('communityId')}>
                     {community.name.replaceAll(' ', ' ')}
                   </FieldCell>
                   <FieldCell href={fieldHref('communityId')}>
-                    {community.id}
+                    {community.name.replaceAll(' ', ' ')}
                   </FieldCell>
                   <FieldCell
                     href={fieldHref('totalAmount')}

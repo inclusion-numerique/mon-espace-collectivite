@@ -15,6 +15,7 @@ export const PrefectureDashboard = asyncComponent(
       include: {
         attachments: true,
         community: true,
+        notes: { where: { createdById: user.id } },
       },
       orderBy: { created: 'desc' },
     })

@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import { Community, Project } from '@prisma/client'
+import { Community, Project, ProjectNote } from '@prisma/client'
 import { PropsWithChildren } from 'react'
 import { deserialize, Serialized } from '@mec/web/utils/serialization'
 import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
@@ -17,7 +16,9 @@ const FieldCell = ({ children }: PropsWithChildren) => {
 export const ProjectsTable = ({
   serializedProjects,
 }: {
-  serializedProjects: Serialized<(Project & { community: Community })[]>
+  serializedProjects: Serialized<
+    (Project & { community: Community; notes: ProjectNote[] })[]
+  >
 }) => {
   const projects = deserialize(serializedProjects)
   return (
@@ -25,6 +26,7 @@ export const ProjectsTable = ({
       <table>
         <thead>
           <tr>
+            <OneLineTh title="Référence" />
             <OneLineTh title="Nom du projet" />
             <OneLineTh title="Porteur du projet" />
             <OneLineTh title="Localisation" />
@@ -75,12 +77,14 @@ export const ProjectsTable = ({
               selectiveSortingPercentage,
               bikePathLength,
               energyConsumption,
+              notes,
             }) => {
               return (
                 <tr key={id}>
-                  <FieldCell>{name}</FieldCell>
+                  <FieldCell>{reference}</FieldCell>
+                  <FieldCell>{name.replaceAll(' ', ' ')}</FieldCell>
                   <FieldCell>{community.name.replaceAll(' ', ' ')}</FieldCell>
-                  <FieldCell>{community.id}</FieldCell>
+                  <FieldCell>{community.name.replaceAll(' ', ' ')}</FieldCell>
                   <FieldCell>{`${totalAmount}`}</FieldCell>
                   <FieldCell>{topic.replaceAll(' ', ' ')}</FieldCell>
                   <FieldCell>{contactEmail}</FieldCell>
@@ -94,7 +98,11 @@ export const ProjectsTable = ({
                   <FieldCell>{bikePathLength}</FieldCell>
                   <FieldCell>{energyConsumption}</FieldCell>
                   <td>
-                    <ProjectNoteButton projectId={id} privateNoteId={null} />
+                    <ProjectNoteButton
+                      projectId={id}
+                      projectName={name}
+                      projectNote={notes[0] ?? null}
+                    />
                   </td>
                 </tr>
               )

@@ -77,9 +77,10 @@ model User {
   status                UserStatus
   communityAccessLevels CommunityAccessLevel[]
 
-  created         DateTime  @default(now())
-  updated         DateTime  @default(now())
-  createdProjects Project[]
+  created             DateTime      @default(now())
+  updated             DateTime      @default(now())
+  createdProjects     Project[]
+  createdProjectNotes ProjectNote[]
 }
 
 enum AccessLevel {
@@ -153,6 +154,21 @@ model Project {
   selectiveSortingPercentage Int?
   bikePathLength             Int?
   energyConsumption          Int?
+
+  notes ProjectNote[]
+}
+
+// A working document attached to a project, privately owned by the structure that created it
+// For now we attach it to User
+model ProjectNote {
+  id          String   @id @db.Uuid
+  projectId   String   @db.Uuid
+  project     Project  @relation(fields: [projectId], references: [id])
+  createdById String   @db.Uuid
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  content     String
+  created     DateTime @default(now())
+  updated     DateTime @default(now())
 }
 
 model Community {
