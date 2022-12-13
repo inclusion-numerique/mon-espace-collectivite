@@ -1,40 +1,17 @@
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { getAuthenticatedSessionToken } from '@mec/web/auth/getSessionUser'
-import { Options } from '@mec/web/utils/options'
-import { prisma } from '@mec/web/prisma'
 import ProjectForm from '@mec/web/app/mon-espace/(municipality)/crte/ProjectForm'
+import { serialize } from '@mec/web/utils/serialization'
+import { getUserWithCommunitiesForProjectForm } from '@mec/web/app/mon-espace/(municipality)/communitiesForProjectForm'
+import { getCategoriesOptionsForProjectForm } from '@mec/web/app/mon-espace/(municipality)/categoriesForProjectForm'
 
 const NewCrtePage = async () => {
   const sessionToken = getAuthenticatedSessionToken()
-  const user = await prisma.user.findFirst({
-    where: {
-      sessions: { some: { sessionToken, expires: { gt: new Date() } } },
-    },
-    include: {
-      communityAccessLevels: {
-        where: {
-          level: {
-            in: ['Owner', 'Write'],
-          },
-        },
-        include: {
-          community: true,
-        },
-      },
-    },
-  })
-
-  if (!user) {
-    throw new Error('User has no read access to any community')
-  }
-
-  // TODO What are the specs for communities for projects ?
-  const communityOptions: Options = user.communityAccessLevels.map(
-    (accessLevel) => ({
-      name: accessLevel.community.name,
-      value: accessLevel.communityId,
-    }),
+  const { user, communityOptions } = await getUserWithCommunitiesForProjectForm(
+    sessionToken,
   )
+
+  const categoriesOptions = await getCategoriesOptionsForProjectForm()
 
   return (
     <div
@@ -52,7 +29,11 @@ const NewCrtePage = async () => {
         />
         <div className="fr-grid-row fr-grid-row--center">
           <div className="fr-col-12 fr-col-md-10 fr-col-lg-8 fr-mb-24v">
-            <ProjectForm communityOptions={communityOptions} />
+            <ProjectForm
+              serializedUser={serialize(user)}
+              communityOptions={communityOptions}
+              categoriesOptions={categoriesOptions}
+            />
           </div>
         </div>
       </div>

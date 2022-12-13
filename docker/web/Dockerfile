@@ -1,9 +1,11 @@
 # Install dependencies only when needed
-FROM node:19-slim AS deps
+FROM node:19-alpine AS deps
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y openssl
+#RUN apt-get update && apt-get install -y openssl
+RUN apk add --no-cache libc6-compat openssl
+
 
 COPY package-lock.json package.json tsconfig.json ./
 COPY apps/web/package.json ./apps/web/package.json
@@ -14,11 +16,11 @@ RUN npm -w @mec/web ci \
     && npm -w @mec/web run modclean
 
 # Rebuild the source code only when needed
-FROM node:19-slim AS builder
+FROM node:19-alpine AS builder
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y openssl
+RUN apk add --no-cache libc6-compat openssl
 
 COPY --from=deps /app/node_modules/ ./node_modules/
 COPY --from=deps /app/apps/web/node_modules/ ./apps/web/node_modules/
@@ -33,11 +35,11 @@ RUN npm -w @mec/web run setup:dsfr \
     && npm -w @mec/web prune --omit=dev
 
 # Production image, copy all the files and run next
-FROM node:19-slim AS runner
+FROM node:19-alpine AS runner
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y openssl
+RUN apk add --no-cache libc6-compat openssl
 
 ENV PORT 8080
 ENV NODE_ENV production

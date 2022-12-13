@@ -183,9 +183,9 @@ model Project {
   name                String
   // Tax included
   totalAmount         Decimal
-  categoryId          Int
-  category            ProjectCategory   @relation(fields: [projectCategoryId], references: [id])
-  secondaryCategories ProjectCategory[] @relation(name: "SecondaryCategories")
+  categoryId          String
+  category            ProjectCategory   @relation(fields: [categoryId], references: [id])
+  secondaryCategories ProjectCategory[] @relation(name: "ProjectsSecondaryCategories")
 
   contactEmail String
   start        DateTime?    @db.Date
@@ -213,8 +213,7 @@ model Project {
   bikePathLength             Int?
   energyConsumption          Int?
 
-  notes             ProjectNote[]
-  projectCategoryId Int
+  notes ProjectNote[]
 }
 
 // A working document attached to a project, privately owned by the structure that created it
@@ -290,20 +289,20 @@ model County {
 }
 
 model ProjectTheme {
-  id         Int               @id
+  id         String            @id
   slug       String            @unique
   name       String
   categories ProjectCategory[]
 }
 
 model ProjectCategory {
-  id                Int          @id
+  id                String       @id
   slug              String       @unique
   name              String
-  themeId           Int
+  themeId           String
   theme             ProjectTheme @relation(fields: [themeId], references: [id])
   projects          Project[]
-  secondaryProjects Project[]    @relation(name: "SecondaryCategories")
+  secondaryProjects Project[]    @relation(name: "ProjectsSecondaryCategories")
 }
 
 // Region

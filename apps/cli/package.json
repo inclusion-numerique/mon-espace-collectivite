@@ -8,6 +8,7 @@
     "tsc": "tsc --noEmit",
     "build": "tsc",
     "with-env": "dotenv -e ../../.env --",
+    "fixtures:load": "npm run with-env ts-node src/loadFixtures.ts",
     "admin-data:download:epci": "npm run with-env ts-node src/downloadEpcisData.ts",
     "admin-data:download:municipalities": "npm run with-env ts-node src/downloadMunicipalitiesData.ts",
     "admin-data:download:categories": "npm run with-env ts-node src/downloadCategoryData.ts",

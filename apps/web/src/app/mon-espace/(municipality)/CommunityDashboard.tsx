@@ -1,5 +1,5 @@
 import { SessionUser } from '@mec/web/auth/sessionUser'
-import { prisma } from '@mec/web/prisma'
+import { prismaClient } from '@mec/web/prismaClient'
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { NoProjects } from '@mec/web/app/mon-espace/(municipality)/NoProjects'
 import Link from 'next/link'
@@ -9,13 +9,16 @@ import { serialize } from '@mec/web/utils/serialization'
 
 export const CommunityDashboard = asyncComponent(
   async ({ user }: { user: SessionUser }) => {
-    const projects = await prisma.project.findMany({
+    const projects = await prismaClient.project.findMany({
       where: {
         createdById: user.id,
       },
       include: {
+        category: { include: { theme: true } },
+        secondaryCategories: { include: { theme: true } },
         attachments: true,
-        community: true,
+        municipality: true,
+        intercommunality: true,
       },
       orderBy: { created: 'desc' },
     })

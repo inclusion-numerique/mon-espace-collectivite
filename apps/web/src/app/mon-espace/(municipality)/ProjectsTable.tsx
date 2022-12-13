@@ -1,5 +1,11 @@
 import Link from 'next/link'
-import { Community, Project } from '@prisma/client'
+import {
+  Intercommunality,
+  Municipality,
+  Project,
+  ProjectCategory,
+  ProjectTheme,
+} from '@prisma/client'
 import { PropsWithChildren } from 'react'
 import styles from './ProjectsTable.module.css'
 import { deserialize, Serialized } from '@mec/web/utils/serialization'
@@ -26,7 +32,14 @@ const FieldCell = ({ children, href }: PropsWithChildren<{ href: string }>) => {
 export const ProjectsTable = ({
   serializedProjects,
 }: {
-  serializedProjects: Serialized<(Project & { community: Community })[]>
+  serializedProjects: Serialized<
+    (Project & {
+      municipality: Municipality | null
+      intercommunality: Intercommunality | null
+      category: ProjectCategory & { theme: ProjectTheme }
+      secondaryCategories: ProjectCategory[]
+    })[]
+  >
 }) => {
   const projects = deserialize(serializedProjects)
   return (
@@ -37,7 +50,6 @@ export const ProjectsTable = ({
             <OneLineTh title="Référence" />
             <OneLineTh title="Nom du projet" />
             <OneLineTh title="Porteur du projet" />
-            <OneLineTh title="Localisation" />
             <OneLineTh title="Montant TTC" />
             <OneLineTh title="Thématique principale" />
             {/*<OneLineTh title="Thématiques secondaires" />*/}
@@ -72,9 +84,10 @@ export const ProjectsTable = ({
               id,
               reference,
               name,
-              community,
+              municipality,
+              intercommunality,
               totalAmount,
-              topic,
+              category,
               contactEmail,
               start,
               end,
@@ -95,17 +108,18 @@ export const ProjectsTable = ({
                   <FieldCell href={fieldHref('name').replaceAll(' ', ' ')}>
                     {name}
                   </FieldCell>
-                  <FieldCell href={fieldHref('communityId')}>
-                    {community.name.replaceAll(' ', ' ')}
-                  </FieldCell>
-                  <FieldCell href={fieldHref('communityId')}>
-                    {community.name.replaceAll(' ', ' ')}
+                  <FieldCell href={fieldHref('municipalityId')}>
+                    {(municipality ?? intercommunality)?.name.replaceAll(
+                      ' ',
+                      ' ',
+                    )}
                   </FieldCell>
                   <FieldCell
                     href={fieldHref('totalAmount')}
                   >{`${totalAmount}`}</FieldCell>
-                  <FieldCell href={fieldHref('topic')}>
-                    {topic.replaceAll(' ', ' ')}
+                  <FieldCell href={fieldHref('categoryId')}>
+                    {category.theme.name.replaceAll(' ', ' ')}&nbsp;/&nbsp;
+                    {category.name.replaceAll(' ', ' ')}
                   </FieldCell>
                   <FieldCell href={fieldHref('contactEmail')}>
                     {contactEmail}

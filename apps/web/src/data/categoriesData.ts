@@ -3,7 +3,7 @@ import { consoleOutput, Output } from '@mec/web/data/csvDataHelpers'
 import { existsSync } from 'fs'
 import { mkdir, readFile, writeFile } from 'fs/promises'
 import axios from 'axios'
-import { prisma } from '@mec/web/prisma'
+import { prismaClient } from '@mec/web/prismaClient'
 
 const dataSourceUrl = 'https://aides-territoires.beta.gouv.fr/api/themes/'
 
@@ -61,12 +61,12 @@ export const mergeCategories = async (output: Output = consoleOutput) => {
   const data: CategoriesApiData = JSON.parse(dataString)
 
   output(`Updating ${data.results.length} themes`)
-  await prisma.$transaction(
+  await prismaClient.$transaction(
     data.results.map(({ id, slug, name }) =>
-      prisma.projectTheme.upsert({
-        where: { id },
+      prismaClient.projectTheme.upsert({
+        where: { id: id.toString() },
         update: { name, slug },
-        create: { name, slug, id },
+        create: { name, slug, id: id.toString() },
       }),
     ),
   )
@@ -79,12 +79,12 @@ export const mergeCategories = async (output: Output = consoleOutput) => {
   output(`Updated ${data.results.length} themes`)
 
   output(`Updating ${categories.length} categories`)
-  await prisma.$transaction(
+  await prismaClient.$transaction(
     categories.map(({ id, slug, name, themeId }) =>
-      prisma.projectCategory.upsert({
-        where: { id },
-        update: { name, slug, themeId },
-        create: { name, slug, id, themeId },
+      prismaClient.projectCategory.upsert({
+        where: { id: id.toString() },
+        update: { name, slug, themeId: themeId.toString() },
+        create: { name, slug, id: id.toString(), themeId: themeId.toString() },
       }),
     ),
   )

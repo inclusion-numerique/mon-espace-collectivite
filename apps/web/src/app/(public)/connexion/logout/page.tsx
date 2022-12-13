@@ -10,13 +10,7 @@ const SignoutPage = () => {
   const [isLoading, setIsLoading] = useState(false)
   const onConfirm = () => {
     setIsLoading(true)
-    signOut()
-      .catch(() => {
-        // TODO Sentry
-      })
-      .finally(() => {
-        router.replace('/')
-      })
+    signOut({ redirect: true, callbackUrl: '/' })
   }
 
   return (

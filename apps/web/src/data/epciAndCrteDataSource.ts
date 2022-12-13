@@ -1,7 +1,7 @@
 import { existsSync } from 'fs'
 import { mkdir } from 'fs/promises'
 import { resolve } from 'path'
-import { prisma } from '@mec/web/prisma'
+import { prismaClient } from '@mec/web/prismaClient'
 import {
   consoleOutput,
   downloadFile,
@@ -59,9 +59,9 @@ const mergeRows = async (output: Output, rows: string[][]) => {
   // Create and merge Regions
   const regions = new Map(rows.map(([code, name]) => [code, { code, name }]))
 
-  await prisma.$transaction(
+  await prismaClient.$transaction(
     [...regions.values()].map((data) =>
-      prisma.region.upsert({
+      prismaClient.region.upsert({
         create: data,
         where: { code: data.code },
         update: { name: data.name },
@@ -77,9 +77,9 @@ const mergeRows = async (output: Output, rows: string[][]) => {
     ]),
   )
 
-  await prisma.$transaction(
+  await prismaClient.$transaction(
     [...counties.values()].map((data) =>
-      prisma.county.upsert({
+      prismaClient.county.upsert({
         create: data,
         where: { code: data.code },
         update: { name: data.name, regionCode: data.regionCode },
@@ -92,9 +92,9 @@ const mergeRows = async (output: Output, rows: string[][]) => {
     rows.map(([_0, _1, _2, _3, code, name]) => [code, { code, name }]),
   )
   output(`Updating ${crtes.size} CRTEs`)
-  await prisma.$transaction(
+  await prismaClient.$transaction(
     [...crtes.values()].map((data) =>
-      prisma.crte.upsert({
+      prismaClient.crte.upsert({
         create: data,
         where: { code: data.code },
         update: { name: data.name },
@@ -104,9 +104,9 @@ const mergeRows = async (output: Output, rows: string[][]) => {
   output(`Updated ${crtes.size} CRTEs`)
 
   output(`Updating ${rows.length} intercommunailities`)
-  await prisma.$transaction(
+  await prismaClient.$transaction(
     rows.map(([_0, _1, _2, _3, crteCode, _5, _6, _7, _8, code, name]) =>
-      prisma.intercommunality.upsert({
+      prismaClient.intercommunality.upsert({
         create: { code, name, crteCode },
         where: { code },
         update: { name, crteCode },

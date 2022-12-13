@@ -1,24 +1,14 @@
 import { SessionUser } from '@mec/web/auth/sessionUser'
-import { prisma } from '@mec/web/prisma'
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { asyncComponent } from '@mec/web/utils/asyncComponent'
 import { NoProjects } from '@mec/web/app/mon-espace/(prefecture)/NoProjects'
 import { ProjectsTable } from '@mec/web/app/mon-espace/(prefecture)/ProjectsTable'
 import { serialize } from '@mec/web/utils/serialization'
+import { getProjectsForDashboard } from '@mec/web/app/mon-espace/(prefecture)/projectsForDashboard'
 
 export const PrefectureDashboard = asyncComponent(
   async ({ user }: { user: SessionUser }) => {
-    const projects = await prisma.project.findMany({
-      where: {
-        createdById: user.id,
-      },
-      include: {
-        attachments: true,
-        community: true,
-        notes: { where: { createdById: user.id } },
-      },
-      orderBy: { created: 'desc' },
-    })
+    const projects = await getProjectsForDashboard(user.id)
 
     if (projects.length === 0) {
       return (

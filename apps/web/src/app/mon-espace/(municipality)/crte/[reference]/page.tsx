@@ -1,9 +1,13 @@
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { getAuthenticatedSessionToken } from '@mec/web/auth/getSessionUser'
 import { Options } from '@mec/web/utils/options'
-import { prisma } from '@mec/web/prisma'
+import { prismaClient } from '@mec/web/prismaClient'
 import { notFound } from 'next/navigation'
 import ProjectForm from '@mec/web/app/mon-espace/(municipality)/crte/ProjectForm'
+import { getUserWithCommunitiesForProjectForm } from '@mec/web/app/mon-espace/(municipality)/communitiesForProjectForm'
+import { getProjectForProjectForm } from '@mec/web/app/mon-espace/(municipality)/projectForProjectForm'
+import { getCategoriesOptionsForProjectForm } from '@mec/web/app/mon-espace/(municipality)/categoriesForProjectForm'
+import { serialize } from '@mec/web/utils/serialization'
 
 const EditCrtePage = async ({
   params: { reference },
@@ -11,53 +15,16 @@ const EditCrtePage = async ({
   params: { reference: string }
 }) => {
   const sessionToken = getAuthenticatedSessionToken()
+  const { user, communityOptions } = await getUserWithCommunitiesForProjectForm(
+    sessionToken,
+  )
 
-  // TODO this query is reused, extract in new file
-  const user = await prisma.user.findFirst({
-    where: {
-      sessions: { some: { sessionToken, expires: { gt: new Date() } } },
-    },
-    include: {
-      communityAccessLevels: {
-        where: {
-          level: {
-            in: ['Owner', 'Write'],
-          },
-        },
-        include: {
-          community: true,
-        },
-      },
-    },
-  })
-
-  if (!user) {
-    throw new Error('User has no read access to any community')
-  }
-
-  const project = await prisma.project.findFirst({
-    where: {
-      reference,
-      community: {
-        communityAccessLevels: {
-          some: { userId: user.id },
-        },
-      },
-    },
-    include: { community: true, attachments: true },
-  })
+  const categoriesOptions = await getCategoriesOptionsForProjectForm()
+  const project = await getProjectForProjectForm(reference)
 
   if (!project) {
     return notFound()
   }
-
-  // TODO What are the specs for communities for projects ?
-  const communityOptions: Options = user.communityAccessLevels.map(
-    (accessLevel) => ({
-      name: accessLevel.community.name,
-      value: accessLevel.communityId,
-    }),
-  )
 
   return (
     <div
@@ -76,8 +43,10 @@ const EditCrtePage = async ({
         <div className="fr-grid-row fr-grid-row--center">
           <div className="fr-col-12 fr-col-md-10 fr-col-lg-8 fr-mb-24v">
             <ProjectForm
+              serializedUser={serialize(user)}
+              categoriesOptions={categoriesOptions}
               communityOptions={communityOptions}
-              project={project}
+              serializedProject={serialize(project)}
             />
           </div>
         </div>

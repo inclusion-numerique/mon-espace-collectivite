@@ -1,4 +1,4 @@
-import { prisma } from '@mec/web/prisma'
+import { prismaClient } from '@mec/web/prismaClient'
 import { SessionUser } from './sessionUser'
 
 export const getSessionUserFromSessionToken = async (
@@ -8,7 +8,7 @@ export const getSessionUserFromSessionToken = async (
     return null
   }
 
-  const res = await prisma.session.findFirst({
+  const res = await prismaClient.session.findFirst({
     where: {
       sessionToken,
       expires: { gt: new Date() },

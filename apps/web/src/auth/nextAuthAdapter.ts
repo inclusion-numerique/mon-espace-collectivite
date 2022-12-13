@@ -1,8 +1,8 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { prisma } from '@mec/web/prisma'
+import { prismaClient } from '@mec/web/prismaClient'
 import { signupUser } from './signupUser'
 
 export const nextAuthAdapter = {
-  ...PrismaAdapter(prisma),
+  ...PrismaAdapter(prismaClient),
   createUser: signupUser,
 }

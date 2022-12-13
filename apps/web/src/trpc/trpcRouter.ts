@@ -1,5 +1,5 @@
 import { ProjectDataValidation } from '@mec/web/project/project'
-import { prisma } from '@mec/web/prisma'
+import { prismaClient } from '@mec/web/prismaClient'
 import { v4 } from 'uuid'
 import z from 'zod'
 import { searchCommunity } from '@mec/web/siren/siren'
@@ -9,7 +9,7 @@ import { ProjectNoteDataValidation } from '@mec/web/project/projectNote'
 
 const userRouter = router({
   acknowledgeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
-    await prisma.user.update({
+    await prismaClient.user.update({
       where: { id: ctx.user.id },
       data: { onboarded: new Date() },
     })
@@ -33,37 +33,52 @@ const communityRouter = router({
 const projectRouter = router({
   create: protectedProcedure
     .input(ProjectDataValidation)
-    .mutation(async ({ input: { communityId, ...data }, ctx: { user } }) => {
-      // TODO Check rights / role for user on community project creation
-      const id = v4()
-      const reference = generateReference()
-      const project = await prisma.project.create({
-        data: {
-          id,
-          reference,
-          communityId,
-          createdById: user.id,
-          ...data,
-        },
-        include: { attachments: true, community: true },
-      })
+    .mutation(
+      async ({
+        input: { municipalityCode, secondaryCategoryIds, ...data },
+        ctx: { user },
+      }) => {
+        // TODO Check rights / role for user on community project creation
+        const id = v4()
+        const reference = generateReference()
+        const project = await prismaClient.project.create({
+          data: {
+            id,
+            reference,
+            municipalityCode,
+            createdById: user.id,
+            secondaryCategories: {
+              connect: secondaryCategoryIds.map((id) => ({ id })),
+            },
+            ...data,
+          },
+          include: { attachments: true, municipality: true },
+        })
 
-      return { project }
-    }),
+        return { project }
+      },
+    ),
   update: protectedProcedure
     .input(ProjectDataValidation.extend({ id: z.string().uuid() }))
     .mutation(
-      async ({ input: { id, communityId, ...data }, ctx: { user } }) => {
+      async ({
+        input: { id, municipalityCode, secondaryCategoryIds, ...data },
+        ctx: { user },
+      }) => {
         // TODO Check rights / role for user on community project creation
         // TODO Check right on write on this project
-        const project = await prisma.project.update({
+        const project = await prismaClient.project.update({
           where: { id },
           data: {
             id,
             updated: new Date(),
+            municipalityCode,
+            secondaryCategories: {
+              connect: secondaryCategoryIds.map((id) => ({ id })),
+            },
             ...data,
           },
-          include: { attachments: true, community: true },
+          include: { attachments: true, municipality: true },
         })
 
         return { project }
@@ -74,7 +89,7 @@ const projectRouter = router({
     .mutation(async ({ input: { id }, ctx: { user } }) => {
       // TODO Check rights / role for user on community project creation
       // TODO Check right on write on this project
-      const project = await prisma.project.delete({
+      const project = await prismaClient.project.delete({
         where: { id },
       })
 
@@ -85,7 +100,7 @@ const projectRouter = router({
     .mutation(async ({ input: { ...data }, ctx: { user } }) => {
       // TODO Check rights / role for user on  project note creation
       const id = v4()
-      const projectNote = await prisma.projectNote.create({
+      const projectNote = await prismaClient.projectNote.create({
         data: {
           id,
           createdById: user.id,
@@ -100,7 +115,7 @@ const projectRouter = router({
     .mutation(async ({ input: { id, ...data }, ctx: { user } }) => {
       // TODO Check rights / role for user on community projectNote update
       // TODO Check right on write on this projectNote
-      const projectNote = await prisma.projectNote.update({
+      const projectNote = await prismaClient.projectNote.update({
         where: { id },
         data: {
           id,
@@ -116,7 +131,7 @@ const projectRouter = router({
     .mutation(async ({ input: { id }, ctx: { user } }) => {
       // TODO Check rights / role for user on community projectNote deletion
       // TODO Check right on write on this projectNote
-      const projectNote = await prisma.projectNote.delete({
+      const projectNote = await prismaClient.projectNote.delete({
         where: { id },
       })
 

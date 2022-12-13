@@ -1,8 +1,8 @@
-import { Community, Project, ProjectNote } from '@prisma/client'
 import { PropsWithChildren } from 'react'
 import { deserialize, Serialized } from '@mec/web/utils/serialization'
 import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
 import { ProjectNoteButton } from '@mec/web/app/mon-espace/(prefecture)/ProjectNoteButton'
+import { ProjectsForDashboard } from '@mec/web/app/mon-espace/(prefecture)/projectsForDashboard'
 
 // TODO class
 const Info = ({ children }: PropsWithChildren) => (
@@ -16,9 +16,7 @@ const FieldCell = ({ children }: PropsWithChildren) => {
 export const ProjectsTable = ({
   serializedProjects,
 }: {
-  serializedProjects: Serialized<
-    (Project & { community: Community; notes: ProjectNote[] })[]
-  >
+  serializedProjects: Serialized<ProjectsForDashboard>
 }) => {
   const projects = deserialize(serializedProjects)
   return (
@@ -64,9 +62,10 @@ export const ProjectsTable = ({
               id,
               reference,
               name,
-              community,
+              municipality,
+              intercommunality,
               totalAmount,
-              topic,
+              category,
               contactEmail,
               start,
               end,
@@ -83,10 +82,18 @@ export const ProjectsTable = ({
                 <tr key={id}>
                   <FieldCell>{reference}</FieldCell>
                   <FieldCell>{name.replaceAll(' ', ' ')}</FieldCell>
-                  <FieldCell>{community.name.replaceAll(' ', ' ')}</FieldCell>
-                  <FieldCell>{community.name.replaceAll(' ', ' ')}</FieldCell>
+                  <FieldCell>
+                    {' '}
+                    {(municipality ?? intercommunality)?.name.replaceAll(
+                      ' ',
+                      ' ',
+                    )}
+                  </FieldCell>
                   <FieldCell>{`${totalAmount}`}</FieldCell>
-                  <FieldCell>{topic.replaceAll(' ', ' ')}</FieldCell>
+                  <FieldCell>
+                    {category.theme.name.replaceAll(' ', ' ')}&nbsp;/&nbsp;
+                    {category.name.replaceAll(' ', ' ')}
+                  </FieldCell>
                   <FieldCell>{contactEmail}</FieldCell>
                   <FieldCell>{start?.toLocaleDateString()}</FieldCell>
                   <FieldCell>{end?.toLocaleDateString()}</FieldCell>

@@ -1,18 +1,16 @@
-import { prisma } from '@mec/web/prisma'
+import { prismaClient } from '@mec/web/prismaClient'
 import { AdapterUser } from 'next-auth/adapters'
 
 // TODO Unit test this
 export const signupUser = async (
   user: Omit<AdapterUser, 'id'>,
 ): Promise<AdapterUser> => {
-  const preAuth = await prisma.preAuthorization.findUnique({
+  const preRegistration = await prismaClient.preRegistration.findUnique({
     where: { email: user.email.toLowerCase() },
   })
 
-  console.log('SIGN UP USER', { preAuth })
-
-  if (!preAuth || !preAuth.allowSignup) {
-    return prisma.user.create({
+  if (!preRegistration || !preRegistration.allowSignup) {
+    return prismaClient.user.create({
       data: {
         ...user,
         roles: [],
@@ -21,28 +19,67 @@ export const signupUser = async (
     })
   }
 
-  return prisma.user.create({
+  const {
+    role,
+    firstName,
+    lastName,
+    name,
+    image,
+    location,
+    title,
+    description,
+    level,
+    municipalityCode,
+    intercommunalityCode,
+    districtCode,
+    countyCode,
+  } = preRegistration
+
+  return prismaClient.user.create({
     data: {
       ...user,
       status: 'Active',
-      roles: [preAuth.role],
-      firstName: preAuth.firstName,
-      lastName: preAuth.lastName,
-      name: preAuth.name,
-      image: preAuth.image,
-      location: preAuth.location,
-      title: preAuth.title,
-      description: preAuth.description,
-      communityAccessLevels:
-        preAuth.communityId && preAuth.level
+      roles: [role],
+      firstName,
+      lastName,
+      name,
+      image,
+      location,
+      title,
+      description,
+      municipalityAccessLevels:
+        municipalityCode && level
           ? {
-              createMany: {
-                data: [
-                  {
-                    communityId: preAuth.communityId,
-                    level: preAuth.level,
-                  },
-                ],
+              create: {
+                municipalityCode,
+                level,
+              },
+            }
+          : undefined,
+      intercommunalityAccessLevels:
+        intercommunalityCode && level
+          ? {
+              create: {
+                intercommunalityCode,
+                level,
+              },
+            }
+          : undefined,
+      districtAccessLevels:
+        districtCode && level
+          ? {
+              create: {
+                districtCode,
+                level,
+              },
+            }
+          : undefined,
+      countyAccessLevels:
+        countyCode && level
+          ? {
+              create: {
+                countyCode,
+                level,
               },
             }
           : undefined,

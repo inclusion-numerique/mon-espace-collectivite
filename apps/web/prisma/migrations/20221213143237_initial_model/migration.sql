@@ -138,7 +138,7 @@ CREATE TABLE "Project" (
     "reference" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "totalAmount" DECIMAL(65,30) NOT NULL,
-    "categoryId" INTEGER NOT NULL,
+    "categoryId" TEXT NOT NULL,
     "contactEmail" TEXT NOT NULL,
     "start" DATE,
     "end" DATE,
@@ -155,7 +155,6 @@ CREATE TABLE "Project" (
     "selectiveSortingPercentage" INTEGER,
     "bikePathLength" INTEGER,
     "energyConsumption" INTEGER,
-    "projectCategoryId" INTEGER NOT NULL,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
 );
@@ -220,7 +219,7 @@ CREATE TABLE "County" (
 
 -- CreateTable
 CREATE TABLE "ProjectTheme" (
-    "id" INTEGER NOT NULL,
+    "id" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "name" TEXT NOT NULL,
 
@@ -229,10 +228,10 @@ CREATE TABLE "ProjectTheme" (
 
 -- CreateTable
 CREATE TABLE "ProjectCategory" (
-    "id" INTEGER NOT NULL,
+    "id" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "themeId" INTEGER NOT NULL,
+    "themeId" TEXT NOT NULL,
 
     CONSTRAINT "ProjectCategory_pkey" PRIMARY KEY ("id")
 );
@@ -257,9 +256,9 @@ CREATE TABLE "Attachment" (
 );
 
 -- CreateTable
-CREATE TABLE "_SecondaryCategories" (
+CREATE TABLE "_ProjectsSecondaryCategories" (
     "A" UUID NOT NULL,
-    "B" INTEGER NOT NULL
+    "B" TEXT NOT NULL
 );
 
 -- CreateIndex
@@ -284,10 +283,10 @@ CREATE UNIQUE INDEX "ProjectTheme_slug_key" ON "ProjectTheme"("slug");
 CREATE UNIQUE INDEX "ProjectCategory_slug_key" ON "ProjectCategory"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_SecondaryCategories_AB_unique" ON "_SecondaryCategories"("A", "B");
+CREATE UNIQUE INDEX "_ProjectsSecondaryCategories_AB_unique" ON "_ProjectsSecondaryCategories"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_SecondaryCategories_B_index" ON "_SecondaryCategories"("B");
+CREATE INDEX "_ProjectsSecondaryCategories_B_index" ON "_ProjectsSecondaryCategories"("B");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -332,7 +331,7 @@ ALTER TABLE "PreRegistration" ADD CONSTRAINT "PreRegistration_districtCode_fkey"
 ALTER TABLE "PreRegistration" ADD CONSTRAINT "PreRegistration_intercommunalityCode_fkey" FOREIGN KEY ("intercommunalityCode") REFERENCES "Intercommunality"("code") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Project" ADD CONSTRAINT "Project_projectCategoryId_fkey" FOREIGN KEY ("projectCategoryId") REFERENCES "ProjectCategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Project" ADD CONSTRAINT "Project_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "ProjectCategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Project" ADD CONSTRAINT "Project_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -371,7 +370,7 @@ ALTER TABLE "ProjectCategory" ADD CONSTRAINT "ProjectCategory_themeId_fkey" FORE
 ALTER TABLE "Attachment" ADD CONSTRAINT "Attachment_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_SecondaryCategories" ADD CONSTRAINT "_SecondaryCategories_A_fkey" FOREIGN KEY ("A") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_ProjectsSecondaryCategories" ADD CONSTRAINT "_ProjectsSecondaryCategories_A_fkey" FOREIGN KEY ("A") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_SecondaryCategories" ADD CONSTRAINT "_SecondaryCategories_B_fkey" FOREIGN KEY ("B") REFERENCES "ProjectCategory"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_ProjectsSecondaryCategories" ADD CONSTRAINT "_ProjectsSecondaryCategories_B_fkey" FOREIGN KEY ("B") REFERENCES "ProjectCategory"("id") ON DELETE CASCADE ON UPDATE CASCADE;

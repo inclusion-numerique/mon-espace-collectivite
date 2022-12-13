@@ -3,49 +3,47 @@ import { useForm } from 'react-hook-form'
 import { trpc } from '@mec/web/trpc'
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { withTrpc } from '@mec/web/withTrpc'
-import {
-  ProjectData,
-  ProjectDataValidation,
-  topicTree,
-} from '@mec/web/project/project'
+import { ProjectData, ProjectDataValidation } from '@mec/web/project/project'
 import { InputFormField } from '@mec/web/form/InputFormField'
 import Link from 'next/link'
 import { SelectFormField } from '@mec/web/form/SelectFormField'
-import { Options } from '@mec/web/utils/options'
+import { Options, OptionsGroups } from '@mec/web/utils/options'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Project, Community } from '@prisma/client'
 import { DefaultValues } from 'react-hook-form/dist/types/form'
 import { FieldPath } from 'react-hook-form/dist/types/path'
 import { removeNullValues } from '@mec/web/utils/removeNullValues'
 import { ProjectDeletion } from '@mec/web/app/mon-espace/(municipality)/crte/[reference]/ProjectDeletion'
-
-// Todo extract this ? Or make prop type of project data ?
-// FIXME Serialization is broken, use superjson ?
-type ProjectWithCommunity = Project & {
-  start: string | undefined
-  end: string | undefined
-  community: Community
-}
+import { SessionUser } from '@mec/web/auth/sessionUser'
+import { deserialize, Serialized } from '@mec/web/utils/serialization'
+import { ProjectForProjectForm } from '@mec/web/app/mon-espace/(municipality)/projectForProjectForm'
 
 const defaultValuesFromExistingProject = (
-  project: ProjectWithCommunity,
+  project: ProjectForProjectForm,
+  user: SessionUser,
 ): DefaultValues<ProjectData> => {
-  const { community, totalAmount, ...data } = project
+  const { municipality, totalAmount, ...data } = project
 
   return removeNullValues({
+    email: user.email,
     ...data,
     totalAmount: parseFloat(`${totalAmount}`),
-    secondaryTopics: [],
+    secondaryCategoryIds: [],
   })
 }
 
 const ProjectForm = ({
   communityOptions,
-  project,
+  categoriesOptions,
+  serializedProject,
+  serializedUser,
 }: {
   communityOptions: Options
-  project?: ProjectWithCommunity
+  categoriesOptions: OptionsGroups
+  serializedUser: Serialized<SessionUser>
+  serializedProject?: Serialized<ProjectForProjectForm>
 }) => {
+  const project = serializedProject ? deserialize(serializedProject) : undefined
+  const user = deserialize(serializedUser)
   // Fields can be autofocused by passing their path as query params
   const focus = useSearchParams().get('focus')
   const autoFocus = (field: FieldPath<ProjectData>) => focus === field
@@ -59,10 +57,11 @@ const ProjectForm = ({
     reValidateMode: 'onChange',
     mode: 'all',
     defaultValues: project
-      ? defaultValuesFromExistingProject(project)
+      ? defaultValuesFromExistingProject(project, user)
       : {
-          communityId: communityOptions[0].value,
-          secondaryTopics: [],
+          municipalityCode: communityOptions[0].value,
+          secondaryCategoryIds: [],
+          contactEmail: user.email,
         },
   })
   const { handleSubmit, control } = form
@@ -71,8 +70,7 @@ const ProjectForm = ({
     if (project?.id) {
       try {
         await updateProject.mutateAsync({ id: project.id, ...data })
-        router.prefetch('/mon-espace')
-        router.back()
+        router.push('/mon-espace')
       } catch (err) {
         // Error message will be in hook result
       }
@@ -81,7 +79,7 @@ const ProjectForm = ({
     }
     try {
       await createProject.mutateAsync(data)
-      router.prefetch('/mon-espace')
+      router.push('/mon-espace')
     } catch (err) {
       // Error message will be in hook result
     }
@@ -119,9 +117,9 @@ const ProjectForm = ({
                 label="Porteur du projet *"
                 disabled={fieldsDisabled}
                 control={control}
-                path="communityId"
+                path="municipalityCode"
                 options={communityOptions}
-                autoFocus={autoFocus('communityId')}
+                autoFocus={autoFocus('municipalityCode')}
               />
               <InputFormField
                 label="Montant TTC *"
@@ -137,12 +135,12 @@ const ProjectForm = ({
                 label="Thématique principale *"
                 disabled={fieldsDisabled}
                 control={control}
-                path="topic"
+                path="categoryId"
                 groups
-                optionGroups={topicTree}
+                optionGroups={categoriesOptions}
                 defaultOption
                 placeholder="Sélectionner une option"
-                autoFocus={autoFocus('topic')}
+                autoFocus={autoFocus('categoryId')}
               />
               <hr />
               <p className="fr-text--bold">Informations de contact</p>
@@ -253,17 +251,22 @@ const ProjectForm = ({
                 step={1}
                 autoFocus={autoFocus('energyConsumption')}
               />
-              {createProject.isError ? (
-                <p className="fr-error-text">
-                  {createProject.error?.message ??
-                    'Une erreur est survenue, merci de réessayer.'}
-                </p>
-              ) : null}
+
               <div
                 className="fr-btns-group fr-btns-group--icon-left"
-                style={{ position: 'sticky', bottom: 0, background: 'white' }}
+                style={
+                  project
+                    ? { position: 'sticky', bottom: 0, background: 'white' }
+                    : undefined
+                }
               >
-                {/*TODO display mutations error*/}
+                {createProject.isError || updateProject.isError ? (
+                  <p className="fr-error-text">
+                    {createProject.error?.message ??
+                      updateProject.error?.message ??
+                      'Une erreur est survenue, merci de réessayer.'}
+                  </p>
+                ) : null}
                 <button
                   className="fr-btn fr-mt-8v fr-icon-checkbox-circle-line"
                   type="submit"

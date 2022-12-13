@@ -7,7 +7,7 @@ import {
 } from '@mec/web/data/csvDataHelpers'
 import { existsSync } from 'fs'
 import { mkdir } from 'fs/promises'
-import { prisma } from '@mec/web/prisma'
+import { prismaClient } from '@mec/web/prismaClient'
 
 const fields = [
   // Some territories (TAAF) have no EPCI, we do not include them for now
@@ -76,9 +76,9 @@ const mergeRows = async (output: Output, rows: string[][]) => {
   )
 
   output(`Updating ${districts.size} districts`)
-  await prisma.$transaction(
+  await prismaClient.$transaction(
     [...districts.values()].map(({ code, name, countyCode }) =>
-      prisma.district.upsert({
+      prismaClient.district.upsert({
         create: { code, name: name || code, countyCode },
         where: { code },
         update: { name: name || code, countyCode },
@@ -94,7 +94,7 @@ const mergeRows = async (output: Output, rows: string[][]) => {
       rows.length - cleanRows.length
     } without valid intercommunality or district)`,
   )
-  await prisma.$transaction(
+  await prismaClient.$transaction(
     cleanRows.map(
       ([
         intercommunalityCode,
@@ -105,7 +105,7 @@ const mergeRows = async (output: Output, rows: string[][]) => {
         _countyCode,
         siren,
       ]) =>
-        prisma.municipality.upsert({
+        prismaClient.municipality.upsert({
           create: { code, name, intercommunalityCode, districtCode, siren },
           where: { code },
           update: { name, intercommunalityCode, districtCode, siren },

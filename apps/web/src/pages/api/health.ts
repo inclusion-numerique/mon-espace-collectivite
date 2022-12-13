@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '@mec/web/prisma'
+import { prismaClient } from '@mec/web/prismaClient'
 export default async function health(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -11,7 +11,7 @@ export default async function health(
 }
 
 const dbStatus = () =>
-  prisma.user
+  prismaClient.user
     .findMany({ take: 1 })
     .then(() => ({ status: 'ok' }))
     .catch((error) => ({ status: 'error', error }))
