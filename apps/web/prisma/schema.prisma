@@ -148,6 +148,14 @@ model Project {
   community       Community    @relation(fields: [communityId], references: [id])
   communityId     String
 
+  // If implanted in municipality
+  municipalityCode String?
+  municipality     Municipality? @relation(fields: [municipalityCode], references: [code])
+
+  // If implemented by intercommunality
+  intercommunalityCode String?
+  intercommunality     Intercommunality? @relation(fields: [intercommunalityCode], references: [code])
+
   artificializedArea         Int?
   greenhouseGasEmissions     Int?
   waterConsumption           Int?
@@ -169,6 +177,64 @@ model ProjectNote {
   content     String
   created     DateTime @default(now())
   updated     DateTime @default(now())
+}
+
+model Municipality {
+  // Official code, not postal code, not SIREN code
+  code                 String           @id
+  siren                String
+  intercommunality     Intercommunality @relation(fields: [intercommunalityCode], references: [code])
+  district             District         @relation(fields: [districtCode], references: [code])
+  name                 String
+  projects             Project[]
+  intercommunalityCode String
+  districtCode         String
+}
+
+// EPCI
+model Intercommunality {
+  // Insee SIREN code
+  code           String         @id
+  crteCode       String
+  crte           Crte           @relation(fields: [crteCode], references: [code])
+  name           String
+  projects       Project[]
+  municipalities Municipality[]
+}
+
+model Crte {
+  // Code officiel
+  code               String             @id
+  name               String
+  intercommunalities Intercommunality[]
+}
+
+// Arrondissement
+// Sous-prefecture
+model District {
+  code           String         @id
+  countyCode     String
+  county         County         @relation(fields: [countyCode], references: [code])
+  name           String
+  municipalities Municipality[]
+}
+
+// Département
+model County {
+  // Official insee code
+  code       String     @id
+  name       String
+  regionCode String
+  region     Region     @relation(fields: [regionCode], references: [code])
+  districts  District[]
+}
+
+// Region
+model Region {
+  // Official insee code
+  code   String   @id
+  name   String
+  County County[]
 }
 
 model Community {
