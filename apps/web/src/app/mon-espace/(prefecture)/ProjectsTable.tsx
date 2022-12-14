@@ -27,7 +27,7 @@ export const ProjectsTable = ({
             <OneLineTh title="Référence" />
             <OneLineTh title="Nom du projet" />
             <OneLineTh title="Porteur du projet" />
-            <OneLineTh title="Localisation" />
+            <OneLineTh title="CRTE" />
             <OneLineTh title="Montant TTC" />
             <OneLineTh title="Thématique principale" />
             {/*<OneLineTh title="Thématiques secondaires" />*/}
@@ -88,6 +88,11 @@ export const ProjectsTable = ({
                       ' ',
                       ' ',
                     )}
+                  </FieldCell>
+                  <FieldCell>
+                    {(
+                      municipality?.intercommunality ?? intercommunality
+                    )?.crte.name.replaceAll(' ', ' ')}
                   </FieldCell>
                   <FieldCell>{`${totalAmount}`}</FieldCell>
                   <FieldCell>

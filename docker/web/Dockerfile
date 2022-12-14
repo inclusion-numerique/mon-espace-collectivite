@@ -1,29 +1,28 @@
 # Install dependencies only when needed
-FROM node:19-alpine AS deps
+FROM node:19-slim AS deps
 
 WORKDIR /app
 
-#RUN apt-get update && apt-get install -y openssl
-RUN apk add --no-cache libc6-compat openssl
-
+RUN apt-get update && apt-get install -y openssl
 
 COPY package-lock.json package.json tsconfig.json ./
 COPY apps/web/package.json ./apps/web/package.json
-# TODO https://darekkay.com/blog/storybook-separate-folder/
 # Only install apps/web dependencies
 RUN npm -w @mec/web ci \
-    && npm -w @mec/web run modclean:root \
-    && npm -w @mec/web run modclean
+    && npm -w @mec/web run modclean:root
+    # For now it's hoisted
+    #&& npm -w @mec/web run modclean
 
 # Rebuild the source code only when needed
-FROM node:19-alpine AS builder
+FROM node:19-slim AS builder
 
 WORKDIR /app
 
-RUN apk add --no-cache libc6-compat openssl
+RUN apt-get update && apt-get install -y openssl
 
 COPY --from=deps /app/node_modules/ ./node_modules/
-COPY --from=deps /app/apps/web/node_modules/ ./apps/web/node_modules/
+# For now its hoisted
+# COPY --from=deps /app/apps/web/node_modules/ ./apps/web/node_modules/
 
 # Here dependencies and unneeded files are skiped thanks to .dockerignore file
 COPY package-lock.json package.json tsconfig.json ./
@@ -35,11 +34,11 @@ RUN npm -w @mec/web run setup:dsfr \
     && npm -w @mec/web prune --omit=dev
 
 # Production image, copy all the files and run next
-FROM node:19-alpine AS runner
+FROM node:19-slim AS runner
 
 WORKDIR /app
 
-RUN apk add --no-cache libc6-compat openssl
+RUN apt-get update && apt-get install -y openssl
 
 ENV PORT 8080
 ENV NODE_ENV production

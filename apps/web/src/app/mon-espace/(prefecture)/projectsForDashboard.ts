@@ -17,8 +17,12 @@ export const getProjectsForDashboard = (userId: string) =>
     },
     include: {
       attachments: true,
-      municipality: true,
-      intercommunality: true,
+      municipality: {
+        include: {
+          intercommunality: { include: { crte: true } },
+        },
+      },
+      intercommunality: { include: { crte: true } },
       category: { include: { theme: true } },
       secondaryCategories: { include: { theme: true } },
       notes: { where: { createdById: userId } },
