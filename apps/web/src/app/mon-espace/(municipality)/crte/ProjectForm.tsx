@@ -16,6 +16,7 @@ import { ProjectDeletion } from '@mec/web/app/mon-espace/(municipality)/crte/[re
 import { SessionUser } from '@mec/web/auth/sessionUser'
 import { deserialize, Serialized } from '@mec/web/utils/serialization'
 import { ProjectForProjectForm } from '@mec/web/app/mon-espace/(municipality)/projectForProjectForm'
+import { MultipleBadgeSelectFormField } from '@mec/web/form/MultipleBadgeSelectFormField'
 
 const defaultValuesFromExistingProject = (
   project: ProjectForProjectForm,
@@ -27,7 +28,7 @@ const defaultValuesFromExistingProject = (
     email: user.email,
     ...data,
     totalAmount: parseFloat(`${totalAmount}`),
-    secondaryCategoryIds: [],
+    secondaryCategoryIds: project.secondaryCategories.map(({ id }) => id),
   })
 }
 
@@ -139,8 +140,20 @@ const ProjectForm = ({
                 groups
                 optionGroups={categoriesOptions}
                 defaultOption
-                placeholder="Sélectionner une option"
+                placeholder="Sélectionnez une thématique"
                 autoFocus={autoFocus('categoryId')}
+              />
+              <MultipleBadgeSelectFormField
+                label="Thématiques secondaires"
+                disabled={fieldsDisabled}
+                control={control}
+                path="secondaryCategoryIds"
+                groups
+                optionGroups={categoriesOptions}
+                defaultOption
+                defaultOptionLabel="Ajoutez une thématique secondaire"
+                placeholder="Ajoutez une thématique secondaire"
+                autoFocus={autoFocus('secondaryCategoryIds')}
               />
               <hr />
               <p className="fr-text--bold">Informations de contact</p>

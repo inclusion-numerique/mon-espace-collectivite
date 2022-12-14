@@ -67,6 +67,14 @@ const projectRouter = router({
       }) => {
         // TODO Check rights / role for user on community project creation
         // TODO Check right on write on this project
+
+        const alreadyConnectedSecondaryCategories =
+          await prismaClient.project.findUnique({
+            where: { id },
+            select: { id: true, secondaryCategories: { select: { id: true } } },
+            rejectOnNotFound: true,
+          })
+
         const project = await prismaClient.project.update({
           where: { id },
           data: {
@@ -75,6 +83,10 @@ const projectRouter = router({
             municipalityCode,
             secondaryCategories: {
               connect: secondaryCategoryIds.map((id) => ({ id })),
+              disconnect:
+                alreadyConnectedSecondaryCategories.secondaryCategories.filter(
+                  ({ id }) => !secondaryCategoryIds.includes(id),
+                ),
             },
             ...data,
           },
