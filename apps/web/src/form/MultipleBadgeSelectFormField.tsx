@@ -44,6 +44,10 @@ export function MultipleBadgeSelectFormField<T extends FieldValues>({
 )) {
   const id = `select-form-field__${path}`
 
+  const flattenedOptions: Options = optionsProps.groups
+    ? Object.values(optionsProps.optionGroups).flat()
+    : optionsProps.options
+
   // TODO Disabled styles classes
   return (
     <Controller
@@ -60,10 +64,6 @@ export function MultipleBadgeSelectFormField<T extends FieldValues>({
         ) => {
           onChange([...value, event.target.value])
         }
-
-        const flattenedOptions: Options = optionsProps.groups
-          ? Object.values(optionsProps.optionGroups).flat()
-          : optionsProps.options
 
         const selectedOptions = flattenedOptions.filter((option) =>
           value?.includes(option.value),
