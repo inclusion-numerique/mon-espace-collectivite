@@ -3,13 +3,15 @@ import { createTransport } from 'nodemailer'
 import { emailSignin } from '@mec/web/email/templates/emailSignin'
 import { compileMjml } from '@mec/web/email/mjml'
 
+const debugMagicLink = true
+
 export const sendVerificationRequest = async ({
   url,
   provider,
   identifier,
 }: SendVerificationRequestParams) => {
   // For quicker dev UX, display url in console in dev environment
-  if (process.env.NODE_ENV === 'development') {
+  if (debugMagicLink) {
     console.log(`Email magic link: ${url}`)
   }
 

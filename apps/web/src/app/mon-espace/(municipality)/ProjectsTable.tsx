@@ -150,13 +150,24 @@ export const ProjectsTable = ({
                     {energyConsumption}
                   </FieldCell>
                   <td>
-                    <Link
-                      prefetch={false}
-                      className="fr-btn fr-btn--icon-left fr-btn--secondary fr-btn--sm fr-icon-pencil-line"
-                      href={fieldHref()}
-                    >
-                      Éditer
-                    </Link>
+                    {/*TODO class*/}
+                    <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
+                      <Link
+                        href="https://aides-territoires.beta.gouv.fr/aides/?targeted_audiences=commune&perimeter={}&categories={}"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="fr-btn"
+                      >
+                        Voir les aides
+                      </Link>
+                      <Link
+                        prefetch={false}
+                        className="fr-ml-4v fr-btn fr-btn--icon-left fr-btn--secondary fr-btn--sm fr-icon-pencil-line"
+                        href={fieldHref()}
+                      >
+                        Éditer
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               )

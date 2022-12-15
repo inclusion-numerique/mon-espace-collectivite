@@ -128,7 +128,7 @@ export const ProjectNoteForm = withTrpc(
               <li>
                 <button
                   disabled={disableButtons}
-                  className="fr-btn fr-icon-delete-bin-line"
+                  className="fr-btn fr-icon-checkbox-circle-line"
                   role="submit"
                 >
                   Enregistrer

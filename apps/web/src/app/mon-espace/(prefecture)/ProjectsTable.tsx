@@ -3,6 +3,7 @@ import { deserialize, Serialized } from '@mec/web/utils/serialization'
 import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
 import { ProjectNoteButton } from '@mec/web/app/mon-espace/(prefecture)/ProjectNoteButton'
 import { ProjectsForDashboard } from '@mec/web/app/mon-espace/(prefecture)/projectsForDashboard'
+import Link from 'next/link'
 
 // TODO class
 const Info = ({ children }: PropsWithChildren) => (
@@ -110,11 +111,22 @@ export const ProjectsTable = ({
                   <FieldCell>{bikePathLength}</FieldCell>
                   <FieldCell>{energyConsumption}</FieldCell>
                   <td>
-                    <ProjectNoteButton
-                      projectId={id}
-                      projectName={name}
-                      projectNote={notes[0] ?? null}
-                    />
+                    {/*TODO class*/}
+                    <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
+                      <Link
+                        href="https://aides-territoires.beta.gouv.fr/aides/?targeted_audiences=commune&perimeter={}&categories={}"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="fr-btn fr-mr-4v"
+                      >
+                        Voir les aides
+                      </Link>
+                      <ProjectNoteButton
+                        projectId={id}
+                        projectName={name}
+                        projectNote={notes[0] ?? null}
+                      />
+                    </div>
                   </td>
                 </tr>
               )

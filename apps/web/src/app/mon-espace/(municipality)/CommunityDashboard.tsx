@@ -58,7 +58,7 @@ export const CommunityDashboard = asyncComponent(
             </div>
           </div>
         </div>
-        <div className="fr-px-4v">
+        <div className="fr-container">
           <ProjectsTable serializedProjects={serializedProjects} />
         </div>
       </>

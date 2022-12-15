@@ -71,7 +71,7 @@ const ProjectForm = ({
     if (project?.id) {
       try {
         await updateProject.mutateAsync({ id: project.id, ...data })
-        router.push('/mon-espace')
+        router.push(`/mon-espace?updatedProject=${project.id}`)
       } catch (err) {
         // Error message will be in hook result
       }
@@ -79,8 +79,8 @@ const ProjectForm = ({
       // TODO check that this work for refreshing data in list
     }
     try {
-      await createProject.mutateAsync(data)
-      router.push('/mon-espace')
+      const created = await createProject.mutateAsync(data)
+      router.push(`/mon-espace?createdProject=${created.project.id}`)
     } catch (err) {
       // Error message will be in hook result
     }
