@@ -17,17 +17,20 @@
   "overrides": {
     "@storybook/addon-essentials": {
       "react": "*"
+    },
+    "storybook-addon-next": {
+      "@storybook/addon-actions": "*"
     }
   },
   "dependencies": {
     "@mec/web": "*",
-    "@storybook/addon-actions": "^7.0.0-beta.3",
-    "@storybook/addon-essentials": "^7.0.0-beta.3",
-    "@storybook/addon-interactions": "^7.0.0-beta.3",
-    "@storybook/addon-links": "^7.0.0-beta.3",
-    "@storybook/cli": "^7.0.0-beta.3",
-    "@storybook/react": "^7.0.0-beta.3",
-    "@storybook/testing-library": "^0.0.14-next.0",
+    "@storybook/addon-actions": "^7.0.0-beta.7",
+    "@storybook/addon-essentials": "^7.0.0-beta.7",
+    "@storybook/addon-interactions": "^7.0.0-beta.7",
+    "@storybook/addon-links": "^7.0.0-beta.7",
+    "@storybook/cli": "^7.0.0-beta.7",
+    "@storybook/react": "^7.0.0-beta.7",
+    "@storybook/testing-library": "^0.0.14-next.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass": "^1.56.2",
@@ -35,12 +38,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
-    "@storybook/react-webpack5": "^7.0.0-beta.3",
+    "@storybook/react-webpack5": "^7.0.0-beta.7",
     "@types/file-saver": "^2.0.5",
     "@types/html-minifier": "^4.0.2",
     "@types/lodash-es": "^4.17.6",
     "@types/mjml": "^4.7.0",
-    "@types/node": "^18.11.12",
+    "@types/node": "^18.11.15",
     "@types/nodemailer": "^6.4.6",
     "@types/nprogress": "^0.2.0",
     "@types/react": "18.0.26",
@@ -50,7 +53,7 @@
     "babel-loader": "^8.3.0",
     "css-loader": "^6.7.2",
     "modclean": "^3.0.0-beta.1",
-    "postcss": "^8.4.19",
+    "postcss": "^8.4.20",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-import": "^15.1.0",
     "postcss-loader": "^7.0.2",

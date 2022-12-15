@@ -10,6 +10,6 @@
   "author": "",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
-    "cypress": "^11.1.0"
+    "cypress": "^12.1.0"
   }
 }
