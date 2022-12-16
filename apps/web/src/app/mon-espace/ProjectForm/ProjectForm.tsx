@@ -12,11 +12,11 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { DefaultValues } from 'react-hook-form/dist/types/form'
 import { FieldPath } from 'react-hook-form/dist/types/path'
 import { removeNullValues } from '@mec/web/utils/removeNullValues'
-import { ProjectDeletion } from '@mec/web/app/mon-espace/(municipality)/crte/[reference]/ProjectDeletion'
 import { SessionUser } from '@mec/web/auth/sessionUser'
 import { deserialize, Serialized } from '@mec/web/utils/serialization'
-import { ProjectForProjectForm } from '@mec/web/app/mon-espace/(municipality)/projectForProjectForm'
 import { MultipleBadgeSelectFormField } from '@mec/web/form/MultipleBadgeSelectFormField'
+import { ProjectForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/projectForProjectForm'
+import { ProjectDeletion } from '@mec/web/app/mon-espace/ProjectForm/ProjectDeletion'
 
 const defaultValuesFromExistingProject = (
   project: ProjectForProjectForm,

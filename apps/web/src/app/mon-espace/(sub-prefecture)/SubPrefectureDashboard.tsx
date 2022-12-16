@@ -1,12 +1,12 @@
 import { SessionUser } from '@mec/web/auth/sessionUser'
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { asyncComponent } from '@mec/web/utils/asyncComponent'
-import { NoProjects } from '@mec/web/app/mon-espace/(prefecture)/NoProjects'
+import { NoProjects } from '@mec/web/app/mon-espace/(sub-prefecture)/NoProjects'
 import { serialize } from '@mec/web/utils/serialization'
-import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadProjectsTable'
 import { getProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
+import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadProjectsTable'
 
-export const PrefectureDashboard = asyncComponent(
+export const SubPrefectureDashboard = asyncComponent(
   async ({ user }: { user: SessionUser }) => {
     const projects = await getProjectsForDashboard(user.id)
 

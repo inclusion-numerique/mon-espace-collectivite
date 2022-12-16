@@ -1,13 +1,11 @@
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { getAuthenticatedSessionToken } from '@mec/web/auth/getSessionUser'
-import { Options } from '@mec/web/utils/options'
-import { prismaClient } from '@mec/web/prismaClient'
 import { notFound } from 'next/navigation'
-import ProjectForm from '@mec/web/app/mon-espace/(municipality)/crte/ProjectForm'
-import { getUserWithCommunitiesForProjectForm } from '@mec/web/app/mon-espace/(municipality)/communitiesForProjectForm'
-import { getProjectForProjectForm } from '@mec/web/app/mon-espace/(municipality)/projectForProjectForm'
-import { getCategoriesOptionsForProjectForm } from '@mec/web/app/mon-espace/(municipality)/categoriesForProjectForm'
 import { serialize } from '@mec/web/utils/serialization'
+import { getUserWithCommunitiesForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/communitiesForProjectForm'
+import { getCategoriesOptionsForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/categoriesForProjectForm'
+import { getProjectForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/projectForProjectForm'
+import ProjectForm from '@mec/web/app/mon-espace/ProjectForm/ProjectForm'
 
 const EditCrtePage = async ({
   params: { reference },

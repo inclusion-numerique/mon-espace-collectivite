@@ -1,9 +1,9 @@
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { getAuthenticatedSessionToken } from '@mec/web/auth/getSessionUser'
-import ProjectForm from '@mec/web/app/mon-espace/(municipality)/crte/ProjectForm'
 import { serialize } from '@mec/web/utils/serialization'
-import { getUserWithCommunitiesForProjectForm } from '@mec/web/app/mon-espace/(municipality)/communitiesForProjectForm'
-import { getCategoriesOptionsForProjectForm } from '@mec/web/app/mon-espace/(municipality)/categoriesForProjectForm'
+import ProjectForm from '@mec/web/app/mon-espace/ProjectForm/ProjectForm'
+import { getUserWithCommunitiesForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/communitiesForProjectForm'
+import { getCategoriesOptionsForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/categoriesForProjectForm'
 
 const NewCrtePage = async () => {
   const sessionToken = getAuthenticatedSessionToken()

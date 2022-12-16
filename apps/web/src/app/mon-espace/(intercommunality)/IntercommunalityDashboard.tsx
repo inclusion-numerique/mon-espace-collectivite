@@ -1,13 +1,13 @@
 import { SessionUser } from '@mec/web/auth/sessionUser'
 import { prismaClient } from '@mec/web/prismaClient'
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
-import { NoProjects } from '@mec/web/app/mon-espace/(municipality)/NoProjects'
+import { NoProjects } from '@mec/web/app/mon-espace/(intercommunality)/NoProjects'
 import Link from 'next/link'
-import { ProjectsTable } from '@mec/web/app/mon-espace/(municipality)/ProjectsTable'
 import { asyncComponent } from '@mec/web/utils/asyncComponent'
 import { serialize } from '@mec/web/utils/serialization'
+import { WriteProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/WriteProjectsTable'
 
-export const CommunityDashboard = asyncComponent(
+export const IntercommunalityDashboard = asyncComponent(
   async ({ user }: { user: SessionUser }) => {
     const projects = await prismaClient.project.findMany({
       where: {
@@ -59,7 +59,7 @@ export const CommunityDashboard = asyncComponent(
           </div>
         </div>
         <div className="fr-container">
-          <ProjectsTable serializedProjects={serializedProjects} />
+          <WriteProjectsTable serializedProjects={serializedProjects} />
         </div>
       </>
     )

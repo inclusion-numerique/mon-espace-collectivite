@@ -1,45 +1,23 @@
-import Link from 'next/link'
-import {
-  Intercommunality,
-  Municipality,
-  Project,
-  ProjectCategory,
-  ProjectTheme,
-} from '@prisma/client'
 import { PropsWithChildren } from 'react'
-import styles from './ProjectsTable.module.css'
 import { deserialize, Serialized } from '@mec/web/utils/serialization'
 import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
+import Link from 'next/link'
+import { ProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
+import { ProjectNoteButton } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteButton'
 
 // TODO class
 const Info = ({ children }: PropsWithChildren) => (
   <span style={{ fontSize: '.75rem' }}>{children}</span>
 )
 
-const FieldCell = ({ children, href }: PropsWithChildren<{ href: string }>) => {
-  return (
-    <td className={`fr-p-0 ${styles.fieldCell}`}>
-      <Link className="fr-p-4v" href={href} prefetch={false}>
-        {children}
-        <span
-          className={`fr-icon--sm fr-icon-pencil-line fr-ml-1v ${styles.editIcon}`}
-        />
-      </Link>
-    </td>
-  )
+const FieldCell = ({ children }: PropsWithChildren) => {
+  return <td>{children}</td>
 }
 
-export const ProjectsTable = ({
+export const ReadProjectsTable = ({
   serializedProjects,
 }: {
-  serializedProjects: Serialized<
-    (Project & {
-      municipality: Municipality | null
-      intercommunality: Intercommunality | null
-      category: ProjectCategory & { theme: ProjectTheme }
-      secondaryCategories: ProjectCategory[]
-    })[]
-  >
+  serializedProjects: Serialized<ProjectsForDashboard>
 }) => {
   const projects = deserialize(serializedProjects)
   return (
@@ -50,6 +28,7 @@ export const ProjectsTable = ({
             <OneLineTh title="Référence" />
             <OneLineTh title="Nom du projet" />
             <OneLineTh title="Porteur du projet" />
+            <OneLineTh title="CRTE" />
             <OneLineTh title="Montant TTC" />
             <OneLineTh title="Thématique principale" />
             {/*<OneLineTh title="Thématiques secondaires" />*/}
@@ -98,57 +77,39 @@ export const ProjectsTable = ({
               selectiveSortingPercentage,
               bikePathLength,
               energyConsumption,
+              notes,
             }) => {
-              const fieldHref = (field?: string) =>
-                `/mon-espace/crte/${reference}${field ? `?focus=${field}` : ''}`
-
               return (
                 <tr key={id}>
-                  <td>{reference}</td>
-                  <FieldCell href={fieldHref('name').replaceAll(' ', ' ')}>
-                    {name}
-                  </FieldCell>
-                  <FieldCell href={fieldHref('municipalityId')}>
+                  <FieldCell>{reference}</FieldCell>
+                  <FieldCell>{name.replaceAll(' ', ' ')}</FieldCell>
+                  <FieldCell>
+                    {' '}
                     {(municipality ?? intercommunality)?.name.replaceAll(
                       ' ',
                       ' ',
                     )}
                   </FieldCell>
-                  <FieldCell
-                    href={fieldHref('totalAmount')}
-                  >{`${totalAmount}`}</FieldCell>
-                  <FieldCell href={fieldHref('categoryId')}>
+                  <FieldCell>
+                    {(
+                      municipality?.intercommunality ?? intercommunality
+                    )?.crte.name.replaceAll(' ', ' ')}
+                  </FieldCell>
+                  <FieldCell>{`${totalAmount}`}</FieldCell>
+                  <FieldCell>
                     {category.theme.name.replaceAll(' ', ' ')}&nbsp;/&nbsp;
                     {category.name.replaceAll(' ', ' ')}
                   </FieldCell>
-                  <FieldCell href={fieldHref('contactEmail')}>
-                    {contactEmail}
-                  </FieldCell>
-                  <FieldCell href={fieldHref('start')}>
-                    {start?.toLocaleDateString()}
-                  </FieldCell>
-                  <FieldCell href={fieldHref('end')}>
-                    {end?.toLocaleDateString()}
-                  </FieldCell>
-                  <FieldCell href={fieldHref('progress')}>{progress}</FieldCell>
-                  <FieldCell href={fieldHref('artificializedArea')}>
-                    {artificializedArea}
-                  </FieldCell>
-                  <FieldCell href={fieldHref('greenhouseGasEmissions')}>
-                    {greenhouseGasEmissions}
-                  </FieldCell>
-                  <FieldCell href={fieldHref('waterConsumption')}>
-                    {waterConsumption}
-                  </FieldCell>
-                  <FieldCell href={fieldHref('selectiveSortingPercentage')}>
-                    {selectiveSortingPercentage}
-                  </FieldCell>
-                  <FieldCell href={fieldHref('bikePathLength')}>
-                    {bikePathLength}
-                  </FieldCell>
-                  <FieldCell href={fieldHref('energyConsumption')}>
-                    {energyConsumption}
-                  </FieldCell>
+                  <FieldCell>{contactEmail}</FieldCell>
+                  <FieldCell>{start?.toLocaleDateString()}</FieldCell>
+                  <FieldCell>{end?.toLocaleDateString()}</FieldCell>
+                  <FieldCell>{progress}</FieldCell>
+                  <FieldCell>{artificializedArea}</FieldCell>
+                  <FieldCell>{greenhouseGasEmissions}</FieldCell>
+                  <FieldCell>{waterConsumption}</FieldCell>
+                  <FieldCell>{selectiveSortingPercentage}</FieldCell>
+                  <FieldCell>{bikePathLength}</FieldCell>
+                  <FieldCell>{energyConsumption}</FieldCell>
                   <td>
                     {/*TODO class*/}
                     <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
@@ -156,17 +117,15 @@ export const ProjectsTable = ({
                         href="https://aides-territoires.beta.gouv.fr/aides/?targeted_audiences=commune&perimeter={}&categories={}"
                         target="_blank"
                         rel="noreferrer"
-                        className="fr-btn"
+                        className="fr-btn fr-mr-4v"
                       >
                         Voir les aides
                       </Link>
-                      <Link
-                        prefetch={false}
-                        className="fr-ml-4v fr-btn fr-btn--icon-left fr-btn--secondary fr-btn--sm fr-icon-pencil-line"
-                        href={fieldHref()}
-                      >
-                        Éditer
-                      </Link>
+                      <ProjectNoteButton
+                        projectId={id}
+                        projectName={name}
+                        projectNote={notes[0] ?? null}
+                      />
                     </div>
                   </td>
                 </tr>

@@ -147,14 +147,14 @@ model PreRegistration {
   municipalityCode String?
   municipality     Municipality? @relation(fields: [municipalityCode], references: [code])
 
-  countyCode String?
-  county     County? @relation(fields: [countyCode], references: [code])
+  intercommunalityCode String?
+  intercommunality     Intercommunality? @relation(fields: [intercommunalityCode], references: [code])
 
   districtCode String?
   district     District? @relation(fields: [districtCode], references: [code])
 
-  intercommunalityCode String?
-  intercommunality     Intercommunality? @relation(fields: [intercommunalityCode], references: [code])
+  countyCode String?
+  county     County? @relation(fields: [countyCode], references: [code])
 
   level       AccessLevel?
   allowSignup Boolean
@@ -217,11 +217,23 @@ model Project {
 }
 
 // A working document attached to a project, privately owned by the structure that created it
-// For now we attach it to User
 model ProjectNote {
-  id          String   @id @db.Uuid
-  projectId   String   @db.Uuid
-  project     Project  @relation(fields: [projectId], references: [id])
+  id        String  @id @db.Uuid
+  projectId String  @db.Uuid
+  project   Project @relation(fields: [projectId], references: [id])
+
+  municipalityCode String?
+  municipality     Municipality? @relation(fields: [municipalityCode], references: [code])
+
+  intercommunalityCode String?
+  intercommunality     Intercommunality? @relation(fields: [intercommunalityCode], references: [code])
+
+  districtCode String?
+  district     District? @relation(fields: [districtCode], references: [code])
+
+  countyCode String?
+  county     County? @relation(fields: [countyCode], references: [code])
+
   createdById String   @db.Uuid
   createdBy   User     @relation(fields: [createdById], references: [id])
   content     String
@@ -242,6 +254,7 @@ model Municipality {
   districtCode         String
   accessLevels         MunicipalityAccessLevel[]
   preRegistrations     PreRegistration[]
+  projectNotes         ProjectNote[]
 }
 
 // EPCI
@@ -255,6 +268,7 @@ model Intercommunality {
   municipalities   Municipality[]
   accessLevels     IntercommunalityAccessLevel[]
   preRegistrations PreRegistration[]
+  projectNotes     ProjectNote[]
 }
 
 model Crte {
@@ -274,6 +288,7 @@ model District {
   municipalities   Municipality[]
   accessLevels     DistrictAccessLevel[]
   preRegistrations PreRegistration[]
+  projectNotes     ProjectNote[]
 }
 
 // Département
@@ -286,6 +301,7 @@ model County {
   districts        District[]
   accessLevels     CountyAccessLevel[]
   preRegistrations PreRegistration[]
+  projectNotes     ProjectNote[]
 }
 
 model ProjectTheme {

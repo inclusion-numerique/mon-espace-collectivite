@@ -1,4 +1,4 @@
-import { ProjectNoteForm } from '@mec/web/app/mon-espace/(prefecture)/ProjectNoteForm'
+import { ProjectNoteForm } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteForm'
 
 export const ProjectNoteButton = ({
   projectId,

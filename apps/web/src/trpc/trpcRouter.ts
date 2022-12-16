@@ -5,7 +5,10 @@ import z from 'zod'
 import { searchCommunity } from '@mec/web/siren/siren'
 import { protectedProcedure, router } from './trpc'
 import { generateReference } from '@mec/web/project/generateReference'
-import { ProjectNoteDataValidation } from '@mec/web/project/projectNote'
+import {
+  ProjectNoteDataValidation,
+  ProjectNoteDataValidationWithId,
+} from '@mec/web/project/projectNote'
 
 const userRouter = router({
   acknowledgeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
@@ -123,7 +126,7 @@ const projectRouter = router({
       return { projectNote }
     }),
   updateNote: protectedProcedure
-    .input(ProjectNoteDataValidation.extend({ id: z.string().uuid() }))
+    .input(ProjectNoteDataValidationWithId)
     .mutation(async ({ input: { id, ...data }, ctx: { user } }) => {
       // TODO Check rights / role for user on community projectNote update
       // TODO Check right on write on this projectNote
