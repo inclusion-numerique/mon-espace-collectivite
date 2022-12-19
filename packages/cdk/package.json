@@ -16,14 +16,14 @@
   "dependencies": {
     "cdktf": "^0.14.3",
     "cdktf-cli": "^0.14.3",
-    "constructs": "^10.1.189",
+    "constructs": "^10.1.194",
     "dotenv": "^16.0.3",
     "dotenv-cli": "^6.0.0",
     "git-rev-sync": "^3.0.2"
   },
   "devDependencies": {
     "@types/git-rev-sync": "^2.0.0",
-    "@types/node": "^18.11.15",
+    "@types/node": "^18.11.17",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.1",
     "typescript": "^4.9.4"

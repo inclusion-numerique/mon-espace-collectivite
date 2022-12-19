@@ -249,6 +249,7 @@ model Municipality {
   intercommunality     Intercommunality          @relation(fields: [intercommunalityCode], references: [code])
   district             District                  @relation(fields: [districtCode], references: [code])
   name                 String
+  aidesTerritoiresId   String?
   projects             Project[]
   intercommunalityCode String
   districtCode         String
@@ -264,6 +265,7 @@ model Intercommunality {
   crteCode         String
   crte             Crte                          @relation(fields: [crteCode], references: [code])
   name             String
+  aidesTerritoiresId   String?
   projects         Project[]
   municipalities   Municipality[]
   accessLevels     IntercommunalityAccessLevel[]

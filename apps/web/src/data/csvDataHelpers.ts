@@ -39,9 +39,6 @@ export const getHeaders = (url: string) =>
         method: 'HEAD',
       },
       (response) => {
-        console.log(response.statusCode, response.statusMessage)
-        console.log(response.headers)
-
         res({
           statusCode: response.statusMessage,
           statusMessage: response.statusMessage,

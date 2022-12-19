@@ -10,12 +10,15 @@
     "with-env": "dotenv -e ../../.env --",
     "with-remote-env": "dotenv -e ../../.env.remote -e ../../.env --",
     "fixtures:load": "npm run with-env ts-node src/loadFixtures.ts",
+    "remote:fixtures:load": "npm run with-remote-env ts-node src/loadFixtures.ts",
     "remote:admin-data:update":  "npm run with-remote-env ts-node src/updateAdministrativeData.ts",
-    "admin-data:download:epci": "npm run with-env ts-node src/downloadEpcisData.ts",
-    "admin-data:download:municipalities": "npm run with-env ts-node src/downloadMunicipalitiesData.ts",
-    "admin-data:download:categories": "npm run with-env ts-node src/downloadCategoryData.ts",
+    "admin-data:download:epci": "ts-node src/downloadEpciData.ts",
+    "admin-data:download:perimeters": "ts-node src/downloadAideTerritoiresData.ts",
+    "admin-data:download:municipalities": "ts-node src/downloadMunicipalitiesData.ts",
+    "admin-data:download:categories": "ts-node src/downloadCategoryData.ts",
+    "admin-data:download": "npm run admin-data:download:epci && npm run admin-data:download:municipalities && npm run admin-data:download:categories",
     "admin-data:update":  "npm run with-env ts-node src/updateAdministrativeData.ts",
-    "admin-data:setup": "npm run admin-data:download:epci && npm run admin-data:download:municipalities && npm run admin-data:update"
+    "admin-data:setup": "npm run admin-data:download && npm run admin-data:update"
   },
   "engines": {
     "node": ">=19",

@@ -26,10 +26,10 @@ COPY --from=deps /app/apps/web/node_modules/ ./apps/web/node_modules/
 COPY package-lock.json package.json tsconfig.json ./
 COPY apps/web ./apps/web
 
-RUN npm -w @mec/web run setup:dsfr \
-    && npm -w @mec/web run prisma:generate \
-    && npm -w @mec/web run build \
-    && npm -w @mec/web prune --omit=dev
+RUN npm -w @mec/web run setup:dsfr
+RUN npm -w @mec/web run prisma:generate
+RUN npm -w @mec/web run build
+RUN npm -w @mec/web prune --omit=dev
 
 # Production image, copy all the files and run next
 FROM node:19-slim AS runner
