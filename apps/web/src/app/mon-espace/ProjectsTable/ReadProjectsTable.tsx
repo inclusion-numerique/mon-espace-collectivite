@@ -4,6 +4,7 @@ import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
 import Link from 'next/link'
 import { ProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
 import { ProjectNoteButton } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteButton'
+import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
 
 // TODO class
 const Info = ({ children }: PropsWithChildren) => (
@@ -16,8 +17,10 @@ const FieldCell = ({ children }: PropsWithChildren) => {
 
 export const ReadProjectsTable = ({
   serializedProjects,
+  scope,
 }: {
   serializedProjects: Serialized<ProjectsForDashboard>
+  scope: DashboardScope
 }) => {
   const projects = deserialize(serializedProjects)
   return (
@@ -28,7 +31,6 @@ export const ReadProjectsTable = ({
             <OneLineTh title="Référence" />
             <OneLineTh title="Nom du projet" />
             <OneLineTh title="Porteur du projet" />
-            <OneLineTh title="CRTE" />
             <OneLineTh title="Montant TTC" />
             <OneLineTh title="Thématique principale" />
             {/*<OneLineTh title="Thématiques secondaires" />*/}
@@ -58,6 +60,11 @@ export const ReadProjectsTable = ({
           </tr>
         </thead>
         <tbody className="fr-table">
+          {projects.length === 0 ? (
+            <tr>
+              <td colSpan={16}>Aucun projet n&apos;a été renseigné</td>
+            </tr>
+          ) : null}
           {projects.map(
             ({
               id,
@@ -90,11 +97,6 @@ export const ReadProjectsTable = ({
                       ' ',
                     )}
                   </FieldCell>
-                  <FieldCell>
-                    {(
-                      municipality?.intercommunality ?? intercommunality
-                    )?.crte.name.replaceAll(' ', ' ')}
-                  </FieldCell>
                   <FieldCell>{`${totalAmount}`}</FieldCell>
                   <FieldCell>
                     {category.theme.name.replaceAll(' ', ' ')}&nbsp;/&nbsp;
@@ -125,6 +127,7 @@ export const ReadProjectsTable = ({
                         projectId={id}
                         projectName={name}
                         projectNote={notes[0] ?? null}
+                        scope={scope}
                       />
                     </div>
                   </td>

@@ -1,13 +1,16 @@
 import { ProjectNoteForm } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteForm'
+import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
 
 export const ProjectNoteButton = ({
   projectId,
   projectName,
   projectNote,
+  scope,
 }: {
   projectId: string
   projectName: string
   projectNote: { id: string; content: string } | null
+  scope: DashboardScope
 }) => {
   const modalId = `project-node-modal-${projectId}`
   const modalTitleId = `${modalId}-title`
@@ -37,6 +40,7 @@ export const ProjectNoteButton = ({
                 projectName={projectName}
                 modalId={modalId}
                 modalTitleId={modalTitleId}
+                scope={scope}
               />
             </div>
           </div>

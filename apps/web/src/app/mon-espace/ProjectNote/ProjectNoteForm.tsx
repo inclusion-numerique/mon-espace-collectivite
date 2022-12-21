@@ -11,6 +11,7 @@ import { DefaultValues } from 'react-hook-form/dist/types/form'
 import { withTrpc } from '@mec/web/withTrpc'
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { useRouter } from 'next/navigation'
+import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
 
 const defaultValuesFromExistingProjectNote = (
   projectNote: { id: string; content: string } | null,
@@ -31,12 +32,14 @@ export const ProjectNoteForm = withTrpc(
     projectNote,
     modalTitleId,
     modalId,
+    scope,
   }: {
     projectId: string
     projectName: string
     projectNote: { id: string; content: string } | null
     modalId: string
     modalTitleId: string
+    scope: DashboardScope
   }) => {
     const router = useRouter()
     const form = useForm<ProjectNoteData>({
@@ -68,7 +71,10 @@ export const ProjectNoteForm = withTrpc(
           // Cancel creation if no content
           return
         }
-        return creation.mutateAsync({ ...data })
+
+        // TODO Scope with code only with zod validation for xxCode ?
+
+        return creation.mutateAsync({ ...data, scope })
       }
 
       // Delete note if no content

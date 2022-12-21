@@ -94,7 +94,7 @@ export const mergePerimeters = async (output: Output = consoleOutput) => {
   )
 
   output(`Updating ${epciPerimeters.length} EPCIs`)
-  const intercommunalityResult = await prismaClient.$transaction(
+  await prismaClient.$transaction(
     epciPerimeters.map(({ id, code }) =>
       prismaClient.intercommunality.updateMany({
         where: { code },
@@ -102,10 +102,9 @@ export const mergePerimeters = async (output: Output = consoleOutput) => {
       }),
     ),
   )
-  console.log('INTERCO RESULT', intercommunalityResult)
 
   output(`Updating ${municipalityPerimeters.length} municipalities`)
-  const municipalitiesResult = await prismaClient.$transaction(
+  await prismaClient.$transaction(
     municipalityPerimeters.map(({ id, code }) =>
       prismaClient.municipality.updateMany({
         where: { code },

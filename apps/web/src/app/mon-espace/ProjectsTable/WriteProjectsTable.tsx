@@ -5,6 +5,9 @@ import { deserialize, Serialized } from '@mec/web/utils/serialization'
 import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
 import { linkToAidesTerritoires } from '@mec/web/project/aidesTerritoires'
 import { ProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
+import { nonBreakable } from '@mec/web/utils/nonBreakable'
+import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
+import { ProjectNoteButton } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteButton'
 
 // TODO class
 const Info = ({ children }: PropsWithChildren) => (
@@ -26,8 +29,10 @@ const FieldCell = ({ children, href }: PropsWithChildren<{ href: string }>) => {
 
 export const WriteProjectsTable = ({
   serializedProjects,
+  scope,
 }: {
   serializedProjects: Serialized<ProjectsForDashboard>
+  scope: DashboardScope
 }) => {
   const projects = deserialize(serializedProjects)
   return (
@@ -67,6 +72,11 @@ export const WriteProjectsTable = ({
           </tr>
         </thead>
         <tbody className="fr-table">
+          {projects.length === 0 ? (
+            <tr>
+              <td colSpan={16}>Aucun projet n&apos;a été renseigné</td>
+            </tr>
+          ) : null}
           {projects.map((project) => {
             const {
               id,
@@ -88,19 +98,16 @@ export const WriteProjectsTable = ({
               energyConsumption,
             } = project
             const fieldHref = (field?: string) =>
-              `/mon-espace/crte/${reference}${field ? `?focus=${field}` : ''}`
+              `/mon-espace/projet/${reference}${field ? `?focus=${field}` : ''}`
 
             return (
               <tr key={id}>
                 <td>{reference}</td>
-                <FieldCell href={fieldHref('name').replaceAll(' ', ' ')}>
-                  {name}
+                <FieldCell href={fieldHref('name')}>
+                  {nonBreakable(name)}
                 </FieldCell>
                 <FieldCell href={fieldHref('municipalityId')}>
-                  {(municipality ?? intercommunality)?.name.replaceAll(
-                    ' ',
-                    ' ',
-                  )}
+                  {nonBreakable((municipality ?? intercommunality)?.name)}
                 </FieldCell>
                 <FieldCell
                   href={fieldHref('totalAmount')}
@@ -113,10 +120,10 @@ export const WriteProjectsTable = ({
                   {contactEmail}
                 </FieldCell>
                 <FieldCell href={fieldHref('start')}>
-                  {start?.toLocaleDateString()}
+                  {nonBreakable(start?.toLocaleDateString())}
                 </FieldCell>
                 <FieldCell href={fieldHref('end')}>
-                  {end?.toLocaleDateString()}
+                  {nonBreakable(end?.toLocaleDateString())}
                 </FieldCell>
                 <FieldCell href={fieldHref('progress')}>{progress}</FieldCell>
                 <FieldCell href={fieldHref('artificializedArea')}>
@@ -146,15 +153,21 @@ export const WriteProjectsTable = ({
                       rel="noreferrer"
                       className="fr-btn"
                     >
-                      Voir les aides
+                      Voir les aides
                     </Link>
                     <Link
                       prefetch={false}
-                      className="fr-ml-4v fr-btn fr-btn--icon-left fr-btn--secondary fr-btn--sm fr-icon-pencil-line"
+                      className="fr-ml-4v  fr-mr-4v fr-btn fr-btn--icon-left fr-btn--secondary fr-icon-pencil-line"
                       href={fieldHref()}
                     >
                       Éditer
                     </Link>
+                    <ProjectNoteButton
+                      projectId={project.id}
+                      projectName={project.name}
+                      projectNote={project.notes[0] ?? null}
+                      scope={scope}
+                    />
                   </div>
                 </td>
               </tr>

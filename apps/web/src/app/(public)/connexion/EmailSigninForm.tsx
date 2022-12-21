@@ -37,6 +37,7 @@ export const EmailSigninForm = ({ error }: { error?: string }) => {
         control={form.control}
         path="email"
         label="Adresse électronique"
+        autoFocus
         hint="Cette adresse est utilisée uniquement pour la connexion au service. Format attendu : nom@domaine.fr"
         disabled={disabled}
       />
