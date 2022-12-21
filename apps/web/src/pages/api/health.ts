@@ -6,8 +6,9 @@ export default async function health(
 ) {
   const database = await dbStatus()
   const status = database.status
+  const headers = req.headers
 
-  res.status(status === 'ok' ? 200 : 503).json({ status, database })
+  res.status(status === 'ok' ? 200 : 503).json({ status, database, headers })
 }
 
 const dbStatus = () =>
