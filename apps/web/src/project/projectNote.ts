@@ -24,18 +24,27 @@ export const PerimeterDataValidation = z
   .partial()
 
 const BaseProjectNoteData = z.object({
-  projectId: z.string().uuid(),
   content: z.string().optional().default(''),
 })
 
-export const ProjectNoteDataValidation = BaseProjectNoteData.merge(
+export const ProjectNoteCreationDataValidation = BaseProjectNoteData.merge(
   PerimeterDataValidation,
-).refine(perimeterDataRefine, perimeterRefineError)
+)
+  .merge(
+    z.object({
+      projectId: z.string().uuid(),
+    }),
+  )
+  .refine(perimeterDataRefine, perimeterRefineError)
 
-export type ProjectNoteData = z.infer<typeof ProjectNoteDataValidation>
+export type ProjectNoteCreationData = z.infer<
+  typeof ProjectNoteCreationDataValidation
+>
 
-export const ProjectNoteDataValidationWithId = BaseProjectNoteData.merge(
+export const ProjectNoteEditionDataValidation = BaseProjectNoteData.merge(
   z.object({ id: z.string().uuid() }),
 )
-  .merge(PerimeterDataValidation)
-  .refine(perimeterDataRefine, perimeterRefineError)
+
+export type ProjectNoteEditionData = z.infer<
+  typeof ProjectNoteEditionDataValidation
+>

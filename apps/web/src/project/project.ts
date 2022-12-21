@@ -5,8 +5,31 @@ const intErrorMessage =
 
 const isoDateRegex = /^\d{4}-\d\d-\d\d$/
 
+// An ownerCode can be a municipality or an intercomunality.
+// We can recognize them by their prefix: "m:{municipalityCode}" or "i:{intercommunalityCode}"
+
+type PerimeterCode =
+  | { municipalityCode: string; intercommunalityCode: null }
+  | { municipalityCode: null; intercommunalityCode: string }
+
+export const perimeterCodeToOwnerCode = (perimeter: {
+  intercommunalityCode?: undefined | null | string
+  municipalityCode?: undefined | null | string
+}) =>
+  perimeter.intercommunalityCode
+    ? `i:${perimeter.intercommunalityCode}`
+    : `m:${perimeter.municipalityCode}`
+
+export const ownerCodeToPerimeter = (code: string): PerimeterCode => {
+  const [prefix, modelCode] = code.split(':')
+  if (prefix === 'i') {
+    return { intercommunalityCode: modelCode, municipalityCode: null }
+  }
+  return { municipalityCode: modelCode, intercommunalityCode: null }
+}
+
 export const ProjectDataValidation = z.object({
-  municipalityCode: z.string({
+  ownerCode: z.string({
     required_error: 'Veuillez renseigner la collectivité porteuse du projet',
   }),
   name: z.string({

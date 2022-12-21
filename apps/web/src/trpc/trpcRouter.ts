@@ -1,4 +1,7 @@
-import { ProjectDataValidation } from '@mec/web/project/project'
+import {
+  ownerCodeToPerimeter,
+  ProjectDataValidation,
+} from '@mec/web/project/project'
 import { prismaClient } from '@mec/web/prismaClient'
 import { v4 } from 'uuid'
 import z from 'zod'
@@ -6,8 +9,8 @@ import { searchCommunity } from '@mec/web/siren/siren'
 import { protectedProcedure, router } from './trpc'
 import { generateReference } from '@mec/web/project/generateReference'
 import {
-  ProjectNoteDataValidation,
-  ProjectNoteDataValidationWithId,
+  ProjectNoteCreationDataValidation,
+  ProjectNoteEditionDataValidation,
 } from '@mec/web/project/projectNote'
 
 const userRouter = router({
@@ -38,22 +41,24 @@ const projectRouter = router({
     .input(ProjectDataValidation)
     .mutation(
       async ({
-        input: { municipalityCode, secondaryCategoryIds, ...data },
+        input: { ownerCode, secondaryCategoryIds, ...data },
         ctx: { user },
       }) => {
         // TODO Check rights / role for user on community project creation
         const id = v4()
         const reference = generateReference()
+        const perimeter = ownerCodeToPerimeter(ownerCode)
+
         const project = await prismaClient.project.create({
           data: {
             id,
             reference,
-            municipalityCode,
             createdById: user.id,
             secondaryCategories: {
               connect: secondaryCategoryIds.map((id) => ({ id })),
             },
             ...data,
+            ...perimeter,
           },
           include: { attachments: true, municipality: true },
         })
@@ -65,12 +70,12 @@ const projectRouter = router({
     .input(ProjectDataValidation.extend({ id: z.string().uuid() }))
     .mutation(
       async ({
-        input: { id, municipalityCode, secondaryCategoryIds, ...data },
+        input: { id, ownerCode, secondaryCategoryIds, ...data },
         ctx: { user },
       }) => {
         // TODO Check rights / role for user on community project creation
         // TODO Check right on write on this project
-
+        const perimeter = ownerCodeToPerimeter(ownerCode)
         const alreadyConnectedSecondaryCategories =
           await prismaClient.project.findUnique({
             where: { id },
@@ -83,7 +88,6 @@ const projectRouter = router({
           data: {
             id,
             updated: new Date(),
-            municipalityCode,
             secondaryCategories: {
               connect: secondaryCategoryIds.map((id) => ({ id })),
               disconnect:
@@ -92,6 +96,7 @@ const projectRouter = router({
                 ),
             },
             ...data,
+            ...perimeter,
           },
           include: { attachments: true, municipality: true },
         })
@@ -111,7 +116,7 @@ const projectRouter = router({
       return { project }
     }),
   createNote: protectedProcedure
-    .input(ProjectNoteDataValidation)
+    .input(ProjectNoteCreationDataValidation)
     .mutation(async ({ input: { ...data }, ctx: { user } }) => {
       // TODO Check rights / role for user on  project note creation
       const id = v4()
@@ -126,14 +131,13 @@ const projectRouter = router({
       return { projectNote }
     }),
   updateNote: protectedProcedure
-    .input(ProjectNoteDataValidationWithId)
+    .input(ProjectNoteEditionDataValidation)
     .mutation(async ({ input: { id, ...data }, ctx: { user } }) => {
       // TODO Check rights / role for user on community projectNote update
       // TODO Check right on write on this projectNote
       const projectNote = await prismaClient.projectNote.update({
         where: { id },
         data: {
-          id,
           updated: new Date(),
           ...data,
         },

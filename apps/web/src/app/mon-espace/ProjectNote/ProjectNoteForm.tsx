@@ -2,8 +2,10 @@
 import { useForm } from 'react-hook-form'
 import { trpc } from '@mec/web/trpc'
 import {
-  ProjectNoteData,
-  ProjectNoteDataValidation,
+  ProjectNoteCreationData,
+  ProjectNoteCreationDataValidation,
+  ProjectNoteEditionData,
+  ProjectNoteEditionDataValidation,
 } from '@mec/web/project/projectNote'
 import { useRef } from 'react'
 import { InputFormField } from '@mec/web/form/InputFormField'
@@ -14,15 +16,25 @@ import { useRouter } from 'next/navigation'
 import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
 
 const defaultValuesFromExistingProjectNote = (
+  scope: DashboardScope,
   projectNote: { id: string; content: string } | null,
   projectId: string,
-): DefaultValues<ProjectNoteData> => {
+): DefaultValues<ProjectNoteCreationData | ProjectNoteEditionData> => {
   if (!projectNote) {
-    return { projectId }
+    // Creation with scope code
+    if ('county' in scope) {
+      return { projectId, countyCode: scope.county.code }
+    }
+    if ('district' in scope) {
+      return { projectId, districtCode: scope.district.code }
+    }
+    if ('intercommunality' in scope) {
+      return { projectId, intercommunalityCode: scope.intercommunality.code }
+    }
+    return { projectId, municipalityCode: scope.municipality.code }
   }
-  const { id, ...data } = projectNote
 
-  return { projectId, ...data }
+  return projectNote
 }
 
 export const ProjectNoteForm = withTrpc(
@@ -42,11 +54,16 @@ export const ProjectNoteForm = withTrpc(
     scope: DashboardScope
   }) => {
     const router = useRouter()
-    const form = useForm<ProjectNoteData>({
-      resolver: zodResolver(ProjectNoteDataValidation),
-      // reValidateMode: 'onChange',
-      // mode: 'all',
+    const isCreation = !projectNote
+
+    const form = useForm<ProjectNoteCreationData | ProjectNoteEditionData>({
+      resolver: zodResolver(
+        isCreation
+          ? ProjectNoteCreationDataValidation
+          : ProjectNoteEditionDataValidation,
+      ),
       defaultValues: defaultValuesFromExistingProjectNote(
+        scope,
         projectNote,
         projectId,
       ),
@@ -64,9 +81,11 @@ export const ProjectNoteForm = withTrpc(
       deletion.isLoading ||
       deletion.isSuccess
 
-    const executeMutation = (data: ProjectNoteData) => {
+    const executeMutation = (
+      data: ProjectNoteCreationData | ProjectNoteEditionData,
+    ) => {
       const hasContent = !!data.content?.trim()
-      if (!projectNote?.id) {
+      if (isCreation) {
         if (!hasContent) {
           // Cancel creation if no content
           return
@@ -74,7 +93,7 @@ export const ProjectNoteForm = withTrpc(
 
         // TODO Scope with code only with zod validation for xxCode ?
 
-        return creation.mutateAsync({ ...data, scope })
+        return creation.mutateAsync({ ...(data as ProjectNoteCreationData) })
       }
 
       // Delete note if no content
@@ -85,7 +104,9 @@ export const ProjectNoteForm = withTrpc(
       return update.mutateAsync({ id: projectNote.id, ...data })
     }
 
-    const onSubmit = async (data: ProjectNoteData) => {
+    const onSubmit = async (
+      data: ProjectNoteCreationData | ProjectNoteEditionData,
+    ) => {
       await executeMutation(data)
       closeRef.current?.click()
       router.refresh()

@@ -1,5 +1,6 @@
 import { prismaClient } from '@mec/web/prismaClient'
 import { Options } from '@mec/web/utils/options'
+import { perimeterCodeToOwnerCode } from '@mec/web/project/project'
 
 export const getUserWithCommunitiesForProjectForm = async (
   sessionToken: string,
@@ -40,18 +41,17 @@ export const getUserWithCommunitiesForProjectForm = async (
     throw new Error('User has no read access to any community')
   }
 
+  // Community options must have an ownerCode to allow municipality or intercommunality as project owner
   const communityOptions: Options = user.intercommunalityAccessLevels.length
-    ? user.intercommunalityAccessLevels
-        .map((accessLevel) =>
-          accessLevel.intercommunality.municipalities.map(({ name, code }) => ({
-            name,
-            value: code,
-          })),
-        )
-        .flat()
+    ? user.intercommunalityAccessLevels.map(
+        ({ intercommunality: { name, code } }) => ({
+          name,
+          value: perimeterCodeToOwnerCode({ intercommunalityCode: code }),
+        }),
+      )
     : user.municipalityAccessLevels.map(({ municipality: { name, code } }) => ({
         name,
-        value: code,
+        value: perimeterCodeToOwnerCode({ municipalityCode: code }),
       }))
 
   return { user, communityOptions }

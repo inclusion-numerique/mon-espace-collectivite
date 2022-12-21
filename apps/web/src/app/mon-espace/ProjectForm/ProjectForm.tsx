@@ -3,7 +3,11 @@ import { useForm } from 'react-hook-form'
 import { trpc } from '@mec/web/trpc'
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { withTrpc } from '@mec/web/withTrpc'
-import { ProjectData, ProjectDataValidation } from '@mec/web/project/project'
+import {
+  perimeterCodeToOwnerCode,
+  ProjectData,
+  ProjectDataValidation,
+} from '@mec/web/project/project'
 import { InputFormField } from '@mec/web/form/InputFormField'
 import Link from 'next/link'
 import { SelectFormField } from '@mec/web/form/SelectFormField'
@@ -29,6 +33,7 @@ const defaultValuesFromExistingProject = (
     ...data,
     totalAmount: parseFloat(`${totalAmount}`),
     secondaryCategoryIds: project.secondaryCategories.map(({ id }) => id),
+    ownerCode: perimeterCodeToOwnerCode(project),
   })
 }
 
@@ -60,7 +65,7 @@ const ProjectForm = ({
     defaultValues: project
       ? defaultValuesFromExistingProject(project, user)
       : {
-          municipalityCode: communityOptions[0].value,
+          ownerCode: communityOptions[0].value,
           secondaryCategoryIds: [],
           contactEmail: user.email,
         },
@@ -118,9 +123,9 @@ const ProjectForm = ({
                 label="Porteur du projet *"
                 disabled={fieldsDisabled}
                 control={control}
-                path="municipalityCode"
+                path="ownerCode"
                 options={communityOptions}
-                autoFocus={autoFocus('municipalityCode')}
+                autoFocus={autoFocus('ownerCode')}
               />
               <InputFormField
                 label="Montant TTC *"
