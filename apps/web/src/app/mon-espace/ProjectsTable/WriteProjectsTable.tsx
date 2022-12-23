@@ -164,7 +164,14 @@ export const WriteProjectsTable = ({
                     </Link>
                     <ProjectNoteButton
                       project={{ id: project.id, name: project.name }}
-                      projectNote={project.notes[0] ?? null}
+                      projectNote={
+                        project.notes[0]
+                          ? {
+                              id: project.notes[0].id,
+                              content: project.notes[0].content,
+                            }
+                          : null
+                      }
                       scope={scope}
                     />
                   </div>

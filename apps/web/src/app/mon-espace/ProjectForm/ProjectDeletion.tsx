@@ -24,6 +24,7 @@ export const ProjectDeletion = ({
         className="fr-link fr-py-2v"
         data-fr-opened="false"
         aria-controls="fr-modal-project-deletion-confirm"
+        data-fr-js-modal-button="true"
         style={{ textDecoration: 'underline' }}
       >
         Supprimer le projet
@@ -43,6 +44,7 @@ export const ProjectDeletion = ({
                     disabled={disableButtons}
                     className="fr-link--close fr-link"
                     aria-controls="fr-modal-project-deletion-confirm"
+                    data-fr-js-modal-button="true"
                   >
                     Fermer
                   </button>
@@ -83,6 +85,7 @@ export const ProjectDeletion = ({
                         disabled={disableButtons}
                         aria-controls="fr-modal-project-deletion-confirm"
                         className="fr-btn  fr-btn--secondary"
+                        data-fr-js-modal-button="true"
                       >
                         Annuler
                       </button>

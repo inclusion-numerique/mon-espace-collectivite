@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
 import { ProjectNoteButton } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteButton'
 import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
+import { linkToAidesTerritoires } from '@mec/web/project/aidesTerritoires'
 
 // TODO class
 const Info = ({ children }: PropsWithChildren) => (
@@ -65,8 +66,8 @@ export const ReadProjectsTable = ({
               <td colSpan={16}>Aucun projet n&apos;a été renseigné</td>
             </tr>
           ) : null}
-          {projects.map(
-            ({
+          {projects.map((project) => {
+            const {
               id,
               reference,
               name,
@@ -85,55 +86,61 @@ export const ReadProjectsTable = ({
               bikePathLength,
               energyConsumption,
               notes,
-            }) => {
-              return (
-                <tr key={id}>
-                  <FieldCell>{reference}</FieldCell>
-                  <FieldCell>{name.replaceAll(' ', ' ')}</FieldCell>
-                  <FieldCell>
-                    {' '}
-                    {(municipality ?? intercommunality)?.name.replaceAll(
-                      ' ',
-                      ' ',
-                    )}
-                  </FieldCell>
-                  <FieldCell>{`${totalAmount}`}</FieldCell>
-                  <FieldCell>
-                    {category.theme.name.replaceAll(' ', ' ')}&nbsp;/&nbsp;
-                    {category.name.replaceAll(' ', ' ')}
-                  </FieldCell>
-                  <FieldCell>{contactEmail}</FieldCell>
-                  <FieldCell>{start?.toLocaleDateString()}</FieldCell>
-                  <FieldCell>{end?.toLocaleDateString()}</FieldCell>
-                  <FieldCell>{progress}</FieldCell>
-                  <FieldCell>{artificializedArea}</FieldCell>
-                  <FieldCell>{greenhouseGasEmissions}</FieldCell>
-                  <FieldCell>{waterConsumption}</FieldCell>
-                  <FieldCell>{selectiveSortingPercentage}</FieldCell>
-                  <FieldCell>{bikePathLength}</FieldCell>
-                  <FieldCell>{energyConsumption}</FieldCell>
-                  <td>
-                    {/*TODO class*/}
-                    <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
-                      <Link
-                        href="https://aides-territoires.beta.gouv.fr/aides/?targeted_audiences=commune&perimeter={}&categories={}"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="fr-btn fr-mr-4v"
-                      >
-                        Voir les aides
-                      </Link>
-                      <ProjectNoteButton
-                        project={{ id, name }}
-                        projectNote={notes[0] ?? null}
-                        scope={scope}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              )
-            },
-          )}
+            } = project
+            return (
+              <tr key={id}>
+                <FieldCell>{reference}</FieldCell>
+                <FieldCell>{name.replaceAll(' ', ' ')}</FieldCell>
+                <FieldCell>
+                  {' '}
+                  {(municipality ?? intercommunality)?.name.replaceAll(
+                    ' ',
+                    ' ',
+                  )}
+                </FieldCell>
+                <FieldCell>{`${totalAmount}`}</FieldCell>
+                <FieldCell>
+                  {category.theme.name.replaceAll(' ', ' ')}&nbsp;/&nbsp;
+                  {category.name.replaceAll(' ', ' ')}
+                </FieldCell>
+                <FieldCell>{contactEmail}</FieldCell>
+                <FieldCell>{start?.toLocaleDateString()}</FieldCell>
+                <FieldCell>{end?.toLocaleDateString()}</FieldCell>
+                <FieldCell>{progress}</FieldCell>
+                <FieldCell>{artificializedArea}</FieldCell>
+                <FieldCell>{greenhouseGasEmissions}</FieldCell>
+                <FieldCell>{waterConsumption}</FieldCell>
+                <FieldCell>{selectiveSortingPercentage}</FieldCell>
+                <FieldCell>{bikePathLength}</FieldCell>
+                <FieldCell>{energyConsumption}</FieldCell>
+                <td>
+                  {/*TODO class*/}
+                  <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
+                    <Link
+                      href={linkToAidesTerritoires(project)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="fr-btn fr-mr-4v"
+                    >
+                      Voir les aides
+                    </Link>
+                    <ProjectNoteButton
+                      project={{ id, name }}
+                      projectNote={
+                        notes[0]
+                          ? {
+                              id: notes[0].id,
+                              content: notes[0].content,
+                            }
+                          : null
+                      }
+                      scope={scope}
+                    />
+                  </div>
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>

@@ -16,11 +16,12 @@ export const Breadcrumbs = ({
       <button
         className="fr-breadcrumb__button"
         aria-expanded="false"
-        aria-controls="breadcrumb-1"
+        aria-controls="breadcrumbs"
+        data-fr-js-collapse-button="true"
       >
         Voir le fil d’Ariane
       </button>
-      <div className="fr-collapse" id="breadcrumb-1">
+      <div className="fr-collapse" id="breadcrumbs">
         <ol className="fr-breadcrumb__list">
           <li>
             <Link className="fr-breadcrumb__link" href="/">
