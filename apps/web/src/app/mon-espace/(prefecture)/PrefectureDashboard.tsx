@@ -9,6 +9,7 @@ import {
   groupProjectsByCrte,
 } from '@mec/web/app/mon-espace/projectsForDashboard'
 import { County } from '@prisma/client'
+import { ProjectNoteFormModal } from '@mec/web/app/mon-espace/ProjectNoteFormModal'
 
 export const PrefectureDashboard = asyncComponent(
   async ({ county }: { user: SessionUser; county: County }) => {
@@ -56,6 +57,7 @@ export const PrefectureDashboard = asyncComponent(
             </>
           )
         })}
+        <ProjectNoteFormModal />
       </>
     )
   },

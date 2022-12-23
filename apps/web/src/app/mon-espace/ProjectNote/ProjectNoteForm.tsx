@@ -14,6 +14,7 @@ import { withTrpc } from '@mec/web/withTrpc'
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { useRouter } from 'next/navigation'
 import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
+import { useProjectNoteModalStore } from '@mec/web/app/mon-espace/useProjectNoteModalStore'
 
 const defaultValuesFromExistingProjectNote = (
   scope: DashboardScope,
@@ -39,22 +40,19 @@ const defaultValuesFromExistingProjectNote = (
 
 export const ProjectNoteForm = withTrpc(
   ({
-    projectId,
-    projectName,
+    project,
     projectNote,
     modalTitleId,
-    modalId,
     scope,
   }: {
-    projectId: string
-    projectName: string
+    project: { id: string; name: string }
     projectNote: { id: string; content: string } | null
-    modalId: string
     modalTitleId: string
     scope: DashboardScope
   }) => {
     const router = useRouter()
     const isCreation = !projectNote
+    const resetModal = useProjectNoteModalStore((state) => state.reset)
 
     const form = useForm<ProjectNoteCreationData | ProjectNoteEditionData>({
       resolver: zodResolver(
@@ -65,7 +63,7 @@ export const ProjectNoteForm = withTrpc(
       defaultValues: defaultValuesFromExistingProjectNote(
         scope,
         projectNote,
-        projectId,
+        project.id,
       ),
     })
     const closeRef = useRef<HTMLButtonElement>(null)
@@ -107,6 +105,7 @@ export const ProjectNoteForm = withTrpc(
     const onSubmit = async (
       data: ProjectNoteCreationData | ProjectNoteEditionData,
     ) => {
+      console.log('SUBMIT ?', data)
       await executeMutation(data)
       closeRef.current?.click()
       router.refresh()
@@ -122,15 +121,17 @@ export const ProjectNoteForm = withTrpc(
       deletion.error?.message ??
       'Une erreur est survenue, merci de réessayer.'
 
+    console.log('FORM', { ...form })
+
     return (
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="fr-modal__body">
           <div className="fr-modal__header">
             <button
               className="fr-link--close fr-link"
-              aria-controls={modalId}
               ref={closeRef}
               type="button"
+              onClick={resetModal}
             >
               Fermer
             </button>
@@ -138,7 +139,7 @@ export const ProjectNoteForm = withTrpc(
           <div className="fr-modal__content">
             <h1 id={modalTitleId} className="fr-modal__title">
               <span className="fr-fi-arrow-right-line fr-fi--lg"></span>
-              {projectName}
+              {project.name}
             </h1>
 
             <InputFormField
@@ -164,7 +165,7 @@ export const ProjectNoteForm = withTrpc(
               <li>
                 <button
                   disabled={disableButtons}
-                  aria-controls={modalId}
+                  onClick={resetModal}
                   className="fr-btn  fr-btn--secondary"
                   type="button"
                 >

@@ -163,8 +163,7 @@ export const WriteProjectsTable = ({
                       Éditer
                     </Link>
                     <ProjectNoteButton
-                      projectId={project.id}
-                      projectName={project.name}
+                      project={{ id: project.id, name: project.name }}
                       projectNote={project.notes[0] ?? null}
                       scope={scope}
                     />

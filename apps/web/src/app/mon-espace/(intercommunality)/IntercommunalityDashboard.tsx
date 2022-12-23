@@ -7,12 +7,11 @@ import { serialize } from '@mec/web/utils/serialization'
 import { WriteProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/WriteProjectsTable'
 import {
   getProjectsForDashboard,
-  groupProjectsByCrte,
-  groupProjectsByIntercommunality,
   ProjectsForDashboard,
 } from '@mec/web/app/mon-espace/projectsForDashboard'
-import { Intercommunality, Crte } from '@prisma/client'
+import { Crte, Intercommunality } from '@prisma/client'
 import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadProjectsTable'
+import { ProjectNoteFormModal } from '@mec/web/app/mon-espace/ProjectNoteFormModal'
 
 export const IntercommunalityDashboard = asyncComponent(
   async ({
@@ -128,6 +127,7 @@ export const IntercommunalityDashboard = asyncComponent(
             serializedProjects={serializedMunicipalitiesProjects}
           />
         </div>
+        <ProjectNoteFormModal />
       </>
     )
   },

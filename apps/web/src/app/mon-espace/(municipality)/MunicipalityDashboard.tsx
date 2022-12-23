@@ -7,6 +7,7 @@ import { serialize } from '@mec/web/utils/serialization'
 import { WriteProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/WriteProjectsTable'
 import { getProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
 import { Crte, Municipality } from '@prisma/client'
+import { ProjectNoteFormModal } from '@mec/web/app/mon-espace/ProjectNoteFormModal'
 
 export const MunicipalityDashboard = asyncComponent(
   async ({
@@ -69,6 +70,7 @@ export const MunicipalityDashboard = asyncComponent(
             scope={scope}
           />
         </div>
+        <ProjectNoteFormModal />
       </>
     )
   },

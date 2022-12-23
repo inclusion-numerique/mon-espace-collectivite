@@ -1,51 +1,39 @@
-import { ProjectNoteForm } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteForm'
+'use client'
 import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
+import { useProjectNoteModalStore } from '@mec/web/app/mon-espace/useProjectNoteModalStore'
 
 export const ProjectNoteButton = ({
-  projectId,
-  projectName,
+  project,
   projectNote,
   scope,
 }: {
-  projectId: string
-  projectName: string
+  project: { id: string; name: string }
   projectNote: { id: string; content: string } | null
   scope: DashboardScope
 }) => {
-  const modalId = `project-node-modal-${projectId}`
-  const modalTitleId = `${modalId}-title`
   const hasNote = !!projectNote
+  const createProjectNote = useProjectNoteModalStore(
+    (state) => state.createProjectNote,
+  )
+  const updateProjectNote = useProjectNoteModalStore(
+    (state) => state.updateProjectNote,
+  )
+
+  const onClick = () => {
+    if (hasNote) {
+      updateProjectNote({ projectNote, project })
+      return
+    }
+    createProjectNote({ project, scope })
+  }
+
+  const label = hasNote ? 'Modifier la note privée' : 'Ajouter une note privée'
 
   return (
     <>
-      <button
-        className="fr-btn fr-btn--secondary"
-        data-fr-opened="false"
-        aria-controls={modalId}
-      >
-        {hasNote ? 'Modifier la note privée' : 'Ajouter une note privée'}
+      <button className="fr-btn fr-btn--secondary" onClick={onClick}>
+        {label}
       </button>
-      <dialog
-        aria-labelledby={modalTitleId}
-        id={modalId}
-        className="fr-modal"
-        role="dialog"
-      >
-        <div className="fr-container fr-container--fluid fr-container-md">
-          <div className="fr-grid-row fr-grid-row--center">
-            <div className="fr-col-12 fr-col-md-8 fr-col-lg-6">
-              <ProjectNoteForm
-                projectId={projectId}
-                projectNote={projectNote}
-                projectName={projectName}
-                modalId={modalId}
-                modalTitleId={modalTitleId}
-                scope={scope}
-              />
-            </div>
-          </div>
-        </div>
-      </dialog>
     </>
   )
 }

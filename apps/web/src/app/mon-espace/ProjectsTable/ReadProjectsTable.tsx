@@ -124,8 +124,7 @@ export const ReadProjectsTable = ({
                         Voir les aides
                       </Link>
                       <ProjectNoteButton
-                        projectId={id}
-                        projectName={name}
+                        project={{ id, name }}
                         projectNote={notes[0] ?? null}
                         scope={scope}
                       />
