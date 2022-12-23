@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['next', 'turbo', 'prettier'],
+  extends: ['turbo', 'prettier', 'next/core-web-vitals'],
   rules: {
     '@next/next/no-html-link-for-pages': 'off',
     'interface-name': 'off',
@@ -10,10 +10,5 @@ module.exports = {
     'no-trailing-spaces': 'error',
     'object-literal-sort-keys': 'off',
     'react/jsx-key': 'off',
-  },
-  settings: {
-    next: {
-      rootDir: ['apps/web/*'],
-    },
   },
 }
