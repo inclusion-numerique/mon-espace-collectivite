@@ -13,6 +13,11 @@
     "cdktf": "cdktf",
     "tf:web:backend-reconfigure": "cd cdktf.out/stacks/web && terraform init -reconfigure"
   },
+  "overrides": {
+    "cdktf-cli": {
+      "react": "*"
+    }
+  },
   "dependencies": {
     "cdktf": "^0.14.3",
     "cdktf-cli": "^0.14.3",
