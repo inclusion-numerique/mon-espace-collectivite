@@ -113,19 +113,16 @@ commands:
           name: "Set env vars"
           command: |
             echo "export IMAGE_NAME=$(echo 'mec-web-<< pipeline.git.branch >>' | sed -e 's/\//-/g')" >> ${BASH_ENV}
-            echo "export TEST_BRANCH=<<pipeline.git.branch>>" >> ${BASH_ENV}
-      - run:
-          name: 'Debug tag'
-          command: echo '<< parameters.registry >>/$IMAGE_NAME:<< parameters.version >>'
+            echo "export IMAGE_TAG=$(echo '<< parameters.registry >>/$IMAGE_NAME:<< parameters.version >>')" >> ${BASH_ENV}
       - run:
           name: 'Login to registry'
           command: docker login << parameters.registry >> -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
       - run:
           name: 'Build docker image'
-          command: docker build -t << parameters.registry >>/$IMAGE_NAME:<< parameters.version >> -f docker/web/Dockerfile .
-#      - run:
-#          name: 'Push image'
-#          command: docker push << parameters.image >>:<< parameters.version >>
+          command: docker build -t $IMAGE_TAG -f docker/web/Dockerfile .
+      - run:
+          name: 'Push image'
+          command: docker push $IMAGE_TAG
 
 
 jobs:
