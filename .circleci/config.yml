@@ -116,7 +116,7 @@ commands:
             echo "export TEST_BRANCH=<<pipeline.git.branch>>" >> ${BASH_ENV}
       - run:
           name: 'Debug tag'
-          command: echo $IMAGE_NAME
+          command: echo '<< parameters.registry >>/$IMAGE_NAME:<< parameters.version >>'
       - run:
           name: 'Login to registry'
           command: docker login << parameters.registry >> -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
