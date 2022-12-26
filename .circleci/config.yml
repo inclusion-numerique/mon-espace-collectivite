@@ -97,17 +97,27 @@ commands:
 
 
   build-web:
+    parameters:
+      image:
+        type: string
+        default: echo "rg.fr-par.scw.cloud/mec-web/mec-web-_<< pipeline.git.branch >>" | sed -e 's/\//-/g'
+      version:
+        type: string
+        default: latest
     steps:
       - setup_remote_docker
       - run:
-          name: 'Set tag'
-          command: WEB_IMAGE_TAG="hello"
+          name: 'Debug tag'
+          command: echo << parameters.image >>:<<parameters.version>>
+      - run:
+          name: 'Login to registry'
+          command: docker login rg.fr-par.scw.cloud/mec-web -u nologin --password-stdin <<< "$SCW_SECRET_KEY"
       - run:
           name: 'Build docker image'
-          command: docker build -t rg.fr-par.scw.cloud/mon-espace-collectivite/mec:latest -f docker/web/Dockerfile .
-      - run:
-          name: 'Debug tag'
-          command: echo "$WEB_IMAGE_TAG"
+          command: docker build -t << parameters.image >>:<< parameters.version >> -f docker/web/Dockerfile .
+#      - run:
+#          name: 'Push image'
+#          command: docker push << parameters.image >>:<< parameters.version >>
 
 
 jobs:
@@ -131,7 +141,6 @@ jobs:
     resource_class: large
     steps:
       - checkout
-      - install-dependencies
       - build-web
 
 workflows:
