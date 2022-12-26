@@ -101,7 +101,6 @@ jobs:
     steps:
       - checkout
       - fetch-dependencies
-      - prisma-generate
 
   lint_and_test:
     executor: node
