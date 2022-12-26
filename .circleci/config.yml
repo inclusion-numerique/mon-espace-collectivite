@@ -115,14 +115,13 @@ commands:
             echo "export IMAGE_NAME=$(echo 'mec-web-<< pipeline.git.branch >>' | sed -e 's/\//-/g')" >> ${BASH_ENV}
             echo "export IMAGE_TAG=$(echo '<< parameters.registry >>/$IMAGE_NAME:<< parameters.version >>')" >> ${BASH_ENV}
       - run:
-          name: 'Login to registry'
-          command: docker login << parameters.registry >> -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
-      - run:
           name: 'Build docker image'
           command: docker build -t $IMAGE_TAG -f docker/web/Dockerfile .
       - run:
-          name: 'Push image'
-          command: docker push $IMAGE_TAG
+          name: 'Login to registry and push image'
+          command: |
+            docker login << parameters.registry >> -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
+            docker push $IMAGE_TAG
 
 
 jobs:
