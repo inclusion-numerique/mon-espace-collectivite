@@ -13,13 +13,11 @@ executors:
       - image: cimg/node:19.3.0
         environment:
           TZ: 'UTC'
-        resource_class: large
   node-browsers:
     docker:
       - image: cimg/node:19.3.0-browsers
         environment:
           TZ: 'UTC'
-        resource_class: large
 
 parameters:
   cache_version:
@@ -114,12 +112,14 @@ commands:
 jobs:
   prepare_dependencies:
     executor: node
+    resource_class: large
     steps:
       - checkout
       - fetch-dependencies
 
   lint_and_test:
     executor: node
+    resource_class: large
     steps:
       - checkout
       - install-dependencies
@@ -127,6 +127,7 @@ jobs:
 
   build_web:
     executor: node
+    resource_class: large
     steps:
       - checkout
       - install-dependencies
