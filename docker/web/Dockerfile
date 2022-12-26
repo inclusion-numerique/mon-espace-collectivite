@@ -21,6 +21,8 @@ RUN pnpm install \
 # Rebuild the source code only when needed
 FROM base as builder
 
+ENV NEXT_TELEMETRY_DISABLED 1
+
 WORKDIR /app
 
 COPY --from=deps /app/node_modules/ ./node_modules/
@@ -40,6 +42,7 @@ FROM base AS runner
 
 ENV PORT 8080
 ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 webgroup \
     && adduser --system --uid 1001 webuser
