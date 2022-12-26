@@ -1,0 +1,111 @@
+version: 2.1
+
+# Circle CI retro public key for ssh access
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFMqZkFRArBl66kbkXuFi16ccYwlMSRtyFcBiCXarmLX retro@circleci.com
+
+orbs:
+  skip: theodo/skip@0.1.2
+#  browser-tools: circleci/browser-tools@1.4.0
+#  cypress: cypress-io/cypress@1
+executors:
+  node:
+    docker:
+      - image: cimg/node:19.3.0
+        environment:
+          TZ: 'UTC'
+  node-browsers:
+    docker:
+      - image: cimg/node:19.3.0-browsers
+        environment:
+          TZ: 'UTC'
+
+parameters:
+  cache_version:
+    type: string
+    default: '20220504-01'
+  virtual_store_dir:
+    type: string
+    default: './.pnpm'
+  lockfile:
+    type: string
+    default: './pnpm-lock.yaml'
+
+commands:
+  wip-fail:
+    steps:
+      - run:
+          name: 'WIP - Fail job'
+          command: /bin/false
+
+  install-pnpm:
+    steps:
+      - run:
+          name: 'Install pnpm'
+          command: curl -L https://pnpm.js.org/pnpm.js | node - add --global pnpm@7
+
+  fetch-dependencies:
+    parameters:
+      cache_key:
+        type: string
+        default: 'pnpm'
+    steps:
+      - restore_cache:
+          keys:
+            - << pipeline.parameters.cache_version >>-<< parameters.cache_key >>-{{ checksum "<< parameters.lockfile >>" }}
+            # Get previous dependencies to speed up download
+            # - << parameters.cache_version >>-<< parameters.cache_key >>-
+      - run:
+          name: 'Fetch dependencies'
+          command: pnpm fetch --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
+      - save_cache:
+          key: << pipeline.parameters.cache_version >>-<< parameters.cache_key >>-{{ checksum "<< parameters.lockfile >>" }}
+          paths:
+            - << pipeline.parameters.virtual_store_dir >>
+
+  install-dependencies:
+    parameters:
+      cache_key:
+        type: string
+        default: 'pnpm'
+    steps:
+      - restore_cache:
+          keys:
+            - << pipeline.parameters.cache_version >>-<< parameters.cache_key >>-{{ checksum "<< parameters.lockfile >>" }}
+      - run:
+          name: 'Install dependencies from store'
+          command: pnpm install --offline --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
+
+jobs:
+  prepare_dependencies:
+    executor: node
+    steps:
+      - checkout
+      - install-pnpm
+      - fetch-dependencies
+      - install-dependencies
+
+workflows:
+  version: 2
+  ci-pipeline:
+    jobs:
+      - prepare_dependencies
+#      - lint_and_test:
+#          requires:
+#            - prepare_dependencies
+#      - build_web:
+#          requires:
+#            - prepare_dependencies
+#      - build_storybook:
+#          requires:
+#            - prepare_dependencies
+#      - test_e2e:
+#          requires:
+#            - build_web
+#      - deploy_chromatic:
+#          requires:
+#            - lint_and_test
+#            - build_storybook
+#      - deploy_web:
+#          required:
+#            - lint_and_test
+#            - test_e2e

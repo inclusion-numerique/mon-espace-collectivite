@@ -1,42 +1,42 @@
+FROM node:19-slim as base
+
+WORKDIR /app
+RUN apt-get update && apt-get install -y openssl
+RUN npm install -g pnpm
+
+
 # Install dependencies only when needed
-FROM node:19-slim AS deps
+FROM base as deps
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y openssl
-
-COPY package-lock.json package.json tsconfig.json ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.json ./
 COPY apps/web/package.json ./apps/web/package.json
-# Only install apps/web dependencies
-RUN npm -w @mec/web ci \
-    && npm -w @mec/web run modclean:root \
-    && npm -w @mec/web run modclean
+
+RUN pnpm install \
+  --filter @mec/web \
+  --virtual-store-dir apps/web/node_modules/.pnpm \
+  --link-workspace-packages copy
 
 # Rebuild the source code only when needed
-FROM node:19-slim AS builder
+FROM base as builder
 
 WORKDIR /app
-
-RUN apt-get update && apt-get install -y openssl
 
 COPY --from=deps /app/node_modules/ ./node_modules/
 COPY --from=deps /app/apps/web/node_modules/ ./apps/web/node_modules/
 
 # Here dependencies and unneeded files are skiped thanks to .dockerignore file
-COPY package-lock.json package.json tsconfig.json ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.json ./
 COPY apps/web ./apps/web
 
-RUN npm -w @mec/web run setup:dsfr
-RUN npm -w @mec/web run prisma:generate
-RUN npm -w @mec/web run build
-RUN npm -w @mec/web prune --omit=dev
+RUN pnpm -F @mec/web setup:dsfr:docker
+RUN pnpm -F @mec/web prisma:generate
+RUN pnpm -F @mec/web build
+# RUN pnpm -F @mec/web prune --omit=dev
 
 # Production image, copy all the files and run next
-FROM node:19-slim AS runner
-
-WORKDIR /app
-
-RUN apt-get update && apt-get install -y openssl
+FROM base AS runner
 
 ENV PORT 8080
 ENV NODE_ENV production
@@ -68,4 +68,4 @@ USER webuser
 
 EXPOSE $PORT
 
-CMD ["npm", "run", "start:web"]
+CMD ["pnpm", "start:web"]
