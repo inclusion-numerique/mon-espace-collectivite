@@ -50,6 +50,7 @@ commands:
         type: string
         default: 'pnpm'
     steps:
+      - install-pnpm
       - restore_cache:
           keys:
             - << pipeline.parameters.cache_version >>-<< parameters.cache_key >>-{{ checksum "<< pipeline.parameters.lockfile >>" }}
@@ -57,7 +58,7 @@ commands:
             # - << parameters.cache_version >>-<< parameters.cache_key >>-
       - run:
           name: 'Fetch dependencies'
-          command: pnpm fetch --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
+          command: pnpm install --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
       - save_cache:
           key: << pipeline.parameters.cache_version >>-<< parameters.cache_key >>-{{ checksum "<< pipeline.parameters.lockfile >>" }}
           paths:
@@ -96,7 +97,6 @@ jobs:
     executor: node
     steps:
       - checkout
-      - install-pnpm
       - fetch-dependencies
 
   lint_and_test:
