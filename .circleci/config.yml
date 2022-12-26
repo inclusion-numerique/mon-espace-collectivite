@@ -98,23 +98,31 @@ commands:
 
   build-web:
     parameters:
+      registry:
+        type: string
+        default: rg.fr-par.scw.cloud/mec-web
       image:
         type: string
-        default: echo "rg.fr-par.scw.cloud/mec-web/mec-web-_<< pipeline.git.branch >>" | sed -e 's/\//-/g'
+        default: mec-web-<< pipeline.git.branch >> | sed -e 's/\//-/g'
       version:
         type: string
         default: latest
     steps:
       - setup_remote_docker
       - run:
+          name: "Set env vars"
+          command: |
+            echo "export IMAGE_NAME=$(echo 'mec-web-<< pipeline.git.branch >>' | sed -e 's/\//-/g')" >> ${BASH_ENV}
+            echo "export TEST_BRANCH=<<pipeline.git.branch>>" >> ${BASH_ENV}
+      - run:
           name: 'Debug tag'
-          command: echo << parameters.image >>:<<parameters.version>>
+          command: echo $IMAGE_NAME
       - run:
           name: 'Login to registry'
-          command: docker login rg.fr-par.scw.cloud/mec-web -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
+          command: docker login << parameters.registry >> -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
       - run:
           name: 'Build docker image'
-          command: docker build -t << parameters.image >>:<< parameters.version >> -f docker/web/Dockerfile .
+          command: docker build -t << parameters.registry >>/$IMAGE_NAME:<< parameters.version >> -f docker/web/Dockerfile .
 #      - run:
 #          name: 'Push image'
 #          command: docker push << parameters.image >>:<< parameters.version >>
