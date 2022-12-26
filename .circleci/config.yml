@@ -86,6 +86,9 @@ commands:
           name: 'Lint'
           command: pnpm lint
       - run:
+          name: 'Prisma generate'
+          command: pnpm -F @mec/web prisma:generate
+      - run:
           name: 'Tsc'
           command: pnpm tsc
       - run:
@@ -98,6 +101,7 @@ jobs:
     steps:
       - checkout
       - fetch-dependencies
+      - prisma-generate
 
   lint_and_test:
     executor: node

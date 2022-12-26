@@ -27,7 +27,6 @@
       "cache": false
     },
     "tsc": {
-      "dependsOn": ["^prisma:generate"],
       "cache": false
     }
   },
