@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "license": "AGPL-3.0-or-later",
   "private": true,
-  "packageManager": "npm@8.19.0",
+  "packageManager": "pnpm@7.19",
   "engines": {
     "node": "^19.1",
     "npm": "^8.19"
