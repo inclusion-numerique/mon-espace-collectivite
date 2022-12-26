@@ -4,7 +4,7 @@ import { existsSync } from 'fs'
 import { mkdir, readFile, writeFile } from 'fs/promises'
 import axios from 'axios'
 import { prismaClient } from '@mec/web/prismaClient'
-import { chunk } from 'lodash'
+import { chunk } from 'lodash-es'
 
 const dataSourceUrl =
   'https://aides-terr-staging-pr1167.osc-fr1.scalingo.io/api/perimeters/'
@@ -56,7 +56,7 @@ export const getPerimetersData = async (output: Output = consoleOutput) => {
   for (const chunkIndex in urlChunks) {
     const urls = urlChunks[chunkIndex]
     const pagesData = await Promise.all(
-      urls.map((url) =>
+      urls.map((url: string) =>
         axios.get<PerimetersApiData>(url).then(({ data }) => data.results),
       ),
     )

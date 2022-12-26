@@ -1,6 +1,6 @@
 import 'tsconfig-paths/register'
 import { mergeEpciAndCrteData } from '@mec/web/data/epciAndCrteDataSource'
-import { mergeMunicipalitiesAndDistrictsData } from '@mec/web/src/data/municipalitiesData'
+import { mergeMunicipalitiesAndDistrictsData } from '@mec/web/data/municipalitiesData'
 import { mergeCategories } from '@mec/web/data/categoriesData'
 import { mergePerimeters } from '@mec/web/data/aidesTerritoiresData'
 
