@@ -13,11 +13,13 @@ executors:
       - image: cimg/node:19.3.0
         environment:
           TZ: 'UTC'
+        resource_class: large
   node-browsers:
     docker:
       - image: cimg/node:19.3.0-browsers
         environment:
           TZ: 'UTC'
+        resource_class: large
 
 parameters:
   cache_version:
@@ -95,6 +97,20 @@ commands:
           name: 'Test @mec/web'
           command: pnpm -F @mec/web test
 
+
+  build-web:
+    steps:
+      - run:
+          name: 'Set tag'
+          command: WEB_IMAGE_TAG="hello"
+      - run:
+          name: 'Build docker image'
+          command: docker build -t rg.fr-par.scw.cloud/mon-espace-collectivite/mec:latest -f docker/web/Dockerfile .
+      - run:
+          name: 'Debug tag'
+          command: echo "$WEB_IMAGE_TAG"
+
+
 jobs:
   prepare_dependencies:
     executor: node
@@ -109,6 +125,13 @@ jobs:
       - install-dependencies
       - lint
 
+  build_web:
+    executor: node
+    steps:
+      - checkout
+      - install-dependencies
+      - build-web
+
 workflows:
   version: 2
   ci-pipeline:
@@ -117,9 +140,9 @@ workflows:
       - lint_and_test:
           requires:
             - prepare_dependencies
-#      - build_web:
-#          requires:
-#            - prepare_dependencies
+      - build_web:
+          requires:
+            - prepare_dependencies
 #      - build_storybook:
 #          requires:
 #            - prepare_dependencies
