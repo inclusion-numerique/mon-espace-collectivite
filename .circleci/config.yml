@@ -62,6 +62,11 @@ commands:
           key: << pipeline.parameters.cache_version >>-<< parameters.cache_key >>-{{ checksum "<< pipeline.parameters.lockfile >>" }}
           paths:
             - << pipeline.parameters.virtual_store_dir >>
+            - node_modules
+            - apps/web/node_modules
+            - apps/ci/node_modules
+            - packages/e2e/node_modules
+            - packages/cdk/node_modules
 
   install-dependencies:
     parameters:
@@ -69,12 +74,22 @@ commands:
         type: string
         default: 'pnpm'
     steps:
+      - install-pnpm
       - restore_cache:
           keys:
             - << pipeline.parameters.cache_version >>-<< parameters.cache_key >>-{{ checksum "<< pipeline.parameters.lockfile >>" }}
+
+  lint:
+    steps:
       - run:
-          name: 'Install dependencies from store'
-          command: pnpm install --offline --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
+          name: 'Lint'
+          command: pnpm lint
+      - run:
+          name: 'Tsc'
+          command: pnpm tsc
+      - run:
+          name: 'Test'
+          command: pnpm test
 
 jobs:
   prepare_dependencies:
@@ -83,16 +98,22 @@ jobs:
       - checkout
       - install-pnpm
       - fetch-dependencies
+
+  lint_and_test:
+    executor: node
+    steps:
+      - checkout
       - install-dependencies
+      - lint
 
 workflows:
   version: 2
   ci-pipeline:
     jobs:
       - prepare_dependencies
-#      - lint_and_test:
-#          requires:
-#            - prepare_dependencies
+      - lint_and_test:
+          requires:
+            - prepare_dependencies
 #      - build_web:
 #          requires:
 #            - prepare_dependencies
