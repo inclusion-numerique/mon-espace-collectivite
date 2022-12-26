@@ -92,8 +92,8 @@ commands:
           name: 'Tsc'
           command: pnpm tsc
       - run:
-          name: 'Test'
-          command: pnpm test
+          name: 'Test @mec/web'
+          command: pnpm -F @mec/web test
 
 jobs:
   prepare_dependencies:
