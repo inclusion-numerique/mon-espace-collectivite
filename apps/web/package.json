@@ -96,7 +96,7 @@
     "@types/html-minifier": "^4.0.2",
     "@types/lodash-es": "^4.17.6",
     "@types/mjml": "^4.7.0",
-    "@types/node": "^18.11.17",
+    "@types/node": "^18.11.18",
     "@types/nodemailer": "^6.4.7",
     "@types/nprogress": "^0.2.0",
     "@types/react": "18.0.26",
