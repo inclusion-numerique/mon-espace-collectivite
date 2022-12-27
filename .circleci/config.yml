@@ -124,6 +124,9 @@ commands:
   chromatic:
     steps:
       - run:
+          name: 'Setup DSFR'
+          command: pnpm -F @mec/web setup:dsfr
+      - run:
           name: 'Build storybook and test components'
           command: pnpm -F @mec/web chromatic
 
