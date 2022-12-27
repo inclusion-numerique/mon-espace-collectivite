@@ -1,8 +1,5 @@
 version: 2.1
 
-# Circle CI retro public key for ssh access
-# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFMqZkFRArBl66kbkXuFi16ccYwlMSRtyFcBiCXarmLX retro@circleci.com
-
 orbs:
   skip: theodo/skip@0.1.2
 #  browser-tools: circleci/browser-tools@1.4.0
@@ -124,6 +121,11 @@ commands:
             docker login << parameters.registry >> -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
             docker push $IMAGE_TAG
 
+  chromatic:
+    steps:
+      - run:
+          name: 'Build storybook and test components'
+          command: pnpm -F @mec/web chromatic
 
 jobs:
   prepare_dependencies:
@@ -148,6 +150,14 @@ jobs:
       - checkout
       - build-web
 
+  chromatic:
+    executor: node
+    resource_class: large
+    steps:
+      - checkout
+      - install-dependencies
+      - chromatic
+
 workflows:
   version: 2
   ci-pipeline:
@@ -159,9 +169,9 @@ workflows:
       - build_web:
           requires:
             - prepare_dependencies
-#      - build_storybook:
-#          requires:
-#            - prepare_dependencies
+      - chromatic:
+          requires:
+            - prepare_dependencies
 #      - test_e2e:
 #          requires:
 #            - build_web

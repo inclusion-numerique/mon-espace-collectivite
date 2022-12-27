@@ -23,7 +23,8 @@
     "prisma:generate": "prisma generate",
     "prisma:format": "prisma format",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "pnpm with-env chromatic --exit-zero-on-changes --exit-once-uploaded"
   },
   "engines": {
     "node": ">=19",
@@ -102,6 +103,7 @@
     "@types/react-dom": "18.0.9",
     "@types/styled-components": "^5.1.26",
     "@types/uuid": "^9.0.0",
+    "chromatic": "^6.14.0",
     "css-loader": "^6.7.3",
     "joi": "^17.7.0",
     "modclean": "^3.0.0-beta.1",
