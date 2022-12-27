@@ -92,6 +92,29 @@ commands:
           name: 'Test @mec/web'
           command: pnpm -F @mec/web test
 
+  setup-docker-env:
+    parameters:
+      registry:
+        type: string
+        default: rg.fr-par.scw.cloud/mec-web
+      build-version:
+        type: string
+        default: $CIRCLE_SHA1
+      deploy-version:
+        type: string
+        default: latest
+      e2e-version:
+        type: string
+        default: e2e
+    steps:
+      - run:
+          name: "Set env vars"
+          command: |
+            echo "export REGISTRY=<< parameters.registry >>" >> ${BASH_ENV}
+            echo "export IMAGE_NAME=$(echo 'mec-web-<< pipeline.git.branch >>' | sed -e 's/\//-/g')" >> ${BASH_ENV}
+            echo "export IMAGE_BUILD_TAG=$(echo '<< parameters.registry >>/$IMAGE_NAME:<< parameters.build-version >>')" >> ${BASH_ENV}
+            echo "export IMAGE_DEPLOY_TAG=$(echo '<< parameters.registry >>/$IMAGE_NAME:<< parameters.deploy-version >>')" >> ${BASH_ENV}
+            echo "export IMAGE_E2E_TAG=$(echo '<< parameters.registry >>/$IMAGE_NAME:<< parameters.e2e-version >>')" >> ${BASH_ENV}
 
   build-web:
     parameters:
@@ -103,23 +126,19 @@ commands:
         default: mec-web-<< pipeline.git.branch >> | sed -e 's/\//-/g'
       version:
         type: string
-        default: latest
+        default: $CIRCLE_SHA1
     steps:
+      - setup-docker-env
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: "Set env vars"
-          command: |
-            echo "export IMAGE_NAME=$(echo 'mec-web-<< pipeline.git.branch >>' | sed -e 's/\//-/g')" >> ${BASH_ENV}
-            echo "export IMAGE_TAG=$(echo '<< parameters.registry >>/$IMAGE_NAME:<< parameters.version >>')" >> ${BASH_ENV}
-      - run:
           name: 'Build docker image'
-          command: docker build -t $IMAGE_TAG -f docker/web/Dockerfile .
+          command: docker build -t $IMAGE_BUILD_TAG -f docker/web/Dockerfile .
       - run:
           name: 'Login to registry and push image'
           command: |
-            docker login << parameters.registry >> -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
-            docker push $IMAGE_TAG
+            docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
+            docker push $IMAGE_BUILD_TAG
 
   chromatic:
     steps:
@@ -129,6 +148,21 @@ commands:
       - run:
           name: 'Build storybook and test components'
           command: pnpm -F @mec/web chromatic
+
+  e2e:
+    steps:
+      - setup-docker-env
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: 'Login to registry and pull image'
+          command: |
+            docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
+            docker pull $IMAGE_BUILD_TAG
+      - run:
+          name: 'Up docker-compose'
+          command: |
+            docker-compose -f docker/web/docker-compose.ci.yml up
 
 jobs:
   prepare_dependencies:
@@ -161,6 +195,13 @@ jobs:
       - install-dependencies
       - chromatic
 
+  test_e2e:
+    executor: node
+    resource_class: large
+    steps:
+      - checkout
+      - e2e
+
 workflows:
   version: 2
   ci-pipeline:
@@ -175,9 +216,9 @@ workflows:
       - chromatic:
           requires:
             - prepare_dependencies
-#      - test_e2e:
-#          requires:
-#            - build_web
+      - test_e2e:
+          requires:
+            - build_web
 #      - deploy_chromatic:
 #          requires:
 #            - lint_and_test

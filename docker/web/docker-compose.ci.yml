@@ -1,0 +1,30 @@
+# This docker-compose is used for upping a @mec/web service for e2e testing
+# in ci environment
+
+version: '3.8'
+services:
+  db:
+    container_name: db
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+  app:
+    container_name: web
+    image: "${IMAGE_BUILD_TAG}"
+    depends_on:
+      - db
+    ports:
+      - "3000:8080"
+    environment:
+      NODE_ENV: test
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: mec
+    links:
+      - db
