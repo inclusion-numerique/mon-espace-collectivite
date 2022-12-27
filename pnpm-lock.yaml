@@ -280,6 +280,12 @@ importers:
       cypress: 12.2.0
       start-server-and-test: 1.15.2
 
+  packages/playwright:
+    specifiers:
+      '@playwright/test': ^1.29.1
+    devDependencies:
+      '@playwright/test': 1.29.1
+
 packages:
 
   /@adobe/css-tools/4.0.1:
@@ -3792,6 +3798,15 @@ packages:
       tiny-glob: 0.2.9
       tslib: 2.4.1
     dev: false
+
+  /@playwright/test/1.29.1:
+    resolution: {integrity: sha512-iQxk2DX5U9wOGV3+/Jh9OHPsw5H3mleUL2S4BgQuwtlAfK3PnKvn38m4Rg9zIViGHVW24opSm99HQm/UFLEy6w==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dependencies:
+      '@types/node': 18.11.17
+      playwright-core: 1.29.1
+    dev: true
 
   /@pmmmwh/react-refresh-webpack-plugin/0.5.10_react-refresh@0.11.0:
     resolution: {integrity: sha512-j0Ya0hCFZPd4x40qLzbhGsh9TMtdb+CJQiso+WxLOPNasohq9cc5SNUcwsZaRH6++Xh91Xkm/xHCkuIiIu0LUA==}
@@ -12998,6 +13013,12 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       find-up: 5.0.0
+    dev: true
+
+  /playwright-core/1.29.1:
+    resolution: {integrity: sha512-20Ai3d+lMkWpI9YZYlxk8gxatfgax5STW8GaMozAHwigLiyiKQrdkt7gaoT9UQR8FIVDg6qVXs9IoZUQrDjIIg==}
+    engines: {node: '>=14'}
+    hasBin: true
     dev: true
 
   /pluralize/7.0.0:

@@ -10,11 +10,12 @@ executors:
       - image: cimg/node:19.3.0
         environment:
           TZ: 'UTC'
-  node-browsers:
+  playwright:
     docker:
-      - image: cimg/node:19.3.0-browsers
-        environment:
-          TZ: 'UTC'
+      - image: mcr.microsoft.com/playwright:v1.29.0-focal
+    environment:
+      TZ: 'UTC'
+
 
 parameters:
   cache_version:
@@ -159,10 +160,18 @@ commands:
           command: |
             docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
             docker pull $IMAGE_BUILD_TAG
+#      - run:
+#          name: 'Install playwright browsers'
+#          command: |
+#            pnpm -F @mec/playwright dlx playwright install
+#      - run:
+#          name: 'Up docker-compose'
+#          command: |
+#            docker-compose -f docker/web/docker-compose.ci.yml up
       - run:
-          name: 'Up docker-compose'
+          name: 'Run playwright'
           command: |
-            docker-compose -f docker/web/docker-compose.ci.yml up
+            SHARD="$((${CIRCLE_NODE_INDEX}+1))"; pnpm -F @mec/e2e playwright test -- --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
 
 jobs:
   prepare_dependencies:
@@ -196,8 +205,9 @@ jobs:
       - chromatic
 
   test_e2e:
-    executor: node
+    executor: playwright
     resource_class: large
+    parallelism: 4
     steps:
       - checkout
       - e2e

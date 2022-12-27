@@ -1,17 +1,11 @@
 {
   "name": "@mec/e2e",
-  "version": "1.0.0",
-  "description": "End to end tests for mon-espace-collectivite",
-  "main": "index.js",
-  "scripts": {
-    "clean": "rm -rf node_modules",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "ci": "start-server-and-test start-server http://localhost:8080 test"
-  },
-  "author": "",
+  "version": "0.1.0",
   "license": "AGPL-3.0-or-later",
-  "dependencies": {
-    "cypress": "^12.1.0",
-    "start-server-and-test": "^1.15.2"
+  "scripts": {
+    "playwright": "playwright"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.29.1"
   }
 }
