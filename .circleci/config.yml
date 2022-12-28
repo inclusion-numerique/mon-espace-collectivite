@@ -146,9 +146,14 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: 'Build and push circleci-e2e base docker image'
+          name: 'Build Docker image'
           command: |
-            docker build --push -t rg.fr-par.scw.cloud/mec-ci/circleci-e2e:latest -f docker/ci/circleci-e2e/Dockerfile .
+            docker build -t rg.fr-par.scw.cloud/mec-ci/circleci-e2e:latest -f docker/ci/circleci-e2e/Dockerfile .
+      - run:
+          name: 'Login and push to registry'
+          command: |
+            docker login rg.fr-par.scw.cloud/mec-ci -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
+            docker push rg.fr-par.scw.cloud/mec-ci/circleci-e2e:latest
 
 
   test_e2e:
