@@ -2,8 +2,7 @@ version: 2.1
 
 orbs:
   skip: theodo/skip@0.1.2
-#  browser-tools: circleci/browser-tools@1.4.0
-#  cypress: cypress-io/cypress@1
+
 executors:
   node:
     docker:
@@ -202,6 +201,12 @@ jobs:
             docker pull $IMAGE_BUILD_TAG
             docker tag $IMAGE_BUILD_TAG $IMAGE_DEPLOY_TAG
             docker push $IMAGE_DEPLOY_TAG
+      - run:
+          name: 'Install Terraform'
+          command: |
+            wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+            echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+            sudo apt update && sudo apt install terraform
       - run:
           name: 'Deploy stack'
           command: |
