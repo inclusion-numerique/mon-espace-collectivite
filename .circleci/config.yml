@@ -60,7 +60,7 @@ workflows:
           requires:
             - build_web
       - deploy_web:
-          required:
+          requires:
             - lint_and_test
             - test_e2e
 
