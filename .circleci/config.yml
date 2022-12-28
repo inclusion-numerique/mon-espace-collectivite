@@ -10,11 +10,11 @@ executors:
       - image: cimg/node:19.3.0
         environment:
           TZ: 'UTC'
-  playwright:
+  e2e:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.29.0-focal
-    environment:
-      TZ: 'UTC'
+      - image: cimg/node:19.3.0-browsers
+        environment:
+          TZ: 'UTC'
 
 
 parameters:
@@ -160,6 +160,11 @@ commands:
           command: |
             docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
             docker pull $IMAGE_BUILD_TAG
+      - run:
+          name: 'Install playwright'
+          command: |
+            cd packages/e2e
+            pnpx playwright install --with-deps chromium
 #      - run:
 #          name: 'Install playwright browsers'
 #          command: |
@@ -205,9 +210,9 @@ jobs:
       - chromatic
 
   test_e2e:
-    executor: playwright
+    executor: e2e
     resource_class: large
-    parallelism: 4
+    parallelism: 1
     steps:
       - checkout
       - e2e
