@@ -16,7 +16,6 @@ executors:
         environment:
           TZ: 'UTC'
 
-
 parameters:
   cache_version:
     type: string
@@ -27,200 +26,25 @@ parameters:
   lockfile:
     type: string
     default: './pnpm-lock.yaml'
-
-commands:
-  wip-fail:
-    steps:
-      - run:
-          name: 'WIP - Fail job'
-          command: /bin/false
-
-  install-pnpm:
-    steps:
-      - run:
-          name: 'Install pnpm'
-#           command: curl -L https://pnpm.js.org/pnpm.js | node - add --global pnpm@7
-          command: sudo corepack enable && corepack prepare pnpm@latest --activate
-
-  fetch-dependencies:
-    parameters:
-      cache_key:
-        type: string
-        default: 'pnpm'
-    steps:
-      - install-pnpm
-      - restore_cache:
-          keys:
-            - << pipeline.parameters.cache_version >>-<< parameters.cache_key >>-{{ checksum "<< pipeline.parameters.lockfile >>" }}
-            # Get previous dependencies to speed up download
-            # - << parameters.cache_version >>-<< parameters.cache_key >>-
-      - run:
-          name: 'Fetch dependencies'
-          command: pnpm install --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
-      - save_cache:
-          key: << pipeline.parameters.cache_version >>-<< parameters.cache_key >>-{{ checksum "<< pipeline.parameters.lockfile >>" }}
-          paths:
-            - << pipeline.parameters.virtual_store_dir >>
-            - ./node_modules
-            - ./apps/web/node_modules
-            - ./apps/ci/node_modules
-            - ./packages/e2e/node_modules
-            - ./packages/cdk/node_modules
-
-  install-dependencies:
-    parameters:
-      cache_key:
-        type: string
-        default: 'pnpm'
-    steps:
-      - install-pnpm
-      - restore_cache:
-          keys:
-            - << pipeline.parameters.cache_version >>-<< parameters.cache_key >>-{{ checksum "<< pipeline.parameters.lockfile >>" }}
-
-  lint:
-    steps:
-      - run:
-          name: 'Lint'
-          command: pnpm lint
-      - run:
-          name: 'Prisma generate'
-          command: pnpm -F @mec/web prisma:generate
-      - run:
-          name: 'Tsc'
-          command: pnpm tsc
-      - run:
-          name: 'Test @mec/web'
-          command: pnpm -F @mec/web test
-
-  setup-docker-env:
-    parameters:
-      registry:
-        type: string
-        default: rg.fr-par.scw.cloud/mec-web
-      build-version:
-        type: string
-        default: $CIRCLE_SHA1
-      deploy-version:
-        type: string
-        default: latest
-      e2e-version:
-        type: string
-        default: e2e
-    steps:
-      - run:
-          name: "Set env vars"
-          command: |
-            echo "export REGISTRY=<< parameters.registry >>" >> ${BASH_ENV}
-            echo "export IMAGE_NAME=$(echo 'mec-web-<< pipeline.git.branch >>' | sed -e 's/\//-/g')" >> ${BASH_ENV}
-            echo "export IMAGE_BUILD_TAG=$(echo '<< parameters.registry >>/$IMAGE_NAME:<< parameters.build-version >>')" >> ${BASH_ENV}
-            echo "export IMAGE_DEPLOY_TAG=$(echo '<< parameters.registry >>/$IMAGE_NAME:<< parameters.deploy-version >>')" >> ${BASH_ENV}
-            echo "export IMAGE_E2E_TAG=$(echo '<< parameters.registry >>/$IMAGE_NAME:<< parameters.e2e-version >>')" >> ${BASH_ENV}
-
-  build-web:
-    parameters:
-      registry:
-        type: string
-        default: rg.fr-par.scw.cloud/mec-web
-      image:
-        type: string
-        default: mec-web-<< pipeline.git.branch >> | sed -e 's/\//-/g'
-      version:
-        type: string
-        default: $CIRCLE_SHA1
-    steps:
-      - setup-docker-env
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: 'Build docker image'
-          command: docker build -t $IMAGE_BUILD_TAG -f docker/web/Dockerfile .
-      - run:
-          name: 'Login to registry and push image'
-          command: |
-            docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
-            docker push $IMAGE_BUILD_TAG
-
-  chromatic:
-    steps:
-      - run:
-          name: 'Setup DSFR'
-          command: pnpm -F @mec/web setup:dsfr
-      - run:
-          name: 'Build storybook and test components'
-          command: pnpm -F @mec/web chromatic
-
-  e2e:
-    steps:
-      - setup-docker-env
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: 'Login to registry and pull image'
-          command: |
-            docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
-            docker pull $IMAGE_BUILD_TAG
-      - run:
-          name: 'Install playwright'
-          command: |
-            cd packages/e2e
-            pnpx playwright install --with-deps chromium
-#      - run:
-#          name: 'Install playwright browsers'
-#          command: |
-#            pnpm -F @mec/playwright dlx playwright install
-#      - run:
-#          name: 'Up docker-compose'
-#          command: |
-#            docker-compose -f docker/web/docker-compose.ci.yml up
-      - run:
-          name: 'Run playwright'
-          command: |
-            SHARD="$((${CIRCLE_NODE_INDEX}+1))"; pnpm -F @mec/e2e playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
-
-jobs:
-  prepare_dependencies:
-    executor: node
-    resource_class: large
-    steps:
-      - checkout
-      - fetch-dependencies
-
-  lint_and_test:
-    executor: node
-    resource_class: large
-    steps:
-      - checkout
-      - install-dependencies
-      - lint
-
-  build_web:
-    executor: node
-    resource_class: large
-    steps:
-      - checkout
-      - build-web
-
-  chromatic:
-    executor: node
-    resource_class: large
-    steps:
-      - checkout
-      - install-dependencies
-      - chromatic
-
-  test_e2e:
-    executor: e2e
-    resource_class: large
-    parallelism: 1
-    steps:
-      - checkout
-      - install-dependencies
-      - e2e
+  registry:
+    type: string
+    default: rg.fr-par.scw.cloud/mec-web
+  image:
+    type: string
+    default: mec-web-<< pipeline.git.branch >> | sed -e 's/\//-/g'
+  build-version:
+    type: string
+    default: $CIRCLE_SHA1
+  deploy-version:
+    type: string
+    default: latest
+  e2e-version:
+    type: string
+    default: e2e
 
 workflows:
   version: 2
-  ci-pipeline:
+  lint-test-build-deploy:
     jobs:
       - prepare_dependencies
       - lint_and_test:
@@ -235,11 +59,149 @@ workflows:
       - test_e2e:
           requires:
             - build_web
-#      - deploy_chromatic:
-#          requires:
-#            - lint_and_test
-#            - build_storybook
-#      - deploy_web:
-#          required:
-#            - lint_and_test
-#            - test_e2e
+      - deploy_web:
+          required:
+            - lint_and_test
+            - test_e2e
+
+jobs:
+  prepare_dependencies:
+    executor: node
+    resource_class: large
+    steps:
+      - checkout
+      - install_pnpm
+      - restore_cache:
+          keys:
+            - << pipeline.parameters.cache_version >>-pnpm-{{ checksum "<< pipeline.parameters.lockfile >>" }}
+            # Get previous dependencies to speed up download
+            # - << parameters.cache_version >>-<< parameters.cache_key >>-
+      - run:
+          name: 'Fetch dependencies'
+          command: pnpm install --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
+      - save_cache:
+          key: << pipeline.parameters.cache_version >>-pnpm-{{ checksum "<< pipeline.parameters.lockfile >>" }}
+          paths:
+            - << pipeline.parameters.virtual_store_dir >>
+            - ./node_modules
+            - ./apps/web/node_modules
+            - ./apps/ci/node_modules
+            - ./packages/e2e/node_modules
+            - ./packages/cdk/node_modules
+
+  lint_and_test:
+    executor: node
+    resource_class: large
+    steps:
+      - checkout
+      - install_dependencies
+      - run:
+          name: 'Lint'
+          command: pnpm lint
+      - run:
+          name: 'Prisma generate'
+          command: pnpm -F @mec/web prisma:generate
+      - run:
+          name: 'Tsc'
+          command: pnpm tsc
+      - run:
+          name: 'Test @mec/web'
+          command: pnpm -F @mec/web test
+
+  build_web:
+    executor: node
+    resource_class: large
+    steps:
+      - checkout
+      - setup-docker-env
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: 'Build docker image'
+          command: docker build -t $IMAGE_BUILD_TAG -f docker/web/Dockerfile .
+      - run:
+          name: 'Login to registry and push image'
+          command: |
+            docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
+            docker push $IMAGE_BUILD_TAG
+
+  chromatic:
+    executor: node
+    resource_class: large
+    steps:
+      - checkout
+      - install-dependencies
+      - run:
+          name: 'Setup DSFR'
+          command: pnpm -F @mec/web setup:dsfr
+      - run:
+          name: 'Build storybook and test components'
+          command: pnpm -F @mec/web chromatic
+
+  test_e2e:
+    executor: e2e
+    resource_class: large
+    parallelism: 1
+    steps:
+      - checkout
+      - install-dependencies
+      - setup-docker-env
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: 'Login to registry and pull image'
+          command: |
+            docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
+            docker pull $IMAGE_BUILD_TAG
+      - run:
+          name: 'Install playwright'
+          command: |
+            cd packages/e2e
+            pnpx playwright install --with-deps chromium
+      #      - run:
+      #          name: 'Install playwright browsers'
+      #          command: |
+      #            pnpm -F @mec/playwright dlx playwright install
+      #      - run:
+      #          name: 'Up docker-compose'
+      #          command: |
+      #            docker-compose -f docker/web/docker-compose.ci.yml up
+      - run:
+          name: 'Run playwright'
+          command: |
+            SHARD="$((${CIRCLE_NODE_INDEX}+1))"; pnpm -F @mec/e2e playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
+
+
+  deploy_web:
+    executor: node
+    resource_class: large
+    steps:
+      - checkout
+      - deploy-web
+
+
+commands:
+
+  install_pnpm:
+    steps:
+      - run:
+          name: 'Install pnpm'
+          command: sudo corepack enable && corepack prepare pnpm@latest --activate
+
+  install_dependencies:
+    steps:
+      - install-pnpm
+      - restore_cache:
+          keys:
+            - << pipeline.parameters.cache_version >>-pnpm-{{ checksum "<< pipeline.parameters.lockfile >>" }}
+
+  setup-docker-env:
+    steps:
+      - run:
+          name: "Set docker env vars"
+          command: |
+            echo "export REGISTRY=<< pipeline.parameters.registry >>" >> ${BASH_ENV}
+            echo "export IMAGE_NAME=$(echo 'mec-web-<< pipeline.git.branch >>' | sed -e 's/\//-/g')" >> ${BASH_ENV}
+            echo "export IMAGE_BUILD_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.build-version >>')" >> ${BASH_ENV}
+            echo "export IMAGE_DEPLOY_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.deploy-version >>')" >> ${BASH_ENV}
+            echo "export IMAGE_E2E_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.e2e-version >>')" >> ${BASH_ENV}
