@@ -6,9 +6,10 @@
     "clean": "rm -rf .turbo node_modules",
     "with-env": "dotenv -e ../../.env --",
     "tsc": "tsc --noEmit",
-    "synth": "npm run with-env cdktf synth",
-    "deploy:web": "npm run with-env cdktf deploy web",
-    "cdktf": "cdktf",
+    "synth": "pnpm with-env cdktf synth",
+    "deploy:web": "pnpm with-env cdktf deploy web",
+    "deploy:web:ci": "cdktf deploy web --auto-approve",
+    "cdktf": "pnpm with-env cdktf",
     "tf:web:backend-reconfigure": "cd cdktf.out/stacks/web && terraform init -reconfigure"
   },
   "overrides": {
@@ -19,7 +20,7 @@
   "dependencies": {
     "cdktf": "^0.14.3",
     "cdktf-cli": "^0.14.3",
-    "constructs": "^10.1.194",
+    "constructs": "^10.1.202",
     "dotenv": "^16.0.3",
     "dotenv-cli": "^6.0.0",
     "git-rev-sync": "^3.0.2"

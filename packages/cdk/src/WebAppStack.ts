@@ -44,11 +44,9 @@ export class WebAppStack extends TerraformStack {
     })
 
     new S3Backend(this, {
-      bucket: 'terraform-state',
+      bucket: 'mec-terraform',
       key: `${namespaced('state')}.tfstate`,
-      region: 'fr-par',
-      accessKey: accessKey.value,
-      secretKey: secretKey.value,
+      // Credentials are provided with AWS_*** env variables
       endpoint: 'https://s3.fr-par.scw.cloud',
       skipCredentialsValidation: true,
       skipRegionValidation: true,

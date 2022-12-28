@@ -192,6 +192,7 @@ jobs:
     steps:
       - checkout
       - setup_docker_env
+      - install_dependencies
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
@@ -202,9 +203,9 @@ jobs:
             docker tag $IMAGE_BUILD_TAG $IMAGE_DEPLOY_TAG
             docker push $IMAGE_DEPLOY_TAG
       - run:
-          name: 'Deploy image'
+          name: 'Deploy stack'
           command: |
-            echo "TODO"
+            pnpm -F @mec/cdk deploy:web:ci
 
 commands:
 
