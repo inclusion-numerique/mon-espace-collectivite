@@ -176,7 +176,7 @@ commands:
       - run:
           name: 'Run playwright'
           command: |
-            SHARD="$((${CIRCLE_NODE_INDEX}+1))"; pnpm -F @mec/e2e playwright test -- --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
+            SHARD="$((${CIRCLE_NODE_INDEX}+1))"; pnpm -F @mec/e2e playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
 
 jobs:
   prepare_dependencies:
