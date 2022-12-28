@@ -32,19 +32,19 @@ parameters:
   image:
     type: string
     default: mec-web-<< pipeline.git.branch >> | sed -e 's/\//-/g'
-  build-version:
+  build_version:
     type: string
     default: $CIRCLE_SHA1
-  deploy-version:
+  deploy_version:
     type: string
     default: latest
-  e2e-version:
+  e2e_version:
     type: string
     default: e2e
 
 workflows:
   version: 2
-  lint-test-build-deploy:
+  lint_test_build_deploy:
     jobs:
       - prepare_dependencies
       - lint_and_test:
@@ -70,12 +70,7 @@ jobs:
     resource_class: large
     steps:
       - checkout
-      - install_pnpm
-      - restore_cache:
-          keys:
-            - << pipeline.parameters.cache_version >>-pnpm-{{ checksum "<< pipeline.parameters.lockfile >>" }}
-            # Get previous dependencies to speed up download
-            # - << parameters.cache_version >>-<< parameters.cache_key >>-
+      - install_dependencies
       - run:
           name: 'Fetch dependencies'
           command: pnpm install --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
@@ -177,7 +172,20 @@ jobs:
     resource_class: large
     steps:
       - checkout
-      - deploy-web
+      - setup_docker_env
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: 'Login to registry and push image'
+          command: |
+            docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
+            docker pull $IMAGE_BUILD_TAG
+            docker tag $IMAGE_BUILD_TAG $IMAGE_DEPLOY_TAG
+            docker push $IMAGE_DEPLOY_TAG
+      - run:
+          name: 'Deploy image'
+          command: |
+            echo "TODO"
 
 
 commands:
@@ -202,6 +210,6 @@ commands:
           command: |
             echo "export REGISTRY=<< pipeline.parameters.registry >>" >> ${BASH_ENV}
             echo "export IMAGE_NAME=$(echo 'mec-web-<< pipeline.git.branch >>' | sed -e 's/\//-/g')" >> ${BASH_ENV}
-            echo "export IMAGE_BUILD_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.build-version >>')" >> ${BASH_ENV}
-            echo "export IMAGE_DEPLOY_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.deploy-version >>')" >> ${BASH_ENV}
-            echo "export IMAGE_E2E_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.e2e-version >>')" >> ${BASH_ENV}
+            echo "export IMAGE_BUILD_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.build_version >>')" >> ${BASH_ENV}
+            echo "export IMAGE_DEPLOY_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.deploy_version >>')" >> ${BASH_ENV}
+            echo "export IMAGE_E2E_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.e2e_version >>')" >> ${BASH_ENV}
