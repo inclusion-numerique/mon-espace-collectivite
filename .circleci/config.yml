@@ -215,6 +215,7 @@ jobs:
     parallelism: 1
     steps:
       - checkout
+      - install-dependencies
       - e2e
 
 workflows:
