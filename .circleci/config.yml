@@ -113,7 +113,7 @@ jobs:
     resource_class: large
     steps:
       - checkout
-      - setup-docker-env
+      - setup_docker_env
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
@@ -130,7 +130,7 @@ jobs:
     resource_class: large
     steps:
       - checkout
-      - install-dependencies
+      - install_dependencies
       - run:
           name: 'Setup DSFR'
           command: pnpm -F @mec/web setup:dsfr
@@ -144,8 +144,8 @@ jobs:
     parallelism: 1
     steps:
       - checkout
-      - install-dependencies
-      - setup-docker-env
+      - install_dependencies
+      - setup_docker_env
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
@@ -190,12 +190,12 @@ commands:
 
   install_dependencies:
     steps:
-      - install-pnpm
+      - install_pnpm
       - restore_cache:
           keys:
             - << pipeline.parameters.cache_version >>-pnpm-{{ checksum "<< pipeline.parameters.lockfile >>" }}
 
-  setup-docker-env:
+  setup_docker_env:
     steps:
       - run:
           name: "Set docker env vars"
