@@ -167,7 +167,6 @@ jobs:
           command: |
             SHARD="$((${CIRCLE_NODE_INDEX}+1))"; pnpm -F @mec/e2e playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
 
-
   deploy_web:
     executor: node
     resource_class: large
@@ -187,7 +186,6 @@ jobs:
           name: 'Deploy image'
           command: |
             echo "TODO"
-
 
 commands:
 
