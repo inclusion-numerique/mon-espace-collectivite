@@ -154,11 +154,7 @@ jobs:
           command: |
             cd packages/e2e
             sudo pnpx playwright install-deps
-#            pnpx playwright install --with-deps chromium
-      #      - run:
-      #          name: 'Install playwright browsers'
-      #          command: |
-      #            pnpm -F @mec/playwright dlx playwright install
+            pnpx playwright install
       #      - run:
       #          name: 'Up docker-compose'
       #          command: |
