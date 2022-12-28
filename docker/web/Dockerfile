@@ -1,4 +1,4 @@
-FROM node:19-slim as base
+FROM node:19.3.0-slim as base
 
 WORKDIR /app
 RUN apt-get update && apt-get install -y openssl

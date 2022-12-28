@@ -12,7 +12,7 @@ executors:
           TZ: 'UTC'
   e2e:
     docker:
-      - image: cimg/node:19.3.0-browsers
+      - image: rg.fr-par.scw.cloud/mec-ci/circleci-e2e:latest
         environment:
           TZ: 'UTC'
 
@@ -56,8 +56,10 @@ workflows:
       - chromatic:
           requires:
             - prepare_dependencies
+      - build_ci_e2e
       - test_e2e:
           requires:
+            - build_ci_e2e
             - build_web
       - deploy_web:
           requires:
@@ -134,13 +136,28 @@ jobs:
           name: 'Build storybook and test components'
           command: pnpm -F @mec/web chromatic
 
+  build_ci_e2e:
+    executor: node
+    resource_class: large
+    steps:
+      - checkout
+      - skip/skip_unchanged:
+          paths: docker/ci/circleci-e2e
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: 'Build and push circleci-e2e base docker image'
+          command: |
+            docker build --push -t rg.fr-par.scw.cloud/mec-ci/circleci-e2e:latest -f docker/ci/circleci-e2e/Dockerfile .
+
+
   test_e2e:
     executor: e2e
     resource_class: large
     parallelism: 1
     steps:
       - checkout
-      - install_dependencies
+      - install_pnpm
       - setup_docker_env
       - setup_remote_docker:
           docker_layer_caching: true
@@ -149,12 +166,12 @@ jobs:
           command: |
             docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
             docker pull $IMAGE_BUILD_TAG
-      - run:
-          name: 'Install playwright'
-          command: |
-            cd packages/e2e
-            sudo pnpx playwright install-deps
-            pnpx playwright install
+#      - run:
+#          name: 'Install playwright'
+#          command: |
+#            cd packages/e2e
+#            sudo pnpx playwright install-deps
+#            pnpx playwright install
       #      - run:
       #          name: 'Up docker-compose'
       #          command: |
