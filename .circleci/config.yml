@@ -217,6 +217,7 @@ jobs:
           # This will be instantly resolved from global store thanks to custom image playwright setup
           command: |
             pnpm -F @mec/e2e install
+            pnpx playwright install
       #      - run:
       #          name: 'Up docker-compose'
       #          command: |
