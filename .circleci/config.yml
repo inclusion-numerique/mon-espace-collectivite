@@ -175,6 +175,11 @@ jobs:
 #          name: 'Copy @mec/web prod dependencies'
 #          command: pnpm install -F @mec/web --prod --node-linker=hoisted --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
       # TODO Check that overriding with prod has worked
+      - run:
+          name: 'Clear dependencies to install only prod dependencies'
+          command: |
+            rm -rf node_modules
+            rm -rf apps/web/node_modules
       - install_web_prod_dependencies
       - run:
           name: 'Cleanup and prepare standalone build'
