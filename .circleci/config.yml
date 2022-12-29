@@ -68,7 +68,7 @@ workflows:
             - build_web
       - test_e2e_baseimg:
           requires:
-            -build_web
+            - build_web
       - deploy_web:
           requires:
             - lint_and_test
