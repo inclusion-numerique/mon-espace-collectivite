@@ -173,10 +173,8 @@ jobs:
             # node_modules from next standalone build is fucked
             rm -rf .next/standalone/node_modules
             mv .next/standalone dist/server
-            mv ./node_modules dist/
-            # mv ./node_modules dist/app/
-            # For now try with filtered node_modules
-            # mv ../../node_modules dist/
+            mv ./node_modules dist/app/
+            mv ../../node_modules dist/
             mv .next/static dist/server/.next/
             mv ./public dist/server/
       - run:
