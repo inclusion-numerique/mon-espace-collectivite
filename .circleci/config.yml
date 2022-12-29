@@ -178,6 +178,7 @@ jobs:
       - run:
           name: 'Clear dependencies to install only prod dependencies'
           command: |
+            rm -rf << pipeline.parameters.virtual_store_dir >>
             rm -rf node_modules
             rm -rf apps/web/node_modules
       - install_web_prod_dependencies
