@@ -160,7 +160,7 @@ jobs:
       - run:
           name: 'Install copied prod dependencies'
           command: |
-            pnpm install -F @mec/web --prod --node-linker=hoisted
+            pnpm install -F @mec/web --prod --node-linker=hoisted --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
       - run:
           # TODO Check that binary is ok for node image or generate inside dockerfile
           name: 'Re-generate Prisma after cleaning dependencies'
