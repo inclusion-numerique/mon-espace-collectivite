@@ -52,6 +52,7 @@ workflows:
   lint_test_build_deploy:
     jobs:
       - prepare_dependencies
+      - prepare_web_prod_dependencies
       - lint_and_test:
           requires:
             - prepare_dependencies
@@ -61,6 +62,7 @@ workflows:
       - build_web_copy:
           requires:
             - prepare_dependencies
+            - prepare_web_prod_dependencies
       - chromatic:
           requires:
             - prepare_dependencies
@@ -99,6 +101,23 @@ jobs:
             - ./apps/ci/node_modules
             - ./packages/e2e/node_modules
             - ./packages/cdk/node_modules
+  prepare_web_prod_dependencies:
+    executor: node
+    resource_class: large
+    steps:
+      - checkout
+      - skip/skip_unchanged:
+          paths: pnpm-lock.yaml
+      - install_dependencies
+      - run:
+          name: 'Fetch web prod dependencies'
+          command: pnpm install -F @mec/web --prod --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
+      - save_cache:
+          key: << pipeline.parameters.cache_version >>-pnpm-web-prod-{{ checksum "<< pipeline.parameters.lockfile >>" }}
+          paths:
+            - << pipeline.parameters.virtual_store_dir >>
+            - ./node_modules
+            - ./apps/web/node_modules
 
   lint_and_test:
     executor: node
@@ -152,9 +171,11 @@ jobs:
       - run:
           name: 'Build next app'
           command: pnpm -F @mec/web build
-      - run:
-          name: 'Copy @mec/web prod dependencies'
-          command: pnpm install -F @mec/web --prod --node-linker=hoisted
+#      - run:
+#          name: 'Copy @mec/web prod dependencies'
+#          command: pnpm install -F @mec/web --prod --node-linker=hoisted --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
+      # TODO Check that overriding with prod has worked
+      - install_web_prod_dependencies
       - run:
           name: 'Cleanup and prepare standalone build'
           command: |
@@ -322,6 +343,13 @@ commands:
       - restore_cache:
           keys:
             - << pipeline.parameters.cache_version >>-pnpm-{{ checksum "<< pipeline.parameters.lockfile >>" }}
+
+  install_web_prod_dependencies:
+    steps:
+      - install_pnpm
+      - restore_cache:
+          keys:
+            - << pipeline.parameters.cache_version >>-pnpm-web-prod-{{ checksum "<< pipeline.parameters.lockfile >>" }}
 
   setup_docker_env:
     steps:
