@@ -47,7 +47,7 @@ export class WebAppStack extends TerraformStack {
       })
 
     // Configuring env variables
-    const webContainerImage = sensitiveEnvVariable('webContainerImage')
+    const webContainerImage = envVariable('webContainerImage')
     // Configuring env secrets
     const accessKey = sensitiveEnvVariable('accessKey')
     const secretKey = sensitiveEnvVariable('secretKey')
@@ -167,6 +167,6 @@ export class WebAppStack extends TerraformStack {
     })
 
     output('webContainerStatus', container.status)
-    output('webContainerId', container.friendlyUniqueId)
+    output('webContainerId', container.id)
   }
 }
