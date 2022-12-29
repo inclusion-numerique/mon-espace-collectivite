@@ -197,6 +197,8 @@ jobs:
       - install_dependencies
       - setup_remote_docker:
           docker_layer_caching: true
+      - queue/until_front_of_line:
+          time: '10'
       - run:
           name: 'Login to registry and push image'
           command: |
