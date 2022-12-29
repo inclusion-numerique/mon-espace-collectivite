@@ -55,9 +55,9 @@ workflows:
       - lint_and_test:
           requires:
             - prepare_dependencies
-      - build_web:
-          requires:
-            - prepare_dependencies
+#      - build_web:
+#          requires:
+#            - prepare_dependencies
       - build_web_copy:
           requires:
             - prepare_dependencies
@@ -65,18 +65,18 @@ workflows:
           requires:
             - prepare_dependencies
       - build_ci_e2e
-      - test_e2e:
-          requires:
-            - build_ci_e2e
-            - build_web
+#      - test_e2e:
+#          requires:
+#            - build_ci_e2e
+#            - build_web
       - test_e2e_baseimg:
           requires:
-            - build_web
+            - build_web_copy
       - deploy_web:
           requires:
             - lint_and_test
             - chromatic
-            - test_e2e
+            - test_e2e_baseimg
 
 jobs:
   prepare_dependencies:
