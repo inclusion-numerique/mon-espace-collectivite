@@ -148,7 +148,7 @@ export class WebAppStack extends TerraformStack {
     const containerName = namespaced('mec-web')
 
     const container = new Container(this, 'webContainer', {
-      namespaceId: containerNamespaceId,
+      namespaceId: containerNamespace.namespaceId,
       registryImage: webRegistryImage,
       environmentVariables: {
         EMAIL_FROM_ADDRESS: emailFromAddress,
