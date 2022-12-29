@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   skip: theodo/skip@0.1.2
+  queue: eddiewebb/queue@1.8.4
 
 executors:
   node:
@@ -72,6 +73,8 @@ jobs:
     resource_class: large
     steps:
       - checkout
+      - skip/skip_unchanged:
+          paths: pnpm-lock.yaml
       - install_dependencies
       - run:
           name: 'Fetch dependencies'
