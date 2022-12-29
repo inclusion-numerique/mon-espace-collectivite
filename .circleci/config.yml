@@ -255,4 +255,4 @@ commands:
             echo "export IMAGE_BUILD_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.build_version >>')" >> ${BASH_ENV}
             echo "export IMAGE_DEPLOY_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.deploy_version >>')" >> ${BASH_ENV}
             echo "export IMAGE_E2E_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.e2e_version >>')" >> ${BASH_ENV}
-            echo "export TF_VAR_web_webContainerImage_C5B2590D=$IMAGE_BUILD_TAG >> ${BASH_ENV}
+            echo "export TF_VAR_web_webContainerImage_C5B2590D=$IMAGE_BUILD_TAG" >> ${BASH_ENV}
