@@ -10,7 +10,8 @@
     "deploy:web": "pnpm with-env cdktf deploy web",
     "deploy:web:ci": "cdktf deploy web --auto-approve",
     "cdktf": "pnpm with-env cdktf",
-    "tf:web:backend-reconfigure": "cd cdktf.out/stacks/web && terraform init -reconfigure"
+    "tf:web:backend-reconfigure": "cd cdktf.out/stacks/web && terraform init -reconfigure",
+    "scw": "pnpm with-env scw"
   },
   "overrides": {
     "cdktf-cli": {

@@ -40,7 +40,14 @@ export class WebAppStack extends TerraformStack {
         type: 'string',
         sensitive: true,
       })
+    const envVariable = (name: string) =>
+      new TerraformVariable(this, name, {
+        type: 'string',
+        sensitive: false,
+      })
 
+    // Configuring env variables
+    const webContainerImage = sensitiveEnvVariable('webContainerImage')
     // Configuring env secrets
     const accessKey = sensitiveEnvVariable('accessKey')
     const secretKey = sensitiveEnvVariable('secretKey')
@@ -140,16 +147,12 @@ export class WebAppStack extends TerraformStack {
 
     const databaseUrl = `postgres://${dbConfig.user}:${dbConfig.password}@${dbInstance.endpointIp}:${dbInstance.endpointPort}/${dbConfig.name}`
 
-    const webRegistryImage = `${registryNamespace.endpoint}/${namespaced(
-      'mec-web',
-    )}:latest`
-
     // Changing the name will recreate a new container
     const containerName = namespaced('mec-web')
 
     const container = new Container(this, 'webContainer', {
       namespaceId: containerNamespace.namespaceId,
-      registryImage: webRegistryImage,
+      registryImage: webContainerImage.value,
       environmentVariables: {
         EMAIL_FROM_ADDRESS: emailFromAddress,
         EMAIL_FROM_NAME: emailFromName,
@@ -162,5 +165,8 @@ export class WebAppStack extends TerraformStack {
       maxScale: isMain ? 5 : 1,
       deploy: true,
     })
+
+    output('webContainerStatus', container.status)
+    output('webContainerId', container.friendlyUniqueId)
   }
 }

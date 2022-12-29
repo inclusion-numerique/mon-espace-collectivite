@@ -25,9 +25,7 @@ export default function HomePage() {
           <div
             className={`fr-col-12 fr-col-md-6 fr-p-4v fr-p-md-10v ${styles.text}`}
           >
-            <h4>
-              TEST_DEPLOY Les contrats de relance et de transition écologique.
-            </h4>
+            <h4>Les contrats de relance et de transition écologique.</h4>
             <p style={{ flex: 1 }}>
               Vous êtes maire ou préfet et vous souhaitez gérer ou voir les
               projets CRTE de votre collectivé.

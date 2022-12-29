@@ -216,7 +216,20 @@ jobs:
           name: 'Deploy stack'
           command: |
             pnpm -F @mec/cdk deploy:web:ci
-
+      - run:
+          name: 'Trigger post deploy'
+          command: |
+            echo "TODO post deploy from CLI with same db credentials and read from output"
+#      - run:
+#          name: 'Install scaleway CLI'
+#          command: |
+#            SCW_VERSION="2.5.4"
+#            sudo curl -o /usr/local/bin/scw -L "https://github.com/scaleway/scaleway-cli/releases/download/v${SCW_VERSION}/scaleway-cli_${SCW_VERSION}_linux_amd64"
+#            sudo chmod +x /usr/local/bin/scw
+#      - run:
+#          name: 'Trigger container deploy'
+#          command: |
+#            scw container container deploy
 commands:
 
   install_pnpm:
@@ -242,3 +255,4 @@ commands:
             echo "export IMAGE_BUILD_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.build_version >>')" >> ${BASH_ENV}
             echo "export IMAGE_DEPLOY_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.deploy_version >>')" >> ${BASH_ENV}
             echo "export IMAGE_E2E_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.e2e_version >>')" >> ${BASH_ENV}
+            echo "export TF_VAR_web_webContainerImage_C5B2590D=$IMAGE_BUILD_TAG >> ${BASH_ENV}
