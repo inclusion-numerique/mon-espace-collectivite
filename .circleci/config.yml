@@ -10,6 +10,11 @@ executors:
       - image: cimg/node:19.3.0
         environment:
           TZ: 'UTC'
+  node-browsers:
+    docker:
+      - image: cimg/node:19.3.0-browsers
+        environment:
+          TZ: 'UTC'
   e2e:
     docker:
       - image: rg.fr-par.scw.cloud/mec-ci/circleci-e2e:latest
@@ -61,6 +66,9 @@ workflows:
           requires:
             - build_ci_e2e
             - build_web
+      - test_e2e_baseimg:
+          requires:
+            -build_web
       - deploy_web:
           requires:
             - lint_and_test
@@ -188,6 +196,37 @@ jobs:
             SHARD="$((${CIRCLE_NODE_INDEX}+1))"
             pnpm -F @mec/e2e playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
 
+
+  test_e2e_baseimg:
+    executor: node-browsers
+    resource_class: large
+    parallelism: 1
+    steps:
+      - checkout
+      - install_pnpm
+      - setup_docker_env
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: 'Login to registry and pull image'
+          command: |
+            docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
+            docker pull $IMAGE_BUILD_TAG
+      - run:
+          name: 'Install playwright'
+          # This will be instantly resolved from global store thanks to custom image playwright setup
+          command: |
+            pnpm -F @mec/e2e install
+      #      - run:
+      #          name: 'Up docker-compose'
+      #          command: |
+      #            docker-compose -f docker/web/docker-compose.ci.yml up
+      - run:
+          name: 'Run playwright'
+          command: |
+            SHARD="$((${CIRCLE_NODE_INDEX}+1))"
+            pnpm -F @mec/e2e playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
+
   deploy_web:
     executor: node
     resource_class: large
@@ -200,18 +239,18 @@ jobs:
       - queue/until_front_of_line:
           time: '10'
       - run:
-          name: 'Login to registry and push image'
-          command: |
-            docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
-            docker pull $IMAGE_BUILD_TAG
-            docker tag $IMAGE_BUILD_TAG $IMAGE_DEPLOY_TAG
-            docker push $IMAGE_DEPLOY_TAG
-      - run:
           name: 'Install Terraform'
           command: |
             wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
             echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
             sudo apt update && sudo apt install terraform
+      - run:
+          name: 'Debug docker env'
+          command: |
+            echo $IMAGE_NAME
+            echo $IMAGE_DEPLOY_TAG
+            echo $IMAGE_BUILD_TAG
+            echo $TF_VAR_web_webContainerImage_C5B2590D
       - run:
           name: 'Deploy stack'
           command: |

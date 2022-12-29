@@ -168,5 +168,6 @@ export class WebAppStack extends TerraformStack {
 
     output('webContainerStatus', container.status)
     output('webContainerId', container.id)
+    output('webContainerImage', webContainerImage.value)
   }
 }
