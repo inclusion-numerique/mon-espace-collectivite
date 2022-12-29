@@ -108,7 +108,7 @@ jobs:
       - checkout
       - skip/skip_unchanged:
           paths: pnpm-lock.yaml
-      - install_dependencies
+      - install_web_prod_dependencies
       - run:
           name: 'Fetch web prod dependencies'
           command: pnpm install -F @mec/web --prod --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
