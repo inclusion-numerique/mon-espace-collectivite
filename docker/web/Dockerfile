@@ -32,7 +32,7 @@ COPY --from=deps /app/apps/web/node_modules/ ./apps/web/node_modules/
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.json ./
 COPY apps/web ./apps/web
 
-RUN pnpm -F @mec/web setup:dsfrc
+RUN pnpm -F @mec/web setup:dsfr
 RUN pnpm -F @mec/web prisma:generate
 RUN pnpm -F @mec/web build
 # RUN pnpm -F @mec/web prune --omit=dev
