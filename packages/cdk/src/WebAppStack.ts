@@ -12,14 +12,21 @@ import { DataScalewayRdbInstance } from '../.gen/providers/scaleway/data-scalewa
 import { RdbUser } from '../.gen/providers/scaleway/rdb-user'
 import { RdbPrivilege } from '../.gen/providers/scaleway/rdb-privilege'
 import { generateDatabasePassword } from './databasePassword'
+import { DataScalewayContainerNamespace } from '../.gen/providers/scaleway/data-scaleway-container-namespace'
+import { DataScalewayRegistryNamespace } from '../.gen/providers/scaleway/data-scaleway-registry-namespace'
+import { Container } from '../.gen/providers/scaleway/container'
 
 const databaseInstanceId = '7bd3aa2e-fdf4-4e5e-b6af-2ec2ec37cd75'
+const containerNamespaceId = '99eb3592-9355-476f-ad0c-6db7b80bff87'
+const registryNamespaceId = '6609899c-75da-481b-914d-17a7b75ea1db'
 const region = 'fr-par'
 
 export class WebAppStack extends TerraformStack {
   constructor(scope: Construct, id: string, namespace: string) {
     super(scope, id)
-    const namespaced = (name: string) => `${name}--${namespace}`
+    const namespaced = (name: string) => `${name}-${namespace}`
+
+    const isMain = namespace === 'main'
 
     // Output helper function
     const output = (name: string, value: string | number | boolean) =>
@@ -93,8 +100,6 @@ export class WebAppStack extends TerraformStack {
 
     output('databaseUser', dbConfig.user)
     output('databaseName', dbConfig.name)
-    // TODO Remove this
-    output('databasePassword', dbConfig.password)
 
     new RdbPrivilege(this, 'databasePrivilege', {
       instanceId: dbInstance.instanceId,
@@ -110,5 +115,52 @@ export class WebAppStack extends TerraformStack {
 
     output('uploadsBucketName', uploadsBucket.name)
     output('uploadsBucketEndpoint', uploadsBucket.endpoint)
+
+    const registryNamespace = new DataScalewayRegistryNamespace(
+      this,
+      'registryNamespace',
+      {
+        namespaceId: registryNamespaceId,
+      },
+    )
+
+    const containerNamespace = new DataScalewayContainerNamespace(
+      this,
+      'containerNamespace',
+      { namespaceId: containerNamespaceId },
+    )
+
+    const emailFromAddress = isMain
+      ? `bot+mon-espace-collectivite@kime.tech`
+      : `bot+mec-${namespace}@kime.tech`
+
+    const emailFromName = isMain
+      ? 'Mon espace collectivité'
+      : `[${namespace}] Mon espace collectivité`
+
+    const databaseUrl = `postgres://${dbConfig.user}:${dbConfig.password}@${dbInstance.endpointIp}:${dbInstance.endpointPort}/${dbConfig.name}`
+
+    const webRegistryImage = `${registryNamespace.endpoint}/${namespaced(
+      'mec-web',
+    )}:latest`
+
+    // Changing the name will recreate a new container
+    const containerName = namespaced('mec-web')
+
+    const container = new Container(this, 'webContainer', {
+      namespaceId: containerNamespaceId,
+      registryImage: webRegistryImage,
+      environmentVariables: {
+        EMAIL_FROM_ADDRESS: emailFromAddress,
+        EMAIL_FROM_NAME: emailFromName,
+      },
+      secretEnvironmentVariables: {
+        DATABASE_URL: databaseUrl,
+      },
+      name: containerName,
+      minScale: isMain ? 2 : 0,
+      maxScale: isMain ? 5 : 1,
+      deploy: true,
+    })
   }
 }
