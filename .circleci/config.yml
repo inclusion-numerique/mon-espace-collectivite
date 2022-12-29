@@ -15,11 +15,6 @@ executors:
       - image: cimg/node:19.3.0-browsers
         environment:
           TZ: 'UTC'
-  e2e:
-    docker:
-      - image: rg.fr-par.scw.cloud/mec-ci/circleci-e2e:latest
-        environment:
-          TZ: 'UTC'
 
 parameters:
   cache_version:
@@ -55,28 +50,20 @@ workflows:
       - lint_and_test:
           requires:
             - prepare_dependencies
-#      - build_web:
-#          requires:
-#            - prepare_dependencies
-      - build_web_copy:
+      - build_web:
           requires:
             - prepare_dependencies
       - chromatic:
           requires:
             - prepare_dependencies
-      - build_ci_e2e
-#      - test_e2e:
-#          requires:
-#            - build_ci_e2e
-#            - build_web
-      - test_e2e_baseimg:
+      - test_e2e:
           requires:
-            - build_web_copy
+            - build_web
       - deploy_web:
           requires:
             - lint_and_test
             - chromatic
-            - test_e2e_baseimg
+            - test_e2e
 
 jobs:
   prepare_dependencies:
@@ -127,23 +114,6 @@ jobs:
       - setup_docker_env
       - setup_remote_docker:
           docker_layer_caching: true
-      - run:
-          name: 'Build docker image'
-          command: docker build -t $IMAGE_BUILD_TAG -f docker/web/Dockerfile .
-      - run:
-          name: 'Login to registry and push image'
-          command: |
-            docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
-            docker push $IMAGE_BUILD_TAG
-
-  build_web_copy:
-    executor: node
-    resource_class: large
-    steps:
-      - checkout
-      - setup_docker_env
-      - setup_remote_docker:
-          docker_layer_caching: true
       - install_dependencies
       - run:
           # TODO Check that binary is ok for node image or generate inside dockerfile
@@ -179,7 +149,7 @@ jobs:
             mv ./public dist/server/
       - run:
           name: 'Build docker image'
-          command: docker build -t $IMAGE_BUILD_TAG -f docker/web-copy/Dockerfile .
+          command: docker build -t $IMAGE_BUILD_TAG -f docker/web/Dockerfile .
       - run:
           name: 'Login to registry and push image'
           command: |
@@ -199,58 +169,7 @@ jobs:
           name: 'Build storybook and test components'
           command: pnpm -F @mec/web chromatic
 
-  build_ci_e2e:
-    executor: node
-    resource_class: large
-    steps:
-      - checkout
-      - skip/skip_unchanged:
-          paths: docker/ci/circleci-e2e
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: 'Build Docker image'
-          command: |
-            docker build -t rg.fr-par.scw.cloud/mec-ci/circleci-e2e:latest -f docker/ci/circleci-e2e/Dockerfile .
-      - run:
-          name: 'Login and push to registry'
-          command: |
-            docker login rg.fr-par.scw.cloud/mec-ci -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
-            docker push rg.fr-par.scw.cloud/mec-ci/circleci-e2e:latest
-
-
   test_e2e:
-    executor: e2e
-    resource_class: large
-    parallelism: 1
-    steps:
-      - checkout
-      - install_pnpm
-      - setup_docker_env
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: 'Login to registry and pull image'
-          command: |
-            docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
-            docker pull $IMAGE_BUILD_TAG
-      - run:
-          name: 'Install playwright'
-          # This will be instantly resolved from global store thanks to custom image playwright setup
-          command: |
-            pnpm -F @mec/e2e install
-      #      - run:
-      #          name: 'Up docker-compose'
-      #          command: |
-      #            docker-compose -f docker/web/docker-compose.ci.yml up
-      - run:
-          name: 'Run playwright'
-          command: |
-            SHARD="$((${CIRCLE_NODE_INDEX}+1))"
-            pnpm -F @mec/e2e playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
-
-
-  test_e2e_baseimg:
     executor: node-browsers
     resource_class: large
     parallelism: 1
