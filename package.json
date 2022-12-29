@@ -34,7 +34,8 @@
     "docker:build:web": "docker buildx build --platform linux/amd64 -t rg.fr-par.scw.cloud/mec-web/mec-web-dev:latest -f docker/web/Dockerfile .",
     "docker:build:web:debug": "DOCKER_BUILDKIT=0 docker build -t mec-web/mec-web-dev:debug -f docker/web/Dockerfile ."
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
     "@manypkg/cli": "^0.19.2",
     "@testing-library/jest-dom": "^5.16.5",

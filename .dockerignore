@@ -3,6 +3,7 @@
 **/.turbo
 # dependencies
 **/node_modules
+!apps/web/dist/**/node_modules
 **/.pnp
 **/.pnp.js
 **/.idea
