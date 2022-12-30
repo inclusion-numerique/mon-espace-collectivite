@@ -5,6 +5,7 @@ import { mergeCategories } from '@mec/web/data/categoriesData'
 import { mergePerimeters } from '@mec/web/data/aidesTerritoiresData'
 
 const main = async () => {
+  console.log('ARGS FOR UPDATE', process.argv)
   await mergeEpciAndCrteData()
   await mergeMunicipalitiesAndDistrictsData()
   await mergeCategories()

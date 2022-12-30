@@ -236,7 +236,7 @@ jobs:
       - run:
           name: 'Trigger post deploy'
           command: |
-            echo "TODO post deploy from CLI with same db credentials and read from output"
+            pnpm -F @mec/cli post-deploy
 #      - run:
 #          name: 'Install scaleway CLI'
 #          command: |

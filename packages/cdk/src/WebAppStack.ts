@@ -29,9 +29,15 @@ export class WebAppStack extends TerraformStack {
     const isMain = namespace === 'main'
 
     // Output helper function
-    const output = (name: string, value: string | number | boolean) =>
+    // ⚠️ When calling this function, do not forget to update typings in src/getCdkOutput.ts
+    const output = (
+      name: string,
+      value: string | number | boolean,
+      sensitive?: 'sensitive',
+    ) =>
       new TerraformOutput(this, `output_${name}`, {
         value,
+        sensitive: sensitive === 'sensitive',
       })
 
     // See https://developer.hashicorp.com/terraform/cdktf/create-and-deploy/best-practices
@@ -168,7 +174,7 @@ export class WebAppStack extends TerraformStack {
       deploy: true,
     })
 
-    output('databaseUrl', databaseUrl)
+    output('databaseUrl', databaseUrl, 'sensitive')
     output('webContainerStatus', container.status)
     output('webContainerId', container.id)
     output('webContainerImage', webContainerImage.value)
