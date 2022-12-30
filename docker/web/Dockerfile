@@ -13,12 +13,13 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 webgroup \
     && adduser --system --uid 1001 webuser
 
-COPY --chown=webuser:webgroup apps/web/dist/node_modules/ ./node_modules/
-COPY --chown=webuser:webgroup apps/web/dist/web/node_modules/ ./web/node_modules/
-COPY --chown=webuser:webgroup apps/web/dist/web/server/ ./web/server/
+COPY --chown=webuser:webgroup apps/web/dist/node_modules ./node_modules
+COPY --chown=webuser:webgroup apps/web/dist/web/node_modules ./web/node_modules
+COPY --chown=webuser:webgroup apps/web/dist/web/server ./web/server
+
 
 USER webuser
 
 EXPOSE $PORT
 
-CMD ["node", "server/server.js"]
+CMD ["node", "web/server/server.js"]
