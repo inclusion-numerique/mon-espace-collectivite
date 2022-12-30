@@ -10,16 +10,13 @@ export default async function health(
   const requestInfo = {
     url: req.url,
     query: req.query,
-    parsedUrl: new URL(req.url ?? ''),
-    parsedHostUrl: new URL(
-      req.url ?? '',
-      `${headers['X-Forwarded-Proto']}://${headers.host}`,
-    ),
-    parsedHostLowerUrl: new URL(
+    parsedUrl: new URL(
       req.url ?? '',
       `${headers['x-forwarded-proto']}://${headers.host}`,
     ),
   }
+
+  console.log('Health env:', process.env)
 
   res
     .status(status === 'ok' ? 200 : 503)
