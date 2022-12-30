@@ -151,7 +151,9 @@ export class WebAppStack extends TerraformStack {
       ? 'Mon espace collectivité'
       : `[${namespace}] Mon espace collectivité`
 
-    const databaseUrl = `postgres://${dbConfig.user}:${dbConfig.password}@${dbInstance.endpointIp}:${dbInstance.endpointPort}/${dbConfig.name}`
+    const databaseUrl = `postgres://${dbConfig.user}:${encodeURIComponent(
+      dbConfig.password,
+    )}@${dbInstance.endpointIp}:${dbInstance.endpointPort}/${dbConfig.name}`
 
     // Changing the name will recreate a new container
     const containerName = namespaced('mec-web')
