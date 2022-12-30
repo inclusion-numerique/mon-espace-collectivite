@@ -8,6 +8,7 @@ import {
 import { existsSync } from 'fs'
 import { mkdir } from 'fs/promises'
 import { prismaClient } from '@mec/web/prismaClient'
+import { dataDirectory } from '@mec/web/data/data'
 
 const fields = [
   // Some territories (TAAF) have no EPCI, we do not include them for now
@@ -25,7 +26,7 @@ const dataSourceUrl = `https://public.opendatasoft.com/explore/dataset/georef-fr
   ',',
 )}&timezone=Europe/Berlin&lang=fr&use_labels_for_header=false&csv_separator=%3B`
 
-const destinationDirectory = resolve(__dirname, '../../var/data')
+const destinationDirectory = dataDirectory
 const filename = 'municipalities-and-districts.csv'
 
 const destination = resolve(destinationDirectory, filename)

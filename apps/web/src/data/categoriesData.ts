@@ -4,10 +4,11 @@ import { existsSync } from 'fs'
 import { mkdir, readFile, writeFile } from 'fs/promises'
 import axios from 'axios'
 import { prismaClient } from '@mec/web/prismaClient'
+import { dataDirectory } from '@mec/web/data/data'
 
 const dataSourceUrl = 'https://aides-territoires.beta.gouv.fr/api/themes/'
 
-const destinationDirectory = resolve(__dirname, '../../var/data')
+const destinationDirectory = dataDirectory
 const filename = 'categories.json'
 
 const destination = resolve(destinationDirectory, filename)

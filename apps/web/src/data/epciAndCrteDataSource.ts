@@ -9,11 +9,12 @@ import {
   getHeaders,
   Output,
 } from '@mec/web/data/csvDataHelpers'
+import { dataDirectory } from '@mec/web/data/data'
 
 const dataSourceUrl =
   'https://www.data.gouv.fr/fr/datasets/r/cf3d2117-3ce8-4f26-af0b-7a86af450862'
 
-const destinationDirectory = resolve(__dirname, '../../var/data')
+const destinationDirectory = dataDirectory
 const filename = 'epci-and-crte.csv'
 
 const destination = resolve(destinationDirectory, filename)

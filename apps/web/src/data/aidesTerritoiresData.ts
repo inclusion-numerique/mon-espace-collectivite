@@ -4,7 +4,8 @@ import { existsSync } from 'fs'
 import { mkdir, readFile, writeFile } from 'fs/promises'
 import axios from 'axios'
 import { prismaClient } from '@mec/web/prismaClient'
-import { chunk } from 'lodash-es'
+import { chunk } from 'lodash'
+import { dataDirectory } from '@mec/web/data/data'
 
 const dataSourceUrl =
   'https://aides-terr-staging-pr1167.osc-fr1.scalingo.io/api/perimeters/'
@@ -12,7 +13,7 @@ const dataSourceUrl =
 // Api has pages 1 based
 const getPerimetersPageUrl = (page: number) => `${dataSourceUrl}?page=${page}`
 
-const destinationDirectory = resolve(__dirname, '../../var/data')
+const destinationDirectory = dataDirectory
 const filename = 'aides-territoires-perimeters.json'
 
 const destination = resolve(destinationDirectory, filename)

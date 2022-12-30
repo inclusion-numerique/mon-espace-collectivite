@@ -93,6 +93,7 @@ importers:
       '@trpc/server': ^10.7.0
       '@types/file-saver': ^2.0.5
       '@types/html-minifier': ^4.0.2
+      '@types/lodash': ^4.14.191
       '@types/lodash-es': ^4.17.6
       '@types/mjml': ^4.7.0
       '@types/node': ^18.11.18
@@ -119,6 +120,7 @@ importers:
       form-data: ^4.0.0
       html-minifier: ^4.0.0
       joi: ^17.7.0
+      lodash: ^4.17.21
       lodash-es: ^4.17.21
       mjml: ^4.13.0
       modclean: ^3.0.0-beta.1
@@ -182,6 +184,7 @@ importers:
       file-saver: 2.0.5
       form-data: 4.0.0
       html-minifier: 4.0.0
+      lodash: 4.17.21
       lodash-es: 4.17.21
       mjml: 4.13.0_encoding@0.1.13
       nanoid: 4.0.0
@@ -218,6 +221,7 @@ importers:
       '@storybook/testing-library': 0.0.14-next.1
       '@types/file-saver': 2.0.5
       '@types/html-minifier': 4.0.2
+      '@types/lodash': 4.14.191
       '@types/lodash-es': 4.17.6
       '@types/mjml': 4.7.0
       '@types/node': 18.11.18
