@@ -3,7 +3,6 @@
 **/.turbo
 # dependencies
 **/node_modules
-
 **/.pnp
 **/.pnp.js
 **/.idea
@@ -34,5 +33,4 @@ apps/web/test
 **/*.e2e.ts
 **/*.e2e.tsx
 
-# Include everything in dist directory
-!apps/web/dist/**/*.*
+!apps/web/dist
