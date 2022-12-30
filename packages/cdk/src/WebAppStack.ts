@@ -159,6 +159,7 @@ export class WebAppStack extends TerraformStack {
       },
       secretEnvironmentVariables: {
         DATABASE_URL: databaseUrl,
+        TEST_SECRET: 'hello',
       },
       name: containerName,
       minScale: isMain ? 2 : 0,
@@ -166,6 +167,7 @@ export class WebAppStack extends TerraformStack {
       deploy: true,
     })
 
+    output('databaseUrl', databaseUrl)
     output('webContainerStatus', container.status)
     output('webContainerId', container.id)
     output('webContainerImage', webContainerImage.value)
