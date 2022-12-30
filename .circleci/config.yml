@@ -19,7 +19,7 @@ executors:
 parameters:
   cache_version:
     type: string
-    default: '20221226-01'
+    default: '20221230-01'
   virtual_store_dir:
     type: string
     default: './.pnpm'
@@ -46,16 +46,19 @@ workflows:
   version: 2
   lint_test_build_deploy:
     jobs:
-      - prepare_dependencies
+      - prepare_workspace_dependencies
+      - prepare_web_prod_dependencies
       - lint_and_test:
           requires:
-            - prepare_dependencies
+            - prepare_workspace_dependencies
       - build_web:
           requires:
-            - prepare_dependencies
+            - prepare_workspace_dependencies
+            - prepare_web_prod_dependencies
+
       - chromatic:
           requires:
-            - prepare_dependencies
+            - prepare_workspace_dependencies
       - test_e2e:
           requires:
             - build_web
@@ -66,7 +69,7 @@ workflows:
             - test_e2e
 
 jobs:
-  prepare_dependencies:
+  prepare_workspace_dependencies:
     executor: node
     resource_class: large
     steps:
@@ -76,7 +79,7 @@ jobs:
       - install_dependencies
       - run:
           name: 'Fetch dependencies'
-          command: pnpm install --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
+          command: pnpm install --virtual-store-dir << pipeline.parameters.virtual_store_dir >> --frozen-lockfile
       - save_cache:
           key: << pipeline.parameters.cache_version >>-pnpm-{{ checksum "<< pipeline.parameters.lockfile >>" }}
           paths:
@@ -86,6 +89,24 @@ jobs:
             - ./apps/ci/node_modules
             - ./packages/e2e/node_modules
             - ./packages/cdk/node_modules
+
+  prepare_web_prod_dependencies:
+    executor: node
+    resource_class: large
+    steps:
+      - checkout
+      - skip/skip_unchanged:
+          paths: pnpm-lock.yaml
+      - install_pnpm
+      - run:
+          name: 'Install dependencies'
+          command: |
+            pnpm install -F @mec/web --prod --node-linker=hoisted --frozen-lockfile
+      - save_cache:
+          key: << pipeline.parameters.cache_version >>-web-prod-{{ checksum "<< pipeline.parameters.lockfile >>" }}
+          paths:
+            - ./node_modules
+            - ./apps/web/node_modules
 
   lint_and_test:
     executor: node
@@ -116,7 +137,6 @@ jobs:
           docker_layer_caching: true
       - install_dependencies
       - run:
-          # TODO Check that binary is ok for node image or generate inside dockerfile
           name: 'Prisma generate'
           command: pnpm -F @mec/web prisma:generate
       - run:
@@ -127,12 +147,11 @@ jobs:
           command: |
             rm -rf node_modules
             rm -rf apps/web/node_modules
+      - restore_cache:
+          keys:
+            - << pipeline.parameters.cache_version >>-web-prod-{{ checksum "<< pipeline.parameters.lockfile >>" }}
       - run:
-          name: 'Install copied prod dependencies'
-          command: |
-            pnpm install -F @mec/web --prod --node-linker=hoisted --virtual-store-dir << pipeline.parameters.virtual_store_dir >>
-      - run:
-          # TODO Check that binary is ok for node image or generate inside dockerfile
+          # TODO Check that binary is ok for node image or generate it from Dockerfile
           name: 'Re-generate Prisma after cleaning dependencies'
           command: pnpm -F @mec/web prisma:generate
       - run:
