@@ -1,8 +1,5 @@
 **/var
-**/.next
 **/.turbo
-# dependencies
-**/node_modules
 **/.pnp
 **/.pnp.js
 **/.idea
@@ -21,7 +18,6 @@
 **/next-env.d.ts
 
 # generated files
-apps/web/public/dsfr
 apps/web/test
 
 # Test files
@@ -33,4 +29,3 @@ apps/web/test
 **/*.e2e.ts
 **/*.e2e.tsx
 
-!apps/web/dist
