@@ -237,7 +237,7 @@ jobs:
           command: |
             pnpm -F @mec/cdk deploy:web:ci
       - run:
-          name: 'Fail job if web container is not ready'
+          name: 'Verify that web container is ready'
           command: |
             pnpm -F @mec/cli web-container:check
       - run:
