@@ -142,7 +142,7 @@ jobs:
             rm -rf apps/web/.next/standalone/node_modules
       - run:
           name: 'Build docker image'
-          command: docker build -t $IMAGE_BUILD_TAG -f docker/web/Dockerfile .
+          command: DOCKER_BUILDKIT=1 docker build -t $IMAGE_BUILD_TAG -f docker/web/Dockerfile .
       - run:
           name: 'Login to registry and push image'
           command: |
