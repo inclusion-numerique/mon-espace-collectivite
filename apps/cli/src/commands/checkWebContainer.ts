@@ -1,5 +1,4 @@
 import 'tsconfig-paths/register'
-
 import { getCdkOutput } from '@mec/cdk/getCdkOutput'
 
 export const main = async () => {
