@@ -246,6 +246,10 @@ jobs:
           command: |
             pnpm -F @mec/web prisma:db:push
       - run:
+          name: 'Generate Prisma client for this platform'
+          command: |
+            pnpm -F @mec/web prisma:db:push
+      - run:
           name: 'Load administrative data if none loaded'
           command: |
             pnpm -F @mec/cli admin-data:update --only-if-empty
