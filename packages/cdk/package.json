@@ -21,7 +21,7 @@
   "dependencies": {
     "cdktf": "^0.14.3",
     "cdktf-cli": "^0.14.3",
-    "constructs": "^10.1.203",
+    "constructs": "^10.1.204",
     "dotenv": "^16.0.3",
     "dotenv-cli": "^6.0.0",
     "git-rev-sync": "^3.0.2"
