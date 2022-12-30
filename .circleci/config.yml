@@ -234,21 +234,27 @@ jobs:
           command: |
             pnpm -F @mec/cdk deploy:web:ci
       - run:
-          name: 'Trigger post deploy'
+          name: 'Fail job if web container is not ready'
           command: |
-            pnpm -F @mec/cli post-deploy
-#      - run:
-#          name: 'Install scaleway CLI'
-#          command: |
-#            SCW_VERSION="2.5.4"
-#            sudo curl -o /usr/local/bin/scw -L "https://github.com/scaleway/scaleway-cli/releases/download/v${SCW_VERSION}/scaleway-cli_${SCW_VERSION}_linux_amd64"
-#            sudo chmod +x /usr/local/bin/scw
-#      - run:
-#          name: 'Trigger container deploy'
-#          command: |
-#            scw container container deploy
-commands:
+            pnpm -F @mec/cli web-container:check
+      - run:
+          name: 'Create .env file from deployment outputs'
+          command: |
+            pnpm -F @mec/cli env:from-cdk
+      - run:
+          name: 'Migrate database'
+          command: |
+            pnpm -F @mec/web prisma:db:push
+      - run:
+          name: 'Load administrative data if none loaded'
+          command: |
+            pnpm -F @mec/cli admin-data:update --only-if-empty
+      - run:
+          name: 'Load fixtures'
+          command: |
+            pnpm -F @mec/cli fixtures:load
 
+commands:
   install_pnpm:
     steps:
       - run:

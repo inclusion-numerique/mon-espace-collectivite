@@ -88,8 +88,8 @@ export class WebAppStack extends TerraformStack {
       // name: 'mec-production',
     })
 
-    output('outputDatabaseHost', dbInstance.endpointIp)
-    output('outputDatabasePort', dbInstance.endpointPort)
+    output('databaseHost', dbInstance.endpointIp)
+    output('databasePort', dbInstance.endpointPort)
 
     const dbConfig = {
       name: namespaced('mec'),
