@@ -24,5 +24,5 @@ export const getCdkOutput = async (): Promise<CdkOutput> => {
     Object.entries(rawOutput).map(([key, value]) => [key.substring(7), value]),
   )
 
-  return output
+  return output as CdkOutput
 }
