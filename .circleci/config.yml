@@ -151,7 +151,6 @@ jobs:
           keys:
             - << pipeline.parameters.cache_version >>-web-prod-{{ checksum "<< pipeline.parameters.lockfile >>" }}
       - run:
-          # TODO Check that binary is ok for node image or generate it from Dockerfile
           name: 'Re-generate Prisma after cleaning dependencies'
           command: pnpm -F @mec/web prisma:generate
       - run:
@@ -232,7 +231,7 @@ jobs:
       - run:
           name: 'Generate Prisma client for this platform'
           command: |
-            pnpm -F @mec/web prisma:db:push
+            pnpm -F @mec/web prisma:generate
       - run:
           name: 'Deploy stack'
           command: |
