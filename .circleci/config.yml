@@ -140,6 +140,9 @@ jobs:
           name: 'Prisma generate'
           command: pnpm -F @mec/web prisma:generate
       - run:
+          name: 'Install DSFR'
+          command: pnpm -F @mec/web setup:dsfr
+      - run:
           name: 'Build next app'
           command: pnpm -F @mec/web build
       - run:
