@@ -15,6 +15,7 @@ import { generateDatabasePassword } from './databasePassword'
 import { DataScalewayContainerNamespace } from '../.gen/providers/scaleway/data-scaleway-container-namespace'
 import { DataScalewayRegistryNamespace } from '../.gen/providers/scaleway/data-scaleway-registry-namespace'
 import { Container } from '../.gen/providers/scaleway/container'
+import { CdkOutput } from './getCdkOutput'
 
 const databaseInstanceId = '7bd3aa2e-fdf4-4e5e-b6af-2ec2ec37cd75'
 const containerNamespaceId = '99eb3592-9355-476f-ad0c-6db7b80bff87'
@@ -30,9 +31,9 @@ export class WebAppStack extends TerraformStack {
 
     // Output helper function
     // ⚠️ When calling this function, do not forget to update typings in src/getCdkOutput.ts
-    const output = (
-      name: string,
-      value: string | number | boolean,
+    const output = <T extends keyof CdkOutput>(
+      name: T,
+      value: CdkOutput[T],
       sensitive?: 'sensitive',
     ) =>
       new TerraformOutput(this, `output_${name}`, {
@@ -177,7 +178,10 @@ export class WebAppStack extends TerraformStack {
     })
 
     output('databaseUrl', databaseUrl, 'sensitive')
-    output('webContainerStatus', container.status)
+    output(
+      'webContainerStatus',
+      container.status as CdkOutput['webContainerStatus'],
+    )
     output('webContainerId', container.id)
     output('webContainerImage', webContainerImage.value)
   }
