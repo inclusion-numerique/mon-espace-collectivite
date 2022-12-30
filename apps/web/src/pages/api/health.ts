@@ -14,6 +14,7 @@ export default async function health(
       req.url ?? '',
       `${headers['x-forwarded-proto']}://${headers.host}`,
     ),
+    image: process.env.MEC_WEB_IMAGE,
   }
 
   console.log('Health env:', process.env)

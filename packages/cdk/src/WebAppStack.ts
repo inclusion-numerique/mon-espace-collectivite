@@ -156,6 +156,7 @@ export class WebAppStack extends TerraformStack {
       environmentVariables: {
         EMAIL_FROM_ADDRESS: emailFromAddress,
         EMAIL_FROM_NAME: emailFromName,
+        MEC_WEB_IMAGE: webContainerImage.value,
       },
       secretEnvironmentVariables: {
         DATABASE_URL: databaseUrl,

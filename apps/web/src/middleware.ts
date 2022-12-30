@@ -9,7 +9,11 @@ const middleware: NextMiddleware = (request) => {
 
   // TODO Redirect to HTTPS
   // On clevercloud http or https is in the X-Forwarded-Proto header
-  if (request.headers.get('X-Forwarded-Proto') === 'http') {
+  if (
+    process.env.NODE_ENV === 'production' &&
+    request.headers.get('X-Forwarded-Proto') === 'http'
+  ) {
+    console.log('HTTP request intercepted, should redirect to https')
     // TODO Redirect to HTTPS with 301
   }
 
