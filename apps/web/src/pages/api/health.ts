@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prismaClient } from '@mec/web/prismaClient'
+
 export default async function health(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -7,25 +8,15 @@ export default async function health(
   const database = await dbStatus()
   const status = database.status
   const headers = req.headers
-  const requestInfo = {
-    url: req.url,
-    query: req.query,
-    parsedUrl: new URL(
-      req.url ?? '',
-      `${headers['x-forwarded-proto']}://${headers.host}`,
-    ),
-    image: process.env.MEC_WEB_IMAGE,
-  }
-
-  console.log('Health env:', process.env)
+  const host = req.headers.host
+  const containerImage = process.env.MEC_WEB_IMAGE
 
   res
     .status(status === 'ok' ? 200 : 503)
-    .json({ status, database, headers, requestInfo })
+    .json({ status, database, headers, host, containerImage })
 }
 
 const dbStatus = () =>
-  prismaClient.user
-    .findMany({ take: 1 })
+  prismaClient.$queryRaw`SELECT 1`
     .then(() => ({ status: 'ok' }))
     .catch((error) => ({ status: 'error', error }))
