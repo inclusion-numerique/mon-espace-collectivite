@@ -18,12 +18,18 @@ ENV NODE_ENV production
 
 # Copy root workspace dependencies
 COPY node_modules ./node_modules
+
 # Copy apps/web dependencies
 COPY apps/web/node_modules ./web/node_modules
+
+# Copy next build
+COPY apps/web/.next/standalone/package.json ./web/package.json
+COPY apps/web/.next/standalone/server.js ./web/server.js
+COPY apps/web/.next/standalone/.next ./web/.next
+
 # Copy public assets
 COPY apps/web/public ./web/public
-# Copy next build
-COPY apps/web/.next/standalone/* ./web/
+
 # Copy static assets
 COPY apps/web/.next/static ./web/.next/static
 

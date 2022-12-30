@@ -1,3 +1,4 @@
+**/.git
 **/var
 **/.turbo
 **/.pnp
@@ -19,6 +20,10 @@
 
 # generated files
 apps/web/test
+
+# Unused package in docker app
+packages/
+apps/cli/node_modules
 
 # Test files
 **/*.stories.mdx
