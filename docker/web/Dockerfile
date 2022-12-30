@@ -35,4 +35,4 @@ COPY apps/web/.next/static ./web/.next/static
 
 EXPOSE $PORT
 
-CMD ["node", "web/server/server.js"]
+CMD ["node", "web/server.js"]
