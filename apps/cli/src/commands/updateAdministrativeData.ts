@@ -12,8 +12,9 @@ const main = async () => {
     const existing = await prismaClient.municipality.count({ take: 100 })
     if (existing === 100) {
       console.log('Data has already been loaded, skipping update')
+      return
     }
-    return
+    console.log('Data has has not been loaded yet, updating from data source')
   }
   await mergeEpciAndCrteData()
   await mergeMunicipalitiesAndDistrictsData()
