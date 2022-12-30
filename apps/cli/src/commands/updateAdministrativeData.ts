@@ -4,7 +4,7 @@ import { mergeMunicipalitiesAndDistrictsData } from '@mec/web/data/municipalitie
 import { mergeCategories } from '@mec/web/data/categoriesData'
 import { mergePerimeters } from '@mec/web/data/aidesTerritoiresData'
 import * as process from 'process'
-import { prismaClient } from '@mec/web/src/prismaClient'
+import { prismaClient } from '@mec/web/prismaClient'
 
 const main = async () => {
   if (process.argv.includes('--only-if-empty')) {
