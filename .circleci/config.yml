@@ -230,6 +230,10 @@ jobs:
             echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
             sudo apt update && sudo apt install terraform
       - run:
+          name: 'Generate Prisma client for this platform'
+          command: |
+            pnpm -F @mec/web prisma:db:push
+      - run:
           name: 'Deploy stack'
           command: |
             pnpm -F @mec/cdk deploy:web:ci
@@ -243,10 +247,6 @@ jobs:
             pnpm -F @mec/cli env:from-cdk
       - run:
           name: 'Migrate database'
-          command: |
-            pnpm -F @mec/web prisma:db:push
-      - run:
-          name: 'Generate Prisma client for this platform'
           command: |
             pnpm -F @mec/web prisma:db:push
       - run:
