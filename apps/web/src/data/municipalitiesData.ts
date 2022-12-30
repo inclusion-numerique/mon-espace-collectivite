@@ -9,6 +9,7 @@ import { existsSync } from 'fs'
 import { mkdir } from 'fs/promises'
 import { prismaClient } from '@mec/web/prismaClient'
 import { dataDirectory } from '@mec/web/data/data'
+import { chunk } from 'lodash'
 
 const fields = [
   // Some territories (TAAF) have no EPCI, we do not include them for now
@@ -65,7 +66,7 @@ const mergeRows = async (output: Output, rows: string[][]) => {
       rows.length
     } total municipalities (${
       rows.length - cleanRows.length
-    } without intercommunality)`,
+    } without valid intercommunality or district)`,
   )
 
   // Create and merge Districts
@@ -95,24 +96,35 @@ const mergeRows = async (output: Output, rows: string[][]) => {
       rows.length - cleanRows.length
     } without valid intercommunality or district)`,
   )
-  await prismaClient.$transaction(
-    cleanRows.map(
-      ([
-        intercommunalityCode,
-        name,
-        code,
-        districtCode,
-        _districtName,
-        _countyCode,
-        siren,
-      ]) =>
-        prismaClient.municipality.upsert({
-          create: { code, name, intercommunalityCode, districtCode, siren },
-          where: { code },
-          update: { name, intercommunalityCode, districtCode, siren },
-        }),
-    ),
-  )
+  output(`Updating ${rows.length} intercommunalities`)
+  const municipalityChunks = chunk(cleanRows, 100)
+  for (const chunkIndex in municipalityChunks) {
+    output(
+      `Updating municipalities batch ${parseInt(chunkIndex) + 1}/${
+        municipalityChunks.length
+      }`,
+    )
+    const chunkRows = municipalityChunks[chunkIndex]
+
+    await prismaClient.$transaction(
+      chunkRows.map(
+        ([
+          intercommunalityCode,
+          name,
+          code,
+          districtCode,
+          _districtName,
+          _countyCode,
+          siren,
+        ]) =>
+          prismaClient.municipality.upsert({
+            create: { code, name, intercommunalityCode, districtCode, siren },
+            where: { code },
+            update: { name, intercommunalityCode, districtCode, siren },
+          }),
+      ),
+    )
+  }
   output(`Updated ${cleanRows.length} municipalities`)
 }
 

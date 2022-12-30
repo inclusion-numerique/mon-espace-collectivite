@@ -95,24 +95,42 @@ export const mergePerimeters = async (output: Output = consoleOutput) => {
   )
 
   output(`Updating ${epciPerimeters.length} EPCIs`)
-  await prismaClient.$transaction(
-    epciPerimeters.map(({ id, code }) =>
-      prismaClient.intercommunality.updateMany({
-        where: { code },
-        data: { aidesTerritoiresId: id },
-      }),
-    ),
-  )
+  const epciPerimetersChunks = chunk(epciPerimeters, 100)
+  for (const chunkIndex in epciPerimetersChunks) {
+    output(
+      `Updating municipalities perimeters batch ${parseInt(chunkIndex) + 1}/${
+        epciPerimetersChunks.length
+      }`,
+    )
+    const chunkRows = epciPerimetersChunks[chunkIndex]
+    await prismaClient.$transaction(
+      chunkRows.map(({ id, code }) =>
+        prismaClient.intercommunality.updateMany({
+          where: { code },
+          data: { aidesTerritoiresId: id },
+        }),
+      ),
+    )
+  }
 
   output(`Updating ${municipalityPerimeters.length} municipalities`)
-  await prismaClient.$transaction(
-    municipalityPerimeters.map(({ id, code }) =>
-      prismaClient.municipality.updateMany({
-        where: { code },
-        data: { aidesTerritoiresId: id },
-      }),
-    ),
-  )
+  const municipalityPerimetersChunks = chunk(municipalityPerimeters, 100)
+  for (const chunkIndex in municipalityPerimetersChunks) {
+    output(
+      `Updating municipalities perimeters batch ${parseInt(chunkIndex) + 1}/${
+        municipalityPerimetersChunks.length
+      }`,
+    )
+    const chunkRows = municipalityPerimetersChunks[chunkIndex]
+    await prismaClient.$transaction(
+      chunkRows.map(({ id, code }) =>
+        prismaClient.municipality.updateMany({
+          where: { code },
+          data: { aidesTerritoiresId: id },
+        }),
+      ),
+    )
+  }
 
   output(`Updated successfuly`)
 }
