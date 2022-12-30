@@ -1,6 +1,3 @@
-# This Dockerfile assumes that a working build of next webapp
-# is located in apps/web/dist
-# See circle ci config build_web job for more info on the build process
 FROM node:19.3.0-slim
 
 WORKDIR /app
@@ -10,15 +7,25 @@ RUN apt-get update && apt-get install -y openssl
 ENV PORT 8080
 ENV NODE_ENV production
 
-RUN addgroup --system --gid 1001 webgroup \
-    && adduser --system --uid 1001 webuser
+# App will have structure :
+# /node_modules -> Root dependencies
+# /web
+#   /node_modules -> apps/web dependencies
+#   /.next -> next build
+#   /server.js
+#   /public
+#   /...other stuff
 
-COPY --chown=webuser:webgroup apps/web/dist/node_modules ./node_modules
-COPY --chown=webuser:webgroup apps/web/dist/web/node_modules ./web/node_modules
-COPY --chown=webuser:webgroup apps/web/dist/web/server ./web/server
-
-
-USER webuser
+# Copy root workspace dependencies
+COPY node_modules ./node_modules
+# Copy apps/web dependencies
+COPY apps/web/node_modules ./web/node_modules
+# Copy public assets
+COPY apps/web/public ./web/public
+# Copy next build
+COPY apps/web/.next/standalone/* ./web/
+# Copy static assets
+COPY apps/web/.next/static ./web/.next/static
 
 EXPOSE $PORT
 

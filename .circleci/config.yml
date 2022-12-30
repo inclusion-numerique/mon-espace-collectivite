@@ -136,17 +136,10 @@ jobs:
           name: 'Re-generate Prisma after cleaning dependencies'
           command: pnpm -F @mec/web prisma:generate
       - run:
-          name: 'Cleanup and prepare dist'
+          name: 'Cleanup build'
           command: |
-            cd apps/web
-            mkdir -p dist/web
-            # node_modules from next standalone build is fucked
-            rm -rf .next/standalone/node_modules
-            mv .next/standalone dist/web/server
-            mv ./node_modules dist/web/
-            mv ../../node_modules dist/
-            mv .next/static dist/web/server/.next/
-            mv ./public dist/web/server/
+            # node_modules from next standalone build are fucked
+            rm -rf apps/web/.next/standalone/node_modules
       - run:
           name: 'Build docker image'
           command: docker build -t $IMAGE_BUILD_TAG -f docker/web/Dockerfile .
