@@ -21,7 +21,10 @@ export const getCdkOutput = async (): Promise<CdkOutput> => {
   const rawOutput = JSON.parse(outputContents)
   // output_blah -> blah
   const output = Object.fromEntries(
-    Object.entries(rawOutput).map(([key, value]) => [key.substring(7), value]),
+    Object.entries(rawOutput['web']).map(([key, value]) => [
+      key.substring(7),
+      value,
+    ]),
   )
 
   return output as CdkOutput
