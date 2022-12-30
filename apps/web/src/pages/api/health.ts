@@ -7,8 +7,23 @@ export default async function health(
   const database = await dbStatus()
   const status = database.status
   const headers = req.headers
+  const requestInfo = {
+    url: req.url,
+    query: req.query,
+    parsedUrl: new URL(req.url ?? ''),
+    parsedHostUrl: new URL(
+      req.url ?? '',
+      `${headers['X-Forwarded-Proto']}://${headers.host}`,
+    ),
+    parsedHostLowerUrl: new URL(
+      req.url ?? '',
+      `${headers['x-forwarded-proto']}://${headers.host}`,
+    ),
+  }
 
-  res.status(status === 'ok' ? 200 : 503).json({ status, database, headers })
+  res
+    .status(status === 'ok' ? 200 : 503)
+    .json({ status, database, headers, requestInfo })
 }
 
 const dbStatus = () =>
