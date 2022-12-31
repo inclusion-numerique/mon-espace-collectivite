@@ -28,6 +28,8 @@
     "lint": "turbo lint",
     "eslint": "eslint",
     "tsc": "turbo tsc",
+    "with-env": "dotenv --",
+    "scw": "pnpm with-env scw",
     "manypkg": "manypkg",
     "manypkg:check": "manypkg check",
     "start:web": "npm -w @mec/web start",
