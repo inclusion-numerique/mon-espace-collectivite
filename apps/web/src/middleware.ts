@@ -10,11 +10,6 @@ const middleware: NextMiddleware = (request) => {
     const path = `${requestUrl.pathname}${requestUrl.search}`
     const redirectTo = `${httpsBase}${path}`
 
-    console.log('REDIRECTING FROM UNSAFE HTTP', {
-      httpsBase,
-      path,
-      redirectTo,
-    })
     return NextResponse.redirect(redirectTo)
   }
 
