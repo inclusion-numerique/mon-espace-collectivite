@@ -51,7 +51,12 @@ workflows:
       - lint_and_test:
           requires:
             - prepare_workspace_dependencies
-      - build_web:
+#      - build_web:
+#          requires:
+#            - prepare_workspace_dependencies
+#            - prepare_web_prod_dependencies
+
+      - build_web_plain:
           requires:
             - prepare_workspace_dependencies
             - prepare_web_prod_dependencies
@@ -66,8 +71,9 @@ workflows:
           requires:
             - lint_and_test
             - chromatic
-            - build_web
-#            - test_e2e
+            # - build_web
+            - build_web_plain
+            # - test_e2e
 
 jobs:
   prepare_workspace_dependencies:
@@ -170,6 +176,50 @@ jobs:
           command: |
             docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
             docker push $IMAGE_BUILD_TAG
+            
+
+    build_web_plain:
+      executor: node
+      resource_class: large
+      steps:
+        - checkout
+        - setup_docker_env
+        - setup_remote_docker:
+            docker_layer_caching: true
+        - install_dependencies
+        - run:
+            name: 'Prisma generate'
+            command: pnpm -F @mec/web prisma:generate
+        - run:
+            name: 'Install DSFR'
+            command: pnpm -F @mec/web setup:dsfr
+        - run:
+            name: 'Build next app'
+            command: pnpm -F @mec/web build
+        - run:
+            name: 'Clear dependencies to install only prod dependencies'
+            command: |
+              rm -rf node_modules
+              rm -rf apps/web/node_modules
+        - restore_cache:
+            keys:
+              - << pipeline.parameters.cache_version >>-web-prod-{{ checksum "<< pipeline.parameters.lockfile >>" }}
+        - run:
+            name: 'Re-generate Prisma after cleaning dependencies'
+            command: pnpm -F @mec/web prisma:generate
+        - run:
+            name: 'Cleanup build'
+            command: |
+              # standalone not needed for plain build
+              rm -rf apps/web/.next/standalone
+        - run:
+            name: 'Build docker image'
+            command: DOCKER_BUILDKIT=1 docker build --progress=plain -t $IMAGE_BUILD_TAG -f docker/web-plain/Dockerfile .
+        - run:
+            name: 'Login to registry and push image'
+            command: |
+              docker login $REGISTRY -u nologin --password-stdin \<<< "$SCW_SECRET_KEY"
+              docker push $IMAGE_BUILD_TAG
 
   chromatic:
     executor: node

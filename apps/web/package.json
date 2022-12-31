@@ -8,7 +8,7 @@
     "scalingo-postbuild": "next build && modclean -Pr && npm prune --omit=dev",
     "modclean": "modclean -Pr",
     "modclean:root": "modclean -Pr -p ./../..",
-    "start": "next start",
+    "start": "NODE_ENV=development NODE_OPTIONS='--inspect' next start",
     "lint": "next lint",
     "tsc": "tsc --noEmit",
     "postinstall": "npm run setup:dsfr",
