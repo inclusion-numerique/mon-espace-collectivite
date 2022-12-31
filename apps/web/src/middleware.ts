@@ -1,6 +1,15 @@
 import { NextMiddleware, NextResponse } from 'next/server'
 
 const middleware: NextMiddleware = (request) => {
+  console.log('HEADERS', [...request.headers.entries()])
+  console.log('REQUEST URL', request.url)
+  const newBase = `https://${request.headers.get('host')}`
+  const forwardedProto = request.headers.get('X-Forwarded-Proto')
+  const nodeEnv = process.env.NODE_ENV
+  console.log('REWRITE BASE', newBase)
+  console.log('FORWAREDED PROTO', forwardedProto)
+  console.log('NODE ENV', nodeEnv)
+
   if (
     process.env.NODE_ENV === 'production' &&
     request.headers.get('X-Forwarded-Proto') === 'http'
