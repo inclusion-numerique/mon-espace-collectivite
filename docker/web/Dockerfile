@@ -5,7 +5,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y openssl
 
 ENV PORT 8080
-ENV NODE_ENV production
+ENV NODE_ENV development
 
 # App will have structure :
 # /node_modules -> Root dependencies
