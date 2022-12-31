@@ -1,6 +1,19 @@
 import { NextMiddleware, NextResponse } from 'next/server'
 
 const middleware: NextMiddleware = (request) => {
+  if (
+    process.env.NODE_ENV === 'production' &&
+    request.headers.get('X-Forwarded-Proto') === 'http'
+  ) {
+    console.log('REDIRECTING FROM UNSAFE', {
+      requestUrl: request.url,
+      base: `https://${request.headers.get('host')}`,
+    })
+    return NextResponse.redirect(
+      new URL(request.url, `https://${request.headers.get('host')}`),
+    )
+  }
+
   const response = NextResponse.next()
   response.headers.append('X-Frame-Options', 'DENY')
   response.headers.append('X-Content-Type-Options', 'nosniff')
@@ -9,13 +22,6 @@ const middleware: NextMiddleware = (request) => {
 
   // TODO Redirect to HTTPS
   // On clevercloud http or https is in the X-Forwarded-Proto header
-  if (
-    process.env.NODE_ENV === 'production' &&
-    request.headers.get('X-Forwarded-Proto') === 'http'
-  ) {
-    console.log('HTTP request intercepted, should redirect to https')
-    // TODO Redirect to HTTPS with 301
-  }
 
   // TODO This CSP policy is too restrictive an account has been created in report-uri.com. Make this in another deployment.
   // https://report-uri.com
