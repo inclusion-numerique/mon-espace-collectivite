@@ -24,4 +24,4 @@ COPY apps/web ./web
 
 EXPOSE $PORT
 
-CMD ["npm", "start", "--prefix apps/web"]
+CMD ["npm", "start --prefix web"]
