@@ -5,13 +5,18 @@ const middleware: NextMiddleware = (request) => {
     process.env.NODE_ENV === 'production' &&
     request.headers.get('X-Forwarded-Proto') === 'http'
   ) {
+    console.log('HEADERS', [...request.headers.entries()])
+    console.log('REQUEST URL', request.url)
+    const newBase = `https://${request.headers.get('host')}`
+
     console.log('REDIRECTING FROM UNSAFE', {
       requestUrl: request.url,
-      base: `https://${request.headers.get('host')}`,
+      base: newBase,
+      rewriten: new URL(request.url, newBase),
     })
-    return NextResponse.redirect(
-      new URL(request.url, `https://${request.headers.get('host')}`),
-    )
+    // return NextResponse.redirect(
+    //   new URL(request.url, `https://${request.headers.get('host')}`),
+    // )
   }
 
   const response = NextResponse.next()
