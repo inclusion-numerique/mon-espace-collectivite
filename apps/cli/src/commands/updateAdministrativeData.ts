@@ -3,7 +3,7 @@ import { mergeEpciAndCrteData } from '@mec/web/data/epciAndCrteDataSource'
 import { mergeMunicipalitiesAndDistrictsData } from '@mec/web/data/municipalitiesData'
 import * as process from 'process'
 import { prismaClient } from '@mec/web/prismaClient'
-import { mergeCategories } from '@mec/web/src/data/categoriesData'
+import { mergeCategories } from '@mec/web/data/categoriesData'
 
 const main = async () => {
   if (process.argv.includes('--only-if-empty')) {
