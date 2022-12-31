@@ -1,10 +1,9 @@
 import 'tsconfig-paths/register'
 import { mergeEpciAndCrteData } from '@mec/web/data/epciAndCrteDataSource'
 import { mergeMunicipalitiesAndDistrictsData } from '@mec/web/data/municipalitiesData'
-import { mergeCategories } from '@mec/web/data/categoriesData'
-import { mergePerimeters } from '@mec/web/data/aidesTerritoiresData'
 import * as process from 'process'
 import { prismaClient } from '@mec/web/prismaClient'
+import { mergeCategories } from '@mec/web/src/data/categoriesData'
 
 const main = async () => {
   if (process.argv.includes('--only-if-empty')) {
@@ -19,7 +18,7 @@ const main = async () => {
   await mergeEpciAndCrteData()
   await mergeMunicipalitiesAndDistrictsData()
   await mergeCategories()
-  await mergePerimeters()
+  // await mergePerimeters()
 }
 
 main().then(() => process.exit(0))
