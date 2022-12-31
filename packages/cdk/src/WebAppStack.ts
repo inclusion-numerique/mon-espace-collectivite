@@ -174,6 +174,8 @@ export class WebAppStack extends TerraformStack {
       name: containerName,
       minScale: isMain ? 2 : 0,
       maxScale: isMain ? 5 : 1,
+      cpuLimit: 1120, //mVPCU
+      memoryLimit: 2048, //mB
       deploy: true,
     })
 
