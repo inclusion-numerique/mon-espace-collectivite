@@ -82,7 +82,7 @@ const mergeRows = async (output: Output, rows: string[][]) => {
   )
   output(`Updating ${crtes.size} CRTEs`)
 
-  const crteChunks = chunk([...crtes.values()], 100)
+  const crteChunks = chunk([...crtes.values()], 200)
 
   for (const chunkIndex in crteChunks) {
     output(
@@ -128,7 +128,7 @@ const mergeRows = async (output: Output, rows: string[][]) => {
       return true
     })
 
-  const intercommunalityChunks = chunk(cleanRows, 100)
+  const intercommunalityChunks = chunk(cleanRows, 200)
 
   for (const chunkIndex in intercommunalityChunks) {
     output(

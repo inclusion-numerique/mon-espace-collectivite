@@ -97,13 +97,13 @@ const mergeRows = async (output: Output, rows: string[][]) => {
 
   // TODO are duplicated municipalities correctly handled ?
   const dedupedMunicipalities = [
-    ...new Map(cleanRows.map((row) => [row[0], row])).values(),
+    ...new Map(cleanRows.map((row) => [row[2], row])).values(),
   ]
 
   output(
     `Updating ${dedupedMunicipalities.length} deduplicated on ${rows.length} intercommunalities`,
   )
-  const municipalityChunks = chunk(dedupedMunicipalities, 100)
+  const municipalityChunks = chunk(dedupedMunicipalities, 200)
   for (const chunkIndex in municipalityChunks) {
     output(
       `Updating municipalities batch ${parseInt(chunkIndex) + 1}/${
