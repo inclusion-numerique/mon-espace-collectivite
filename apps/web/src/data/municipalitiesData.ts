@@ -101,7 +101,7 @@ const mergeRows = async (output: Output, rows: string[][]) => {
   ]
 
   output(
-    `Updating ${dedupedMunicipalities.length} deduplicated on ${rows.length} intercommunalities`,
+    `Updating ${dedupedMunicipalities.length} deduplicated on ${rows.length} municipalities`,
   )
   const municipalityChunks = chunk(dedupedMunicipalities, 200)
   for (const chunkIndex in municipalityChunks) {
