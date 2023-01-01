@@ -194,7 +194,7 @@ export class WebAppStack extends TerraformStack {
       type: 'CNAME',
       dnsZone: rootZone.domain,
       name: namespace,
-      data: container.domainName,
+      data: `${container.domainName}.`,
       ttl: 60 * 5,
     })
 
