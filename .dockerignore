@@ -1,8 +1,6 @@
+**/.git
 **/var
-**/.next
 **/.turbo
-# dependencies
-**/node_modules
 **/.pnp
 **/.pnp.js
 **/.idea
@@ -21,8 +19,12 @@
 **/next-env.d.ts
 
 # generated files
-apps/web/public/dsfr
 apps/web/test
+apps/web/data
+
+# Unused package in docker app
+packages/
+apps/cli/node_modules
 
 # Test files
 **/*.stories.mdx
@@ -32,3 +34,4 @@ apps/web/test
 **/*.integration.tsx
 **/*.e2e.ts
 **/*.e2e.tsx
+

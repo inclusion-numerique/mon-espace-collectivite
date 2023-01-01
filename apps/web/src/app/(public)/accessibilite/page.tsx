@@ -25,7 +25,7 @@ const AccessibilityStatementPage = () => {
         <strong>Mon espace collectivité</strong> est{' '}
         <strong>
           <span data-printfilter="lowercase">non conforme</span>
-        </strong>
+        </strong>{' '}
         avec le{' '}
         <abbr title="Référentiel général d’amélioration de l’accessibilité">
           RGAA

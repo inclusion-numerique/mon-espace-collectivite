@@ -4,5 +4,5 @@
   "terraformProviders": [
     "scaleway/scaleway@>= 2.8.0"
   ],
-  "projectId": "63cc0a27-1e84-48d3-8b32-c6974e574369"
+  "projectId": "f672f07b-f112-42d9-a275-c1511adf05af"
 }

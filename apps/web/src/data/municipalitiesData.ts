@@ -8,6 +8,9 @@ import {
 import { existsSync } from 'fs'
 import { mkdir } from 'fs/promises'
 import { prismaClient } from '@mec/web/prismaClient'
+import { dataDirectory } from '@mec/web/data/data'
+import { chunk } from 'lodash'
+import { upsert } from '@mec/web/data/upsert'
 
 const fields = [
   // Some territories (TAAF) have no EPCI, we do not include them for now
@@ -25,7 +28,7 @@ const dataSourceUrl = `https://public.opendatasoft.com/explore/dataset/georef-fr
   ',',
 )}&timezone=Europe/Berlin&lang=fr&use_labels_for_header=false&csv_separator=%3B`
 
-const destinationDirectory = resolve(__dirname, '../../var/data')
+const destinationDirectory = dataDirectory
 const filename = 'municipalities-and-districts.csv'
 
 const destination = resolve(destinationDirectory, filename)
@@ -64,26 +67,23 @@ const mergeRows = async (output: Output, rows: string[][]) => {
       rows.length
     } total municipalities (${
       rows.length - cleanRows.length
-    } without intercommunality)`,
+    } without valid intercommunality or district)`,
   )
 
   // Create and merge Districts
   const districts = new Map(
     cleanRows.map(([_0, _1, _2, code, name, countyCode]) => [
       code,
-      { code, name, countyCode },
+      [code, name, countyCode],
     ]),
   )
 
   output(`Updating ${districts.size} districts`)
-  await prismaClient.$transaction(
-    [...districts.values()].map(({ code, name, countyCode }) =>
-      prismaClient.district.upsert({
-        create: { code, name: name || code, countyCode },
-        where: { code },
-        update: { name: name || code, countyCode },
-      }),
-    ),
+  await upsert(
+    'District',
+    'code',
+    ['name', 'countyCode'],
+    [...districts.values()],
   )
   output(`Updated ${districts.size} districts`)
 
@@ -94,8 +94,23 @@ const mergeRows = async (output: Output, rows: string[][]) => {
       rows.length - cleanRows.length
     } without valid intercommunality or district)`,
   )
-  await prismaClient.$transaction(
-    cleanRows.map(
+
+  // TODO are duplicated municipalities correctly handled ?
+  const dedupedMunicipalities = [
+    ...new Map(cleanRows.map((row) => [row[2], row])).values(),
+  ]
+
+  output(
+    `Updating ${dedupedMunicipalities.length} deduplicated on ${rows.length} municipalities`,
+  )
+  const municipalityChunks = chunk(dedupedMunicipalities, 200)
+  for (const chunkIndex in municipalityChunks) {
+    output(
+      `Updating municipalities batch ${parseInt(chunkIndex) + 1}/${
+        municipalityChunks.length
+      }`,
+    )
+    const chunkRows = municipalityChunks[chunkIndex].map(
       ([
         intercommunalityCode,
         name,
@@ -104,15 +119,16 @@ const mergeRows = async (output: Output, rows: string[][]) => {
         _districtName,
         _countyCode,
         siren,
-      ]) =>
-        prismaClient.municipality.upsert({
-          create: { code, name, intercommunalityCode, districtCode, siren },
-          where: { code },
-          update: { name, intercommunalityCode, districtCode, siren },
-        }),
-    ),
-  )
-  output(`Updated ${cleanRows.length} municipalities`)
+      ]) => [code, siren, name, intercommunalityCode, districtCode],
+    )
+    await upsert(
+      'Municipality',
+      'code',
+      ['siren', 'name', 'intercommunalityCode', 'districtCode'],
+      chunkRows,
+    )
+  }
+  output(`Updated ${dedupedMunicipalities.length} municipalities`)
 }
 
 export const mergeMunicipalitiesAndDistrictsData = async (

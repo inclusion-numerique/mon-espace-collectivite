@@ -1,6 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
+  binaryTargets   = ["native", "debian-openssl-1.1.x"]
 }
 
 datasource db {
@@ -261,16 +262,16 @@ model Municipality {
 // EPCI
 model Intercommunality {
   // Insee SIREN code
-  code             String                        @id
-  crteCode         String
-  crte             Crte                          @relation(fields: [crteCode], references: [code])
-  name             String
-  aidesTerritoiresId   String?
-  projects         Project[]
-  municipalities   Municipality[]
-  accessLevels     IntercommunalityAccessLevel[]
-  preRegistrations PreRegistration[]
-  projectNotes     ProjectNote[]
+  code               String                        @id
+  crteCode           String
+  crte               Crte                          @relation(fields: [crteCode], references: [code])
+  name               String
+  aidesTerritoiresId String?
+  projects           Project[]
+  municipalities     Municipality[]
+  accessLevels       IntercommunalityAccessLevel[]
+  preRegistrations   PreRegistration[]
+  projectNotes       ProjectNote[]
 }
 
 model Crte {

@@ -4,10 +4,12 @@ import { existsSync } from 'fs'
 import { mkdir, readFile, writeFile } from 'fs/promises'
 import axios from 'axios'
 import { prismaClient } from '@mec/web/prismaClient'
+import { dataDirectory } from '@mec/web/data/data'
+import { upsert } from '@mec/web/data/upsert'
 
 const dataSourceUrl = 'https://aides-territoires.beta.gouv.fr/api/themes/'
 
-const destinationDirectory = resolve(__dirname, '../../var/data')
+const destinationDirectory = dataDirectory
 const filename = 'categories.json'
 
 const destination = resolve(destinationDirectory, filename)
@@ -61,32 +63,26 @@ export const mergeCategories = async (output: Output = consoleOutput) => {
   const data: CategoriesApiData = JSON.parse(dataString)
 
   output(`Updating ${data.results.length} themes`)
-  await prismaClient.$transaction(
-    data.results.map(({ id, slug, name }) =>
-      prismaClient.projectTheme.upsert({
-        where: { id: id.toString() },
-        update: { name, slug },
-        create: { name, slug, id: id.toString() },
-      }),
-    ),
+  await upsert(
+    'ProjectTheme',
+    'id',
+    ['slug', 'name'],
+    data.results.map(({ id, slug, name }) => [id.toString(10), slug, name]),
   )
-
-  const categories = data.results
-    .map(({ categories, id }) =>
-      categories.map((category) => ({ ...category, themeId: id })),
-    )
-    .flat()
   output(`Updated ${data.results.length} themes`)
 
+  const categories = data.results
+    .map(({ categories, id: themeId }) =>
+      categories.map((category) => [
+        category.id.toString(10),
+        category.slug,
+        category.name,
+        themeId.toString(10),
+      ]),
+    )
+    .flat()
+
   output(`Updating ${categories.length} categories`)
-  await prismaClient.$transaction(
-    categories.map(({ id, slug, name, themeId }) =>
-      prismaClient.projectCategory.upsert({
-        where: { id: id.toString() },
-        update: { name, slug, themeId: themeId.toString() },
-        create: { name, slug, id: id.toString(), themeId: themeId.toString() },
-      }),
-    ),
-  )
+  await upsert('ProjectCategory', 'id', ['slug', 'name', 'themeId'], categories)
   output(`Updated ${categories.length} categories`)
 }

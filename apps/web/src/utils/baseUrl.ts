@@ -1,6 +1,6 @@
 import { isBrowser } from '@mec/web/utils/isBrowser'
 
-export const getBaseUrl = () => {
+export const getServerBaseUrl = () => {
   if (isBrowser) {
     // browser should use relative path
     return ''
@@ -24,5 +24,5 @@ export const getBaseUrl = () => {
 }
 
 export const getUrl = (path: string) => {
-  return `${getBaseUrl()}${path}`
+  return `${getServerBaseUrl()}${path}`
 }

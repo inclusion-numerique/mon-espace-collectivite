@@ -5,6 +5,7 @@ import { mkdir, readFile, writeFile } from 'fs/promises'
 import axios from 'axios'
 import { prismaClient } from '@mec/web/prismaClient'
 import { chunk } from 'lodash'
+import { dataDirectory } from '@mec/web/data/data'
 
 const dataSourceUrl =
   'https://aides-terr-staging-pr1167.osc-fr1.scalingo.io/api/perimeters/'
@@ -12,7 +13,7 @@ const dataSourceUrl =
 // Api has pages 1 based
 const getPerimetersPageUrl = (page: number) => `${dataSourceUrl}?page=${page}`
 
-const destinationDirectory = resolve(__dirname, '../../var/data')
+const destinationDirectory = dataDirectory
 const filename = 'aides-territoires-perimeters.json'
 
 const destination = resolve(destinationDirectory, filename)
@@ -56,7 +57,7 @@ export const getPerimetersData = async (output: Output = consoleOutput) => {
   for (const chunkIndex in urlChunks) {
     const urls = urlChunks[chunkIndex]
     const pagesData = await Promise.all(
-      urls.map((url) =>
+      urls.map((url: string) =>
         axios.get<PerimetersApiData>(url).then(({ data }) => data.results),
       ),
     )
@@ -94,24 +95,42 @@ export const mergePerimeters = async (output: Output = consoleOutput) => {
   )
 
   output(`Updating ${epciPerimeters.length} EPCIs`)
-  await prismaClient.$transaction(
-    epciPerimeters.map(({ id, code }) =>
-      prismaClient.intercommunality.updateMany({
-        where: { code },
-        data: { aidesTerritoiresId: id },
-      }),
-    ),
-  )
+  const epciPerimetersChunks = chunk(epciPerimeters, 100)
+  for (const chunkIndex in epciPerimetersChunks) {
+    output(
+      `Updating municipalities perimeters batch ${parseInt(chunkIndex) + 1}/${
+        epciPerimetersChunks.length
+      }`,
+    )
+    const chunkRows = epciPerimetersChunks[chunkIndex]
+    await prismaClient.$transaction(
+      chunkRows.map(({ id, code }) =>
+        prismaClient.intercommunality.updateMany({
+          where: { code },
+          data: { aidesTerritoiresId: id },
+        }),
+      ),
+    )
+  }
 
   output(`Updating ${municipalityPerimeters.length} municipalities`)
-  await prismaClient.$transaction(
-    municipalityPerimeters.map(({ id, code }) =>
-      prismaClient.municipality.updateMany({
-        where: { code },
-        data: { aidesTerritoiresId: id },
-      }),
-    ),
-  )
+  const municipalityPerimetersChunks = chunk(municipalityPerimeters, 100)
+  for (const chunkIndex in municipalityPerimetersChunks) {
+    output(
+      `Updating municipalities perimeters batch ${parseInt(chunkIndex) + 1}/${
+        municipalityPerimetersChunks.length
+      }`,
+    )
+    const chunkRows = municipalityPerimetersChunks[chunkIndex]
+    await prismaClient.$transaction(
+      chunkRows.map(({ id, code }) =>
+        prismaClient.municipality.updateMany({
+          where: { code },
+          data: { aidesTerritoiresId: id },
+        }),
+      ),
+    )
+  }
 
   output(`Updated successfuly`)
 }

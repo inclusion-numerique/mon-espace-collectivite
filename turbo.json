@@ -27,11 +27,11 @@
       "cache": false
     },
     "tsc": {
-      "dependsOn": ["^prisma:generate"],
       "cache": false
     }
   },
   "globalEnv": [
+    "CI",
     "DATABASE_URL",
     "NEXTAUTH_SECRET",
     "NEXTAUTH_URL",
@@ -49,6 +49,7 @@
     "SCW_S3_BUCKET_LOCATION",
     "SCW_BUCKET_ID",
     "SCW_S3_HOST",
+    "MEC_WEB_IMAGE",
     "GRIST_TABLE_ID",
     "GRIST_DOCUMENT_ID",
     "GRIST_API_KEY",

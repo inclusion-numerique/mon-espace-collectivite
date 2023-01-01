@@ -1,5 +1,6 @@
 const nextConfig = {
   // FIXME standalone does not support app directory for now
+  output: 'standalone',
   reactStrictMode: true,
   // transpilePackages: ['@acme/ui', 'lodash-es'],
   experimental: {

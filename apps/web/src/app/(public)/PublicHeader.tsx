@@ -10,7 +10,7 @@ const PublicHeader = ({
           <li>
             <a
               className="fr-btn fr-btn--tertiary fr-icon-account-circle-fill"
-              href="/connexion/login/"
+              href="/mon-espace"
             >
               Accéder à mon espace
             </a>
@@ -25,7 +25,7 @@ const PublicHeader = ({
         <li>
           <Link
             className="fr-btn fr-btn--icon-left fr-icon-account-circle-fill"
-            href="/connexion/login"
+            href="/mon-espace"
           >
             Accéder à mon espace
           </Link>
