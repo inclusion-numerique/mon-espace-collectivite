@@ -191,7 +191,7 @@ export class WebAppStack extends TerraformStack {
       domain: 'mec.gouv.kime.tech',
     })
 
-    new DomainRecord(this, 'webDnsRecord', {
+    const webDnsRecord = new DomainRecord(this, 'webDnsRecord', {
       type: 'CNAME',
       dnsZone: rootZone.domain,
       name: namespace,
@@ -202,6 +202,7 @@ export class WebAppStack extends TerraformStack {
     new ContainerDomain(this, 'webContainerDomain', {
       containerId: container.id,
       hostname,
+      dependsOn: [webDnsRecord, container],
     })
 
     output('webBaseUrl', hostname)
