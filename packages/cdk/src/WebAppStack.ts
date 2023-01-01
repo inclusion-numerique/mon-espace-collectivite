@@ -18,6 +18,7 @@ import { Container } from '../.gen/providers/scaleway/container'
 import { CdkOutput } from './getCdkOutput'
 import { DataScalewayDomainZone } from '../.gen/providers/scaleway/data-scaleway-domain-zone'
 import { DomainRecord } from '../.gen/providers/scaleway/domain-record'
+import { ContainerDomain } from '../.gen/providers/scaleway/container-domain'
 
 const databaseInstanceId = '7bd3aa2e-fdf4-4e5e-b6af-2ec2ec37cd75'
 const containerNamespaceId = '99eb3592-9355-476f-ad0c-6db7b80bff87'
@@ -196,6 +197,11 @@ export class WebAppStack extends TerraformStack {
       name: namespace,
       data: `${container.domainName}.`,
       ttl: 60 * 5,
+    })
+
+    new ContainerDomain(this, 'webContainerDomain', {
+      containerId: container.id,
+      hostname,
     })
 
     output('webBaseUrl', hostname)
