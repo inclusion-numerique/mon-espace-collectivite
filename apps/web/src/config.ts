@@ -1,10 +1,12 @@
 const NodeEnv = process.env.NODE_ENV
 
+const emailServer = `smtp://${process.env.SMTP_USERNAME}:${process.env.SCW_SECRET_KEY}@${process.env.SMTP_SERVER}:${process.env.SMTP_PORT}`
+
 export const PrivateConfig = {
   NodeEnv,
   Auth: {
     Email: {
-      server: process.env.EMAIL_SERVER ?? '',
+      server: emailServer,
       from: `${process.env.EMAIL_FROM_NAME} <${process.env.EMAIL_FROM_ADDRESS}>`,
     },
   },
