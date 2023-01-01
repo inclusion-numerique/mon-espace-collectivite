@@ -3,9 +3,18 @@ import { NextMiddleware, NextResponse } from 'next/server'
 const middleware: NextMiddleware = (request) => {
   const forwardedProto = request.headers.get('X-Forwarded-Proto')
   const nodeEnv = process.env.NODE_ENV
+  const requestHost = request.headers.get('host')
+  const baseUrl = process.env.BASE_URL
 
-  if (nodeEnv === 'production' && forwardedProto === 'http') {
-    const httpsBase = `https://${request.headers.get('host')}`
+  if (
+    nodeEnv === 'production' &&
+    // We redirect if protocol is not secure https
+    (forwardedProto === 'http' ||
+      // If we have a base url defined and the host is different
+      // we redirect to the main domain defined in base_url
+      (!!baseUrl && requestHost !== baseUrl))
+  ) {
+    const httpsBase = `https://${baseUrl || requestHost}`
     const requestUrl = new URL(request.url)
     const path = `${requestUrl.pathname}${requestUrl.search}`
     const redirectTo = `${httpsBase}${path}`

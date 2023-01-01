@@ -2,6 +2,8 @@ import { readFile } from 'fs/promises'
 import { resolve } from 'path'
 
 export type CdkOutput = {
+  webBaseUrl: string
+  containerDomainName: string
   databaseName: string
   databaseUrl: string
   databaseUser: string

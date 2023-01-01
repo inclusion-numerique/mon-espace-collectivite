@@ -16,11 +16,14 @@ import { DataScalewayContainerNamespace } from '../.gen/providers/scaleway/data-
 import { DataScalewayRegistryNamespace } from '../.gen/providers/scaleway/data-scaleway-registry-namespace'
 import { Container } from '../.gen/providers/scaleway/container'
 import { CdkOutput } from './getCdkOutput'
+import { DataScalewayDomainZone } from '../.gen/providers/scaleway/data-scaleway-domain-zone'
+import { DomainRecord } from '../.gen/providers/scaleway/domain-record'
 
 const databaseInstanceId = '7bd3aa2e-fdf4-4e5e-b6af-2ec2ec37cd75'
 const containerNamespaceId = '99eb3592-9355-476f-ad0c-6db7b80bff87'
 const registryNamespaceId = '6609899c-75da-481b-914d-17a7b75ea1db'
 const region = 'fr-par'
+const domain = 'mec.gouv.kime.tech'
 
 export class WebAppStack extends TerraformStack {
   constructor(scope: Construct, id: string, namespace: string) {
@@ -28,6 +31,9 @@ export class WebAppStack extends TerraformStack {
     const namespaced = (name: string) => `${name}-${namespace}`
 
     const isMain = namespace === 'main'
+
+    const subDomain = namespace
+    const hostname = `${subDomain}.${domain}`
 
     // Output helper function
     // ⚠️ When calling this function, do not forget to update typings in src/getCdkOutput.ts
@@ -166,6 +172,7 @@ export class WebAppStack extends TerraformStack {
         EMAIL_FROM_ADDRESS: emailFromAddress,
         EMAIL_FROM_NAME: emailFromName,
         MEC_WEB_IMAGE: webContainerImage.value,
+        BASE_URL: hostname,
       },
       secretEnvironmentVariables: {
         DATABASE_URL: databaseUrl,
@@ -179,6 +186,20 @@ export class WebAppStack extends TerraformStack {
       deploy: true,
     })
 
+    const rootZone = new DataScalewayDomainZone(this, 'dnsZone', {
+      domain: 'mec.gouv.kime.tech',
+    })
+
+    new DomainRecord(this, 'webDnsRecord', {
+      type: 'CNAME',
+      dnsZone: rootZone.domain,
+      name: namespace,
+      data: container.domainName,
+      ttl: 60 * 5,
+    })
+
+    output('webBaseUrl', hostname)
+    output('containerDomainName', container.domainName)
     output('databaseUrl', databaseUrl, 'sensitive')
     output(
       'webContainerStatus',
