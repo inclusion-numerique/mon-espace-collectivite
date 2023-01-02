@@ -21,7 +21,6 @@ import { ContainerDomain } from '../.gen/providers/scaleway/container-domain'
 
 const databaseInstanceId = '7bd3aa2e-fdf4-4e5e-b6af-2ec2ec37cd75'
 const containerNamespaceId = '99eb3592-9355-476f-ad0c-6db7b80bff87'
-const registryNamespaceId = '6609899c-75da-481b-914d-17a7b75ea1db'
 const region = 'fr-par'
 const domain = 'mec.gouv.kime.tech'
 
@@ -143,8 +142,8 @@ export class WebAppStack extends TerraformStack {
     )
 
     const emailFromAddress = isMain
-      ? `bot@mec.gouv.kime.tech`
-      : `bot+${namespace}@mec.gouv.kime.tech`
+      ? `bot@${domain}`
+      : `bot+${namespace}@${domain}`
 
     const emailFromName = isMain
       ? 'Mon espace collectivité'
