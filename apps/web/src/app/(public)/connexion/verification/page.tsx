@@ -8,7 +8,8 @@ const VerifyPage = async () => {
   const user = await getSessionUser()
   const nextStep = getUserAuthFlowStep(user)
   if (user || nextStep !== '/connexion/login') {
-    return redirect(nextStep)
+    redirect(nextStep)
+    return null
   }
 
   return (

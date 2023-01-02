@@ -8,7 +8,8 @@ const PendingPage = async () => {
   const user = await getSessionUser()
   const nextStep = getUserAuthFlowStep(user)
   if (nextStep !== '/connexion/en-attente') {
-    return redirect(nextStep)
+    redirect(nextStep)
+    return null
   }
 
   return (

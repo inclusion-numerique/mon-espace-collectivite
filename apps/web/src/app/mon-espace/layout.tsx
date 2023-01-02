@@ -8,15 +8,18 @@ const PrivateLayout = async ({ children, ...props }: PropsWithChildren) => {
   const user = await getSessionUser()
 
   if (!user) {
-    return redirect('/connexion/login')
+    redirect('/connexion/login')
+    return null
   }
 
   if (user.status !== 'Active') {
-    return redirect('/connexion/en-attente')
+    redirect('/connexion/en-attente')
+    return null
   }
 
   if (!user.onboarded) {
-    return redirect('/connexion/onboarding')
+    redirect('/connexion/onboarding')
+    return null
   }
 
   return (

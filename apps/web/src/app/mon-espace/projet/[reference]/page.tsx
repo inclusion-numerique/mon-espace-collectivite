@@ -21,7 +21,8 @@ const EditCrtePage = async ({
   const project = await getProjectForProjectForm(reference)
 
   if (!project) {
-    return notFound()
+    notFound()
+    return null
   }
 
   return (

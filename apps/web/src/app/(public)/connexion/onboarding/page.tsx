@@ -10,7 +10,8 @@ const OnboardingPage = async ({}: {}) => {
   const user = await getSessionUser()
   const nextStep = getUserAuthFlowStep(user)
   if (!user || nextStep !== '/connexion/onboarding') {
-    return redirect(nextStep)
+    redirect(nextStep)
+    return null
   }
 
   return (
