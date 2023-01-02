@@ -33,7 +33,6 @@
     "manypkg": "manypkg",
     "manypkg:check": "manypkg check",
     "start:web": "npm -w @mec/web start",
-    "docker:build:e2e": "docker buildx build --push --platform linux/amd64 -t rg.fr-par.scw.cloud/mec-ci/circleci-e2e:latest -f docker/ci/circleci-e2e/Dockerfile .",
     "docker:build:web": "docker buildx build --platform linux/amd64 -t rg.fr-par.scw.cloud/mec-web/mec-web-dev:latest -f docker/web/Dockerfile .",
     "docker:build:web:debug": "DOCKER_BUILDKIT=0 docker build -t mec-web/mec-web-dev:debug -f docker/web/Dockerfile ."
   },

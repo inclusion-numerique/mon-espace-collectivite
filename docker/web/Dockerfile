@@ -12,27 +12,18 @@ ENV NODE_ENV development
 # /web
 #   /node_modules -> apps/web dependencies
 #   /.next -> next build
-#   /server.js
+#   /src
 #   /public
 #   /...other stuff
 
 # Copy root workspace dependencies
 COPY node_modules ./node_modules
 
-# Copy apps/web dependencies
-COPY apps/web/node_modules ./web/node_modules
-
-# Copy next build
-COPY apps/web/.next/standalone/package.json ./web/package.json
-COPY apps/web/.next/standalone/server.js ./web/server.js
-COPY apps/web/.next/standalone/.next ./web/.next
-
-# Copy public assets
-COPY apps/web/public ./web/public
-
-# Copy static assets
-COPY apps/web/.next/static ./web/.next/static
+# Copy apps/web
+COPY apps/web ./web
 
 EXPOSE $PORT
 
-CMD ["node", "web/server.js"]
+WORKDIR /app/web
+
+CMD ["npm", "start"]

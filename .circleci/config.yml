@@ -215,7 +215,7 @@ jobs:
             rm -rf apps/web/.next/standalone
       - run:
           name: 'Build docker image'
-          command: DOCKER_BUILDKIT=1 docker build --progress=plain -t $IMAGE_BUILD_TAG -f docker/web-plain/Dockerfile .
+          command: DOCKER_BUILDKIT=1 docker build --progress=plain -t $IMAGE_BUILD_TAG -f docker/web/Dockerfile .
       - run:
           name: 'Login to registry and push image'
           command: |
