@@ -29,7 +29,7 @@
   "dependencies": {
     "@mec/web": "*",
     "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.1.1"
+    "tsconfig-paths": "^4.1.2"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
