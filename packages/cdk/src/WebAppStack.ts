@@ -13,7 +13,6 @@ import { RdbUser } from '../.gen/providers/scaleway/rdb-user'
 import { RdbPrivilege } from '../.gen/providers/scaleway/rdb-privilege'
 import { generateDatabasePassword } from './databasePassword'
 import { DataScalewayContainerNamespace } from '../.gen/providers/scaleway/data-scaleway-container-namespace'
-import { DataScalewayRegistryNamespace } from '../.gen/providers/scaleway/data-scaleway-registry-namespace'
 import { Container } from '../.gen/providers/scaleway/container'
 import { CdkOutput } from './getCdkOutput'
 import { DataScalewayDomainZone } from '../.gen/providers/scaleway/data-scaleway-domain-zone'
@@ -137,14 +136,6 @@ export class WebAppStack extends TerraformStack {
     output('uploadsBucketName', uploadsBucket.name)
     output('uploadsBucketEndpoint', uploadsBucket.endpoint)
 
-    const registryNamespace = new DataScalewayRegistryNamespace(
-      this,
-      'registryNamespace',
-      {
-        namespaceId: registryNamespaceId,
-      },
-    )
-
     const containerNamespace = new DataScalewayContainerNamespace(
       this,
       'containerNamespace',
@@ -152,8 +143,8 @@ export class WebAppStack extends TerraformStack {
     )
 
     const emailFromAddress = isMain
-      ? `bot+mon-espace-collectivite@kime.tech`
-      : `bot+mec-${namespace}@kime.tech`
+      ? `bot@mec.gouv.kime.tech`
+      : `bot+${namespace}@mec.gouv.kime.tech`
 
     const emailFromName = isMain
       ? 'Mon espace collectivité'
