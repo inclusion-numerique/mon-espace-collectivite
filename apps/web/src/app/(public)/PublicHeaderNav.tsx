@@ -13,11 +13,11 @@ export const PublicHeaderNav = () => {
       <li className="fr-nav__item">
         <a
           className="fr-nav__link"
-          href="https://lafrancedessolutions.gouv.fr"
+          href="https://solutionsdelus.anct.gouv.fr"
           target="_blank"
           rel="noreferrer"
         >
-          La France des solutions
+          Solutions d&apos;élus
         </a>
       </li>
       <li className="fr-nav__item">
