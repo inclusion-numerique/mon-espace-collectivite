@@ -243,15 +243,16 @@ model ProjectNote {
 }
 
 model Municipality {
-  // Official code, not postal code, not SIREN code
+  // Official and unique INSEE code, not postal code, not SIREN code
   code                 String                    @id
-  // Warning: Siren is not unique for a municipality in the current dataset
-  siren                String
   intercommunality     Intercommunality          @relation(fields: [intercommunalityCode], references: [code])
   district             District                  @relation(fields: [districtCode], references: [code])
   name                 String
   aidesTerritoiresId   String?
   projects             Project[]
+  parent               Municipality?             @relation(name: "parent_municipality", fields: [parentCode], references: [code])
+  parentCode           String?
+  children             Municipality[]            @relation(name: "parent_municipality")
   intercommunalityCode String
   districtCode         String
   accessLevels         MunicipalityAccessLevel[]

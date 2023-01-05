@@ -1,4 +1,6 @@
 import { prismaClient } from '@mec/web/prismaClient'
+import { mockProviders } from 'next-auth/client/__tests__/helpers/mocks'
+import type = mockProviders.github.type
 
 const doubleQuoted = (value: string) => `"${value}"`
 
@@ -7,7 +9,7 @@ export const upsert = (
   idColumn: string,
   dataColumns: string[],
   // id column first, then values for datacolumns in the same order as specified
-  data: string[][],
+  data: (string | number | null | boolean)[][],
 ): Promise<number> => {
   const quotedColumnNames = [idColumn, ...dataColumns]
     .map(doubleQuoted)
@@ -17,7 +19,17 @@ export const upsert = (
     .map(
       (values) =>
         `(${values
-          .map((value) => `'${value.replaceAll("'", "''")}'`)
+          .map((value) =>
+            value === null
+              ? 'null'
+              : typeof value === 'number'
+              ? value.toString(10)
+              : typeof value === 'boolean'
+              ? value
+                ? 'true'
+                : 'false'
+              : `'${value.replaceAll("'", "''")}'`,
+          )
           .join(',')})`,
     )
     .join(',')}`
