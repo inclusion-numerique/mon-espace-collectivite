@@ -437,8 +437,8 @@ const ConfidentialityPage = () => {
           </ul>
 
           <p>
-            Pour toute demande, vous pouvez écrire un email à l’équipe La France
-            des solutions&nbsp;:{' '}
+            Pour toute demande, vous pouvez écrire un email à l’équipe Mon
+            espace collectivité&nbsp;:{' '}
             <a href={`mailto:${PublicConfig.contactEmail}`}>
               {PublicConfig.contactEmail}
             </a>

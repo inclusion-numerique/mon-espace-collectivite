@@ -1,9 +1,9 @@
 import 'tsconfig-paths/register'
-import { mergeEpciAndCrteData } from '@mec/web/data/epciAndCrteDataSource'
-import { mergeMunicipalitiesAndDistrictsData } from '@mec/web/data/municipalitiesData'
+import { mergeEpciAndCrteData } from '@mec/cli/data/epciAndCrteDataSource'
+import { mergeMunicipalitiesAndDistrictsData } from '@mec/cli/data/municipalitiesData'
 import * as process from 'process'
 import { prismaClient } from '@mec/web/prismaClient'
-import { mergeCategories } from '@mec/web/data/categoriesData'
+import { mergeCategories } from '@mec/cli/data/categoriesData'
 
 const main = async () => {
   if (process.argv.includes('--only-if-empty')) {

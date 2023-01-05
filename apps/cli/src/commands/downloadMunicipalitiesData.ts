@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register'
-import { getMunicipalitiesAndDistrictsData } from '@mec/web/data/municipalitiesData'
+import { getMunicipalitiesAndDistrictsData } from '@mec/cli/data/municipalitiesData'
 
 const main = async () => {
   await getMunicipalitiesAndDistrictsData()

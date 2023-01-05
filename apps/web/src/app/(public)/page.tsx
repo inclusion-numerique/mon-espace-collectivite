@@ -47,21 +47,21 @@ export default function HomePage() {
                   verticalAlign: 'middle',
                 }}
                 src="/images/village.webp"
-                alt="La France des solutions"
+                alt="Solutions d'élus"
               />
             </picture>
           </div>
           <div
             className={`fr-col-12 fr-col-md-6 fr-p-4v fr-p-md-10v ${styles.text}`}
           >
-            <h4>La France des solutions</h4>
+            <h4>Solutions d&apos;élus</h4>
             <p style={{ flex: 1 }}>
               Vous êtes maire ou président d’intercommunalité et vous souhaitez
               voir ou partager des solutions concrètes pour accélérer la
               transition écologique des territoires.
             </p>
             <Link
-              href="https://lafrancedessolutions.gouv.fr/projets"
+              href="https://solutionsdelus.anct.gouv.fr/projets"
               className="fr-link"
               target="_blank"
               rel="noreferrer"

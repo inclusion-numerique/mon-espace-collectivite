@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@mec/web/*": ["apps/web/src/*"],
+      "@mec/cli/*": ["apps/cli/src/*"],
       "@mec/e2e/*": ["e2e/cypress/*"],
       "@mec/cdk/*": ["packages/cdk/src/*"],
       "@mec/scaleway/*": ["packages/cdk/.gen/providers/scaleway/*"]

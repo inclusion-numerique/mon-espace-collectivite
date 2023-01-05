@@ -16,7 +16,7 @@ const AccessibilityStatementPage = () => {
         Cette déclaration d’accessibilité s’applique à{' '}
         <strong>Mon espace collectivité</strong>{' '}
         <span>
-          (<span>https://lafrancedessolutions.anct.gouv.fr/</span>)
+          (<span>https://monespacecollectivite.anct.gouv.fr/</span>)
         </span>
         .
       </p>
