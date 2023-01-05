@@ -154,7 +154,8 @@ export class WebAppStack extends TerraformStack {
     )}@${dbInstance.endpointIp}:${dbInstance.endpointPort}/${dbConfig.name}`
 
     // Changing the name will recreate a new container
-    const containerName = namespaced('mec-web')
+    // The names failes with max length so we shorten it
+    const containerName = namespaced('web').replaceAll('-feat-', '-')
 
     const container = new Container(this, 'webContainer', {
       namespaceId: containerNamespace.namespaceId,
