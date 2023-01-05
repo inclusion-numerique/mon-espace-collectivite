@@ -155,7 +155,7 @@ export class WebAppStack extends TerraformStack {
 
     // Changing the name will recreate a new container
     // The names failes with max length so we shorten it
-    const containerName = namespaced('web').replaceAll('-feat-', '-')
+    const containerName = namespace
 
     const container = new Container(this, 'webContainer', {
       namespaceId: containerNamespace.namespaceId,
