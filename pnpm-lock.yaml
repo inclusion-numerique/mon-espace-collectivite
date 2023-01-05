@@ -63,7 +63,7 @@ importers:
       axios: ^1.2.2
       csv-parse: ^5.3.3
       csv-stringify: ^6.2.3
-      lodash-es: ^4.17.21
+      lodash: ^4.17.21
       ts-node: ^10.9.1
       tsconfig-paths: ^4.1.2
       typescript: ^4.9.4
@@ -72,7 +72,7 @@ importers:
       axios: 1.2.2
       csv-parse: 5.3.3
       csv-stringify: 6.2.3
-      lodash-es: 4.17.21
+      lodash: 4.17.21
       ts-node: 10.9.1_awa2wsr5thmg3i7jqycphctjfq
       tsconfig-paths: 4.1.2
     devDependencies:
@@ -11258,10 +11258,6 @@ packages:
     dependencies:
       p-locate: 6.0.0
     dev: true
-
-  /lodash-es/4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
-    dev: false
 
   /lodash.clone/4.5.0:
     resolution: {integrity: sha512-GhrVeweiTD6uTmmn5hV/lzgCQhccwReIVRLHp7LT4SopOjqEZ5BbX8b5WWEtAKasjmy8hR7ZPwsYlxRCku5odg==}
