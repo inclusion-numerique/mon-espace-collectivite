@@ -155,7 +155,11 @@ export class WebAppStack extends TerraformStack {
 
     // Changing the name will recreate a new container
     // The names failes with max length so we shorten it
-    const containerName = namespace
+    const maxContainerNameLength = 34
+    const containerName =
+      namespace.length > maxContainerNameLength
+        ? namespace.substring(0, maxContainerNameLength)
+        : namespace
 
     const container = new Container(this, 'webContainer', {
       namespaceId: containerNamespace.namespaceId,
