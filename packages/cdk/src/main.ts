@@ -6,9 +6,9 @@ import { branch } from 'git-rev-sync'
 
 const app = new App()
 
-const namespace = branch()
-  .replace(/\/|_|\.|@/g, '-')
-  .toLowerCase()
+const branchScope = process.env.CDK_FORCE_BRANCH || branch()
+
+const namespace = branchScope.replace(/\/|_|\.|@/g, '-').toLowerCase()
 
 new WebAppStack(app, `web`, namespace)
 
