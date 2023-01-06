@@ -303,7 +303,7 @@ jobs:
       - run:
           name: 'Migrate database'
           command: |
-            pnpm -F @mec/web prisma:db:push
+            pnpm -F @mec/web with-env prisma db push --skip-generate --accept-data-loss
       - run:
           name: 'Load administrative data if none loaded'
           command: |
