@@ -18,6 +18,11 @@ import { CdkOutput } from './getCdkOutput'
 import { DataScalewayDomainZone } from '../.gen/providers/scaleway/data-scaleway-domain-zone'
 import { DomainRecord } from '../.gen/providers/scaleway/domain-record'
 import { ContainerDomain } from '../.gen/providers/scaleway/container-domain'
+import {
+  computeBranchNamespace,
+  generateDatabaseUrl,
+  namespacer,
+} from './utils'
 
 const databaseInstanceId = '7bd3aa2e-fdf4-4e5e-b6af-2ec2ec37cd75'
 const containerNamespaceId = '99eb3592-9355-476f-ad0c-6db7b80bff87'
@@ -25,9 +30,12 @@ const region = 'fr-par'
 const domain = 'mec.gouv.kime.tech'
 
 export class WebAppStack extends TerraformStack {
-  constructor(scope: Construct, id: string, namespace: string) {
+  constructor(scope: Construct, id: string, branch: string) {
     super(scope, id)
-    const namespaced = (name: string) => `${name}-${namespace}`
+
+    const namespace = computeBranchNamespace(branch)
+
+    const namespaced = namespacer(namespace)
 
     const isMain = namespace === 'main'
 
@@ -149,9 +157,13 @@ export class WebAppStack extends TerraformStack {
       ? 'Mon espace collectivité'
       : `[${namespace}] Mon espace collectivité`
 
-    const databaseUrl = `postgres://${dbConfig.user}:${encodeURIComponent(
-      dbConfig.password,
-    )}@${dbInstance.endpointIp}:${dbInstance.endpointPort}/${dbConfig.name}`
+    const databaseUrl = generateDatabaseUrl({
+      user: dbConfig.user,
+      password: dbConfig.password,
+      host: dbInstance.endpointIp,
+      port: dbInstance.endpointPort,
+      name: dbConfig.name,
+    })
 
     // Changing the name will recreate a new container
     // The names failes with max length so we shorten it
