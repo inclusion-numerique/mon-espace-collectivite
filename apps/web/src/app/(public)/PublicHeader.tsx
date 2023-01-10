@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { PublicHeaderNav } from '@mec/web/app/(public)/PublicHeaderNav'
 import { ReactNode } from 'react'
+import { Routes } from '@mec/web/app/routing'
 
 const PublicHeader = ({
   headerTools = (
@@ -10,7 +11,7 @@ const PublicHeader = ({
           <li>
             <a
               className="fr-btn fr-btn--tertiary fr-icon-account-circle-fill"
-              href="/mon-espace"
+              href={Routes.MonEspace.Index}
             >
               Accéder à mon espace
             </a>
@@ -25,7 +26,7 @@ const PublicHeader = ({
         <li>
           <Link
             className="fr-btn fr-btn--icon-left fr-icon-account-circle-fill"
-            href="/mon-espace"
+            href={Routes.MonEspace.Index}
           >
             Accéder à mon espace
           </Link>

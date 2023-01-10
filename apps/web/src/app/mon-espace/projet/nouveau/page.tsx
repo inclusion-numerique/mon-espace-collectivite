@@ -4,6 +4,7 @@ import { serialize } from '@mec/web/utils/serialization'
 import ProjectForm from '@mec/web/app/mon-espace/ProjectForm/ProjectForm'
 import { getUserWithCommunitiesForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/communitiesForProjectForm'
 import { getCategoriesOptionsForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/categoriesForProjectForm'
+import { Routes } from '@mec/web/app/routing'
 
 const NewCrtePage = async () => {
   const sessionToken = getAuthenticatedSessionToken()
@@ -25,7 +26,9 @@ const NewCrtePage = async () => {
       <div className="fr-container">
         <Breadcrumbs
           currentPage="Nouveau CRTE"
-          parents={[{ title: 'Gérer et voir mes CRTE', href: '/mon-espace' }]}
+          parents={[
+            { title: 'Gérer et voir mes CRTE', href: Routes.MonEspace.Index },
+          ]}
         />
         <div className="fr-grid-row fr-grid-row--center">
           <div className="fr-col-12 fr-col-md-10 fr-col-lg-8 fr-mb-24v">

@@ -105,7 +105,6 @@ export const ProjectNoteForm = withTrpc(
     const onSubmit = async (
       data: ProjectNoteCreationData | ProjectNoteEditionData,
     ) => {
-      console.log('SUBMIT ?', data)
       await executeMutation(data)
       closeRef.current?.click()
       router.refresh()
@@ -120,8 +119,6 @@ export const ProjectNoteForm = withTrpc(
       update.error?.message ??
       deletion.error?.message ??
       'Une erreur est survenue, merci de réessayer.'
-
-    console.log('FORM', { ...form })
 
     return (
       <form onSubmit={form.handleSubmit(onSubmit)}>

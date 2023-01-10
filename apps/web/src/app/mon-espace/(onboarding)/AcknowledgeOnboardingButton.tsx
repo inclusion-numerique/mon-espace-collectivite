@@ -9,7 +9,7 @@ export const AcknowledgeOnboardingButton = withTrpc(() => {
   const { mutate, isLoading, isSuccess, isError } =
     trpc.user.acknowledgeOnboarding.useMutation({
       onSuccess: () => {
-        router.replace('/mon-espace')
+        router.refresh()
       },
     })
 

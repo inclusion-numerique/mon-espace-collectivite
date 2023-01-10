@@ -5,6 +5,8 @@ import { SubPrefectureDashboard } from '@mec/web/app/mon-espace/(sub-prefecture)
 import { IntercommunalityDashboard } from '@mec/web/app/mon-espace/(intercommunality)/IntercommunalityDashboard'
 import { prismaClient } from '@mec/web/prismaClient'
 
+export const revalidate = 0
+
 const DashboardPage = async () => {
   const user = await getAuthenticatedSessionUser()
 

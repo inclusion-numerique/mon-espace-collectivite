@@ -8,6 +8,7 @@ import { WriteProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/WriteP
 import { getProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
 import { Crte, Municipality } from '@prisma/client'
 import { ProjectNoteFormModal } from '@mec/web/app/mon-espace/ProjectNoteFormModal'
+import { Routes } from '@mec/web/app/routing'
 
 export const MunicipalityDashboard = asyncComponent(
   async ({
@@ -56,7 +57,7 @@ export const MunicipalityDashboard = asyncComponent(
               <div className="fr-btns-group fr-btns-group--icon-left">
                 <Link
                   className="fr-btn fr-icon-add-line"
-                  href="/mon-espace/projet/nouveau"
+                  href={Routes.MonEspace.Projet.Nouveau}
                 >
                   Ajouter un nouveau projet
                 </Link>

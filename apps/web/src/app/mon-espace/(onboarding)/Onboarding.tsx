@@ -1,7 +1,8 @@
-import { AcknowledgeOnboardingButton } from '@mec/web/app/(public)/connexion/onboarding/AcknowledgeOnboardingButton'
+import { AcknowledgeOnboardingButton } from '@mec/web/app/mon-espace/(onboarding)/AcknowledgeOnboardingButton'
+import { AuthCard } from '@mec/web/app/(public)/connexion/AuthCard'
 
 export const Onboarding = ({ name, role }: { name: string; role: string }) => (
-  <>
+  <AuthCard>
     <div className="fr-grid-row fr-grid-row--center">
       <picture>
         <img
@@ -25,5 +26,5 @@ export const Onboarding = ({ name, role }: { name: string; role: string }) => (
     <div className="fr-btns-group">
       <AcknowledgeOnboardingButton />
     </div>
-  </>
+  </AuthCard>
 )

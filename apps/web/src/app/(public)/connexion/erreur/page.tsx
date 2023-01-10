@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { AuthCard } from '@mec/web/app/(public)/connexion/AuthCard'
+import { Routes } from '@mec/web/app/routing'
 
 const errorMessage = (error?: string): string | undefined => {
   if (error === 'Verification') {
@@ -29,7 +30,11 @@ const ErrorPage = async ({
 
         <ul className="fr-btns-group fr-mt-12v">
           <li>
-            <Link href="/connexion/login" target="_self" className="fr-btn">
+            <Link
+              href={Routes.Connexion.Login}
+              target="_self"
+              className="fr-btn"
+            >
               Retour
             </Link>
           </li>

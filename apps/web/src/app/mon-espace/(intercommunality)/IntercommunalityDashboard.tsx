@@ -12,6 +12,7 @@ import {
 import { Crte, Intercommunality } from '@prisma/client'
 import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadProjectsTable'
 import { ProjectNoteFormModal } from '@mec/web/app/mon-espace/ProjectNoteFormModal'
+import { Routes } from '@mec/web/app/routing'
 
 export const IntercommunalityDashboard = asyncComponent(
   async ({
@@ -88,7 +89,7 @@ export const IntercommunalityDashboard = asyncComponent(
               <div className="fr-btns-group fr-btns-group--icon-left">
                 <Link
                   className="fr-btn fr-icon-add-line"
-                  href="/mon-espace/projet/nouveau"
+                  href={Routes.MonEspace.Projet.Nouveau}
                 >
                   Ajouter un nouveau projet
                 </Link>

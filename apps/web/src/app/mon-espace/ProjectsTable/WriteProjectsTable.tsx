@@ -8,6 +8,7 @@ import { ProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboa
 import { nonBreakable } from '@mec/web/utils/nonBreakable'
 import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
 import { ProjectNoteButton } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteButton'
+import { Routes } from '@mec/web/app/routing'
 
 // TODO class
 const Info = ({ children }: PropsWithChildren) => (
@@ -98,7 +99,7 @@ export const WriteProjectsTable = ({
               energyConsumption,
             } = project
             const fieldHref = (field?: string) =>
-              `/mon-espace/projet/${reference}${field ? `?focus=${field}` : ''}`
+              Routes.MonEspace.Projet.Modifier(reference, { focus: field })
 
             return (
               <tr key={id}>

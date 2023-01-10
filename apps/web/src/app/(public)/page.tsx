@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import styles from './styles.module.css'
+import { Routes } from '@mec/web/app/routing'
 
 export default function HomePage() {
   return (
@@ -30,7 +31,7 @@ export default function HomePage() {
               Vous êtes maire ou préfet et vous souhaitez gérer ou voir les
               projets CRTE de votre collectivé.
             </p>
-            <Link href="/mon-espace" className="fr-btn">
+            <Link href={Routes.MonEspace.Index} className="fr-btn">
               Accéder à mon espace
             </Link>
           </div>

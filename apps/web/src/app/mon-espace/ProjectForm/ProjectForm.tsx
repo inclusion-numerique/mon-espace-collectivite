@@ -21,6 +21,7 @@ import { deserialize, Serialized } from '@mec/web/utils/serialization'
 import { MultipleBadgeSelectFormField } from '@mec/web/form/MultipleBadgeSelectFormField'
 import { ProjectForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/projectForProjectForm'
 import { ProjectDeletion } from '@mec/web/app/mon-espace/ProjectForm/ProjectDeletion'
+import { Routes } from '@mec/web/app/routing'
 
 const defaultValuesFromExistingProject = (
   project: ProjectForProjectForm,
@@ -76,7 +77,9 @@ const ProjectForm = ({
     if (project?.id) {
       try {
         await updateProject.mutateAsync({ id: project.id, ...data })
-        router.push(`/mon-espace?updatedProject=${project.id}`)
+        router.push(
+          Routes.MonEspace.IndexWithParams({ updatedProject: project.id }),
+        )
       } catch (err) {
         // Error message will be in hook result
       }
@@ -85,7 +88,11 @@ const ProjectForm = ({
     }
     try {
       const created = await createProject.mutateAsync(data)
-      router.push(`/mon-espace?createdProject=${created.project.id}`)
+      router.push(
+        Routes.MonEspace.IndexWithParams({
+          createdProject: created.project.id,
+        }),
+      )
     } catch (err) {
       // Error message will be in hook result
     }
@@ -100,7 +107,10 @@ const ProjectForm = ({
         {createProject.isSuccess ? (
           <div className="fr-card__content">
             <h2>Votre projet CRTE a bien été enregistré</h2>
-            <Link href="/mon-espace" className="fr-btn fr-btn--secondary">
+            <Link
+              href={Routes.MonEspace.Index}
+              className="fr-btn fr-btn--secondary"
+            >
               Retour à mon espace
             </Link>
           </div>
@@ -294,7 +304,7 @@ const ProjectForm = ({
                 </button>
                 <Link
                   className="fr-btn fr-btn--tertiary fr-mt-4v fr-icon-arrow-left-line"
-                  href="/mon-espace"
+                  href={Routes.MonEspace.Index}
                 >
                   Annuler
                 </Link>
