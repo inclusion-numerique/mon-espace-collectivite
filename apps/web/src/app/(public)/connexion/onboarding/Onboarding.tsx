@@ -12,7 +12,7 @@ export const Onboarding = ({ name, role }: { name: string; role: string }) => (
       </picture>
     </div>
     <h2 style={{ textAlign: 'center' }} className="fr-mt-4v">
-      Votre compte a bien été crée&nbsp;!
+      Votre compte a bien été créé&nbsp;!
     </h2>
     <p style={{ textAlign: 'center' }}>
       Vous êtes identifié en tant que&nbsp;:
