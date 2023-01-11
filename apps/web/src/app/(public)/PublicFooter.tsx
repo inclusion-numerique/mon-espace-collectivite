@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { PublicConfig } from '@mec/web/config'
 
 const PublicFooter = () => {
   return (
@@ -34,13 +35,14 @@ const PublicFooter = () => {
                 title="Site Web de l'Agence Nationale de la Cohésion des Territoires"
                 className="fr-footer__brand-link"
               >
-                <Image
-                  src="/images/logo-anct.svg"
-                  alt="Logo de l'Agence Nationale de la Cohésion des Territoires"
-                  width={200}
-                  height={200}
-                  className="fr-footer__logo"
-                />
+                <picture>
+                  <img
+                    src="/images/logo-anct.svg"
+                    alt="Logo de l'Agence Nationale de la Cohésion des Territoires"
+                    width={200}
+                    className="fr-footer__logo"
+                  />
+                </picture>
               </a>
             </div>
           </div>
@@ -111,7 +113,7 @@ const PublicFooter = () => {
             <li className="fr-footer__bottom-item">
               <a
                 className="fr-footer__bottom-link"
-                href="https://github.com/inclusion-numerique/mon-espace-collectivite"
+                href={PublicConfig.repository}
                 target="_blank"
                 rel="noreferrer"
                 title="Code source"

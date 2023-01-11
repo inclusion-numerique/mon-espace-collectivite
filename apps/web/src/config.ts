@@ -4,6 +4,12 @@ const emailServer = `smtp://${process.env.SMTP_USERNAME}:${process.env.SCW_SECRE
 
 export const PrivateConfig = {
   NodeEnv,
+  Branch: process.env.BRANCH ?? '',
+  Namespace: process.env.NAMESPACE ?? '',
+  isMain: process.env.BRANCH === 'main',
+  Chromatic: {
+    appId: process.env.CHROMATIC_APP_ID ?? '',
+  },
   Auth: {
     Email: {
       server: emailServer,
@@ -28,6 +34,9 @@ export const PrivateConfig = {
 }
 
 export const PublicConfig = {
+  productTitle: 'Mon espace collectivité',
+  mainLiveUrl: 'https://main.mec.gouv.kime.tech',
+  repository: 'https://github.com/inclusion-numerique/mon-espace-collectivite',
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
   sirenApiKey: process.env.NEXT_PUBLIC_SIREN_API_KEY,
 }

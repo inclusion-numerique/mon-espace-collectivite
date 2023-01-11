@@ -32,7 +32,10 @@
   },
   "globalEnv": [
     "CI",
+    "CHROMATIC_APP_ID",
     "DATABASE_URL",
+    "BRANCH",
+    "NAMESPACE",
     "NEXTAUTH_SECRET",
     "NEXTAUTH_URL",
     "NODE_ENV",

@@ -29,3 +29,12 @@ export const userHasSomeRole = (
 ) => {
   return !!oneOf.find((role) => user.roles.includes(role))
 }
+export const userHasRole = (
+  user: Pick<SessionUser, 'roles'>,
+  role: SessionUser['roles'][number],
+) => {
+  return !!user.roles.includes(role)
+}
+
+export const userIsAdmin = (user: Pick<SessionUser, 'roles'>) =>
+  userHasRole(user, 'Administrator')

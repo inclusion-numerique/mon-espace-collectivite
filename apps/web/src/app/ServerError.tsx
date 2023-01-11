@@ -27,6 +27,17 @@ export const NotFoundError = () => (
   </GenericError>
 )
 
+export const UnauthorizedError = () => (
+  <GenericError
+    title="Accès refusé"
+    subtitle="Erreur 403"
+    lead="Vous n'avez pas accès à cette page."
+  >
+    Si vous avez tapé l&apos;adresse web dans le navigateur, vérifiez
+    qu&apos;elle est correcte.
+  </GenericError>
+)
+
 export const GenericError = ({
   title,
   subtitle,
