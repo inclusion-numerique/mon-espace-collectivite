@@ -2,6 +2,7 @@ import '@mec/web/styles/app.css'
 import { PropsWithChildren } from 'react'
 import { Matomo } from '@mec/web/app/Matomo'
 import { Dsfr } from '@mec/web/app/Dsfr'
+import { EnvironmentInformation } from '@mec/web/app/EnvironmentInformation'
 
 const fontsToPreload = ['Marianne-Regular', 'Marianne-Bold', 'Marianne-Medium']
 
@@ -40,7 +41,10 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <Dsfr />
         <Matomo />
       </head>
-      <body>{children}</body>
+      <body>
+        <EnvironmentInformation />
+        {children}
+      </body>
     </html>
   )
 }

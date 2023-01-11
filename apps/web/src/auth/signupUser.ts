@@ -13,7 +13,7 @@ export const signupUser = async (
     return prismaClient.user.create({
       data: {
         ...user,
-        roles: [],
+        roles: ['User'],
         status: 'Pending',
       },
     })
