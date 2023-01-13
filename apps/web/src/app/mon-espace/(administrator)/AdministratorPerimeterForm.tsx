@@ -55,18 +55,21 @@ export const AdministratorPerimeterForm = () => {
         scope: urlProjectScopes[scope],
       }),
     )
-    // We allow the form to be submitted again but keep field states
-    reset(undefined, {
-      keepIsSubmitted: false,
-      keepDefaultValues: false,
-      keepDirty: true,
-      keepDirtyValues: true,
-      keepIsValid: true,
-      keepErrors: true,
-      keepSubmitCount: true,
-      keepTouched: true,
-      keepValues: true,
-    })
+    // We allow the form to be submitted again but keep field values
+    reset(
+      { perimeter, scope },
+      //   {
+      //   keepIsSubmitted: false,
+      //   keepDefaultValues: false,
+      //   keepDirty: true,
+      //   keepDirtyValues: true,
+      //   keepIsValid: true,
+      //   keepErrors: true,
+      //   keepSubmitCount: true,
+      //   keepTouched: true,
+      //   keepValues: true,
+      // }
+    )
   }
 
   return (

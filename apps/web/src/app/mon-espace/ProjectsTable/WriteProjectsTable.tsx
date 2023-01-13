@@ -2,31 +2,24 @@ import Link from 'next/link'
 import { PropsWithChildren } from 'react'
 import styles from './WriteProjectsTable.module.css'
 import { deserialize, Serialized } from '@mec/web/utils/serialization'
-import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
-import { linkToAidesTerritoires } from '@mec/web/project/aidesTerritoires'
-import { ProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
-import { nonBreakable } from '@mec/web/utils/nonBreakable'
+import type { ProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
 import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
+import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
+import { nonBreakable } from '@mec/web/utils/nonBreakable'
+import { linkToAidesTerritoires } from '@mec/web/project/aidesTerritoires'
 import { ProjectNoteButton } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteButton'
 import { Routes } from '@mec/web/app/routing'
 
-// TODO class
-const Info = ({ children }: PropsWithChildren) => (
-  <span style={{ fontSize: '.75rem' }}>{children}</span>
+const FieldCell = ({ children, href }: PropsWithChildren<{ href: string }>) => (
+  <td className={`fr-p-0 ${styles.fieldCell}`}>
+    <Link className="fr-p-4v" href={href} prefetch={false}>
+      {children}
+      <span
+        className={`fr-icon--sm fr-icon-pencil-line fr-ml-1v ${styles.editIcon}`}
+      />
+    </Link>
+  </td>
 )
-
-const FieldCell = ({ children, href }: PropsWithChildren<{ href: string }>) => {
-  return (
-    <td className={`fr-p-0 ${styles.fieldCell}`}>
-      <Link className="fr-p-4v" href={href} prefetch={false}>
-        {children}
-        <span
-          className={`fr-icon--sm fr-icon-pencil-line fr-ml-1v ${styles.editIcon}`}
-        />
-      </Link>
-    </td>
-  )
-}
 
 export const WriteProjectsTable = ({
   serializedProjects,
@@ -36,6 +29,7 @@ export const WriteProjectsTable = ({
   scope: DashboardScope
 }) => {
   const projects = deserialize(serializedProjects)
+
   return (
     <div className="fr-table fr-table--bordered" style={{ width: '100%' }}>
       <table>
@@ -51,24 +45,12 @@ export const WriteProjectsTable = ({
             <OneLineTh title="Date de début" />
             <OneLineTh title="Date de fin" />
             <OneLineTh title="État d’avancement" />
-            <OneLineTh title="Surface artificialisée">
-              <Info>(m2)</Info>
-            </OneLineTh>
-            <OneLineTh title="Émissions GES">
-              <Info>(tonnes eq CO2)</Info>
-            </OneLineTh>
-            <OneLineTh title="Consommation d'eau">
-              <Info>(m3)</Info>
-            </OneLineTh>
-            <OneLineTh title="Part de tri sélectif">
-              <Info>(%)</Info>
-            </OneLineTh>
-            <OneLineTh title="Pistes cyclables">
-              <Info>(km)</Info>
-            </OneLineTh>
-            <OneLineTh title="Consommation énergétique">
-              <Info>(kWh)</Info>
-            </OneLineTh>
+            <OneLineTh title="Surface artificialisée" help="(m²)" />
+            <OneLineTh title="Émissions GES" help="(tonnes eq CO2)" />
+            <OneLineTh title="Consommation d'eau" help="(m³)" />
+            <OneLineTh title="Part de tri sélectif" help="(%)" />
+            <OneLineTh title="Pistes cyclables" help="(km)" />
+            <OneLineTh title="Consommation énergétique" help="(kWh)" />
             <th></th>
           </tr>
         </thead>
@@ -146,8 +128,7 @@ export const WriteProjectsTable = ({
                   {energyConsumption}
                 </FieldCell>
                 <td>
-                  {/*TODO class*/}
-                  <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
+                  <div className={styles.actionsContainer}>
                     <Link
                       href={linkToAidesTerritoires(project)}
                       target="_blank"

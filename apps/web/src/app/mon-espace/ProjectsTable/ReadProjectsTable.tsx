@@ -7,14 +7,7 @@ import { ProjectNoteButton } from '@mec/web/app/mon-espace/ProjectNote/ProjectNo
 import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
 import { linkToAidesTerritoires } from '@mec/web/project/aidesTerritoires'
 
-// TODO class
-const Info = ({ children }: PropsWithChildren) => (
-  <span style={{ fontSize: '.75rem' }}>{children}</span>
-)
-
-const FieldCell = ({ children }: PropsWithChildren) => {
-  return <td>{children}</td>
-}
+const FieldCell = ({ children }: PropsWithChildren) => <td>{children}</td>
 
 export const ReadProjectsTable = ({
   serializedProjects,
@@ -24,6 +17,7 @@ export const ReadProjectsTable = ({
   scope: DashboardScope
 }) => {
   const projects = deserialize(serializedProjects)
+
   return (
     <div className="fr-table fr-table--bordered" style={{ width: '100%' }}>
       <table>
@@ -39,24 +33,12 @@ export const ReadProjectsTable = ({
             <OneLineTh title="Date de début" />
             <OneLineTh title="Date de fin" />
             <OneLineTh title="État d’avancement" />
-            <OneLineTh title="Surface artificialisée">
-              <Info>(m2)</Info>
-            </OneLineTh>
-            <OneLineTh title="Émissions GES">
-              <Info>(tonnes eq CO2)</Info>
-            </OneLineTh>
-            <OneLineTh title="Consommation d'eau">
-              <Info>(m3)</Info>
-            </OneLineTh>
-            <OneLineTh title="Part de tri sélectif">
-              <Info>(%)</Info>
-            </OneLineTh>
-            <OneLineTh title="Pistes cyclables">
-              <Info>(km)</Info>
-            </OneLineTh>
-            <OneLineTh title="Consommation énergétique">
-              <Info>(kWh)</Info>
-            </OneLineTh>
+            <OneLineTh title="Surface artificialisée" help="(m²)" />
+            <OneLineTh title="Émissions GES" help="(tonnes eq CO2)" />
+            <OneLineTh title="Consommation d'eau" help="(m³)" />
+            <OneLineTh title="Part de tri sélectif" help="(%)" />
+            <OneLineTh title="Pistes cyclables" help="(km)" />
+            <OneLineTh title="Consommation énergétique" help="(kWh)" />
             <th></th>
           </tr>
         </thead>

@@ -7,7 +7,6 @@ import { serialize } from '@mec/web/utils/serialization'
 import { WriteProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/WriteProjectsTable'
 import { getProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
 import { Crte, Municipality } from '@prisma/client'
-import { ProjectNoteFormModal } from '@mec/web/app/mon-espace/ProjectNoteFormModal'
 import { Routes } from '@mec/web/app/routing'
 
 export const MunicipalityDashboard = asyncComponent(
@@ -21,8 +20,7 @@ export const MunicipalityDashboard = asyncComponent(
     crte: Crte
   }) => {
     // A municipality dashboard assumes write access on 1 municipality
-    const scope = { municipality }
-    const projects = await getProjectsForDashboard(scope)
+    const projects = await getProjectsForDashboard({ municipality })
     const title = `Projets ${crte.name}`
     const subtitle = `Municipalité • ${municipality.name}`
 
@@ -38,6 +36,7 @@ export const MunicipalityDashboard = asyncComponent(
     }
 
     const serializedProjects = serialize(projects)
+
     return (
       <>
         <div className="fr-container">
@@ -68,10 +67,9 @@ export const MunicipalityDashboard = asyncComponent(
         <div className="fr-container">
           <WriteProjectsTable
             serializedProjects={serializedProjects}
-            scope={scope}
+            scope={{ municipality: { code: municipality.code } }}
           />
         </div>
-        <ProjectNoteFormModal />
       </>
     )
   },

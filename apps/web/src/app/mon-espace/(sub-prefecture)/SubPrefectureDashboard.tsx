@@ -9,7 +9,6 @@ import {
 } from '@mec/web/app/mon-espace/projectsForDashboard'
 import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadProjectsTable'
 import { District } from '@prisma/client'
-import { ProjectNoteFormModal } from '@mec/web/app/mon-espace/ProjectNoteFormModal'
 
 export const SubPrefectureDashboard = asyncComponent(
   async ({ district }: { user: SessionUser; district: District }) => {
@@ -51,13 +50,12 @@ export const SubPrefectureDashboard = asyncComponent(
               <div className="fr-container">
                 <ReadProjectsTable
                   serializedProjects={serializedProjects}
-                  scope={{ district }}
+                  scope={{ district: { code: district.code } }}
                 />
               </div>
             </>
           )
         })}
-        <ProjectNoteFormModal />
       </>
     )
   },

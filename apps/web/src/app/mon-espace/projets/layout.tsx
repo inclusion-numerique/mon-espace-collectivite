@@ -1,6 +1,7 @@
 import { getAuthenticatedSessionUser } from '@mec/web/auth/getSessionUser'
 import { AdministratorPerimeterForm } from '@mec/web/app/mon-espace/(administrator)/AdministratorPerimeterForm'
 import { PropsWithChildren } from 'react'
+import { ProjectNoteFormModal } from '@mec/web/app/mon-espace/ProjectNoteFormModal'
 
 const ProjectsLayout = async ({ children }: PropsWithChildren) => {
   // For now only Administrators have access to all projects / projects scopes
@@ -12,6 +13,7 @@ const ProjectsLayout = async ({ children }: PropsWithChildren) => {
       <>
         <AdministratorPerimeterForm />
         {children}
+        <ProjectNoteFormModal />
       </>
     )
   }

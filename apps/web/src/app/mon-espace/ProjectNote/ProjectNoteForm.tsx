@@ -1,4 +1,5 @@
 'use client'
+
 import { useForm } from 'react-hook-form'
 import { trpc } from '@mec/web/trpc'
 import {
@@ -52,7 +53,10 @@ export const ProjectNoteForm = withTrpc(
   }) => {
     const router = useRouter()
     const isCreation = !projectNote
-    const resetModal = useProjectNoteModalStore((state) => state.reset)
+    const resetModal = useProjectNoteModalStore((state) => state.resetModal)
+    const setProjectNote = useProjectNoteModalStore(
+      (state) => state.setProjectNote,
+    )
 
     const form = useForm<ProjectNoteCreationData | ProjectNoteEditionData>({
       resolver: zodResolver(
@@ -89,8 +93,6 @@ export const ProjectNoteForm = withTrpc(
           return
         }
 
-        // TODO Scope with code only with zod validation for xxCode ?
-
         return creation.mutateAsync({ ...(data as ProjectNoteCreationData) })
       }
 
@@ -105,9 +107,13 @@ export const ProjectNoteForm = withTrpc(
     const onSubmit = async (
       data: ProjectNoteCreationData | ProjectNoteEditionData,
     ) => {
-      await executeMutation(data)
+      const result = await executeMutation(data)
+
+      if (result) {
+        setProjectNote(project.id, result.projectNote)
+      }
+
       closeRef.current?.click()
-      router.refresh()
       creation.reset()
       update.reset()
       deletion.reset()

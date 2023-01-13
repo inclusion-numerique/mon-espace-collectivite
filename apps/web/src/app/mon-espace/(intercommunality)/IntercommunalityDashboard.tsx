@@ -11,7 +11,6 @@ import {
 } from '@mec/web/app/mon-espace/projectsForDashboard'
 import { Crte, Intercommunality } from '@prisma/client'
 import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadProjectsTable'
-import { ProjectNoteFormModal } from '@mec/web/app/mon-espace/ProjectNoteFormModal'
 import { Routes } from '@mec/web/app/routing'
 
 export const IntercommunalityDashboard = asyncComponent(
@@ -28,7 +27,6 @@ export const IntercommunalityDashboard = asyncComponent(
     // And Read access on All municipalities in this intercommunality
     // General case is 1 municipality and 1 CRTE but for data modeling ease, we iterate on array structure
     const projects = await getProjectsForDashboard({ intercommunality })
-    const scope = { intercommunality }
     const title = ``
     const subtitle = ``
     const municipalitiesSubtitle = ``
@@ -100,7 +98,7 @@ export const IntercommunalityDashboard = asyncComponent(
         <div key={intercommunality.code + '-table'} className="fr-container">
           <WriteProjectsTable
             serializedProjects={serializedIntercommunalityProjects}
-            scope={scope}
+            scope={{ intercommunality: { code: intercommunality.code } }}
           />
         </div>
         <div
@@ -124,11 +122,10 @@ export const IntercommunalityDashboard = asyncComponent(
           className="fr-container"
         >
           <ReadProjectsTable
-            scope={scope}
+            scope={{ intercommunality: { code: intercommunality.code } }}
             serializedProjects={serializedMunicipalitiesProjects}
           />
         </div>
-        <ProjectNoteFormModal />
       </>
     )
   },
