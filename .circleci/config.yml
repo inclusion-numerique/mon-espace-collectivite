@@ -285,6 +285,8 @@ commands:
           name: "Set docker env vars"
           command: |
             echo "export REGISTRY=<< pipeline.parameters.registry >>" >> ${BASH_ENV}
+            echo "export BRANCH='<< pipeline.git.branch >>'" >> ${BASH_ENV}
+            echo "export NAMESPACE=$(echo '<< pipeline.git.branch >>' | sed -e 's/\//-/g')" >> ${BASH_ENV}
             echo "export IMAGE_NAME=$(echo 'mec-web-<< pipeline.git.branch >>' | sed -e 's/\//-/g')" >> ${BASH_ENV}
             echo "export IMAGE_BUILD_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.build_version >>')" >> ${BASH_ENV}
             echo "export IMAGE_DEPLOY_TAG=$(echo '<< pipeline.parameters.registry >>/$IMAGE_NAME:<< pipeline.parameters.deploy_version >>')" >> ${BASH_ENV}
