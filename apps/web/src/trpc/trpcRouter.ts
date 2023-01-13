@@ -150,11 +150,11 @@ const projectRouter = router({
     .mutation(async ({ input: { id }, ctx: { user } }) => {
       // TODO Check rights / role for user on community projectNote deletion
       // TODO Check right on write on this projectNote
-      const projectNote = await prismaClient.projectNote.delete({
+      await prismaClient.projectNote.delete({
         where: { id },
       })
 
-      return { projectNote }
+      return { projectNote: null }
     }),
 })
 
