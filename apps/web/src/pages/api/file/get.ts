@@ -12,8 +12,6 @@ const get = async (req: NextApiRequest, res: NextApiResponse) => {
     // Get info from body
     const { key } = req.body
 
-    console.log('KEY', key)
-
     const { url } = await createSignedGetUrl({
       key,
     })
