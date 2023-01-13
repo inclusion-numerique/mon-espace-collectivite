@@ -12,7 +12,7 @@ export const sendVerificationRequest = async ({
 }: SendVerificationRequestParams) => {
   // For quicker dev UX, display url in console in dev environment
   if (debugMagicLink) {
-    console.log(`Email magic link: ${url}`)
+    console.log(`[AUTH] Magic link for ${identifier}: ${url}`)
   }
 
   const { host } = new URL(url)
