@@ -62,7 +62,6 @@ const ProjectsDashboardPage = async ({
     if (intercommunality) {
       return (
         <IntercommunalityProjects
-          user={user}
           intercommunality={intercommunality}
           crte={intercommunality.crte}
         />
@@ -84,7 +83,6 @@ const ProjectsDashboardPage = async ({
     if (municipality) {
       return (
         <MunicipalityProjects
-          user={user}
           municipality={municipality}
           crte={municipality.intercommunality.crte}
         />
