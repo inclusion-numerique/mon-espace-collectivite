@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { PropsWithChildren } from 'react'
-import styles from './WriteProjectsTable.module.css'
 import type {
   ProjectForDashboard,
   ProjectsForDashboard,
@@ -11,6 +10,7 @@ import { nonBreakable } from '@mec/web/utils/nonBreakable'
 import { linkToAidesTerritoires } from '@mec/web/project/aidesTerritoires'
 import { ProjectNoteButton } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteButton'
 import { Routes } from '@mec/web/app/routing'
+import styles from '@mec/web/app/mon-espace/ProjectsTable/WriteProjectsTable.module.css'
 
 export const WriteProjectsTable = ({
   projects,
