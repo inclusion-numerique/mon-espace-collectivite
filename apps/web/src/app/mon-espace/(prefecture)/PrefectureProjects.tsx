@@ -1,18 +1,18 @@
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { asyncComponent } from '@mec/web/utils/asyncComponent'
-import { NoProjects } from '@mec/web/app/mon-espace/(sub-prefecture)/NoProjects'
+import { NoProjects } from '@mec/web/app/mon-espace/(prefecture)/NoProjects'
+import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadProjectsTable'
 import {
   getProjectsForDashboard,
   groupProjectsByCrte,
 } from '@mec/web/app/mon-espace/projectsForDashboard'
-import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadProjectsTable'
-import { District } from '@prisma/client'
+import { County } from '@prisma/client'
 
-export const SubPrefectureDashboard = asyncComponent(
-  async ({ district }: { district: District }) => {
-    const projects = await getProjectsForDashboard({ district })
+export const PrefectureProjects = asyncComponent(
+  async ({ county }: { county: County }) => {
+    const projects = await getProjectsForDashboard({ county })
 
-    const title = `Projets de la sous-préfecture • ${district.name}`
+    const title = `Projets • ${county.name}`
     if (projects.length === 0) {
       return (
         <div className="fr-container">
@@ -39,15 +39,15 @@ export const SubPrefectureDashboard = asyncComponent(
                     <h3>Projets {crte.name}</h3>
                     <p>
                       Retrouvez dans ce tableau les projets renseignés par les
-                      municipalités et EPCIs de votre arrondissement.
+                      municipalités et EPCIs de votre département.
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="fr-container">
+              <div className="fr-px-4v">
                 <ReadProjectsTable
                   projects={crteProjects}
-                  scope={{ district: { code: district.code } }}
+                  scope={{ county: { code: county.code } }}
                 />
               </div>
             </>

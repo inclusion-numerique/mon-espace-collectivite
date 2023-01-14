@@ -6,11 +6,11 @@ import {
 } from '@mec/web/project/project'
 import { userIsAdmin } from '@mec/web/utils/user'
 import { notFound } from 'next/navigation'
-import { PrefectureDashboard } from '@mec/web/app/mon-espace/(prefecture)/PrefectureDashboard'
+import { PrefectureProjects } from '@mec/web/app/mon-espace/(prefecture)/PrefectureProjects'
 import { prismaClient } from '@mec/web/prismaClient'
-import { SubPrefectureDashboard } from '@mec/web/app/mon-espace/(sub-prefecture)/SubPrefectureDashboard'
-import { IntercommunalityDashboard } from '@mec/web/app/mon-espace/(intercommunality)/IntercommunalityDashboard'
-import { MunicipalityDashboard } from '@mec/web/app/mon-espace/(municipality)/MunicipalityDashboard'
+import { SubPrefectureProjects } from '@mec/web/app/mon-espace/(sub-prefecture)/SubPrefectureProjects'
+import { IntercommunalityProjects } from '@mec/web/app/mon-espace/(intercommunality)/IntercommunalityProjects'
+import { MunicipalityProjects } from '@mec/web/app/mon-espace/(municipality)/MunicipalityProjects'
 
 const ProjectsDashboardPage = async ({
   params,
@@ -39,7 +39,7 @@ const ProjectsDashboardPage = async ({
       where,
     })
     if (county) {
-      return <PrefectureDashboard county={county} />
+      return <PrefectureProjects county={county} />
     }
   }
 
@@ -48,7 +48,7 @@ const ProjectsDashboardPage = async ({
       where,
     })
     if (district) {
-      return <SubPrefectureDashboard district={district} />
+      return <SubPrefectureProjects district={district} />
     }
   }
 
@@ -61,7 +61,7 @@ const ProjectsDashboardPage = async ({
     })
     if (intercommunality) {
       return (
-        <IntercommunalityDashboard
+        <IntercommunalityProjects
           user={user}
           intercommunality={intercommunality}
           crte={intercommunality.crte}
@@ -83,7 +83,7 @@ const ProjectsDashboardPage = async ({
     })
     if (municipality) {
       return (
-        <MunicipalityDashboard
+        <MunicipalityProjects
           user={user}
           municipality={municipality}
           crte={municipality.intercommunality.crte}

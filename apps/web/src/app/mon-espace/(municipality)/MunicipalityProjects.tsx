@@ -7,7 +7,7 @@ import { getProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDash
 import { Crte, Municipality } from '@prisma/client'
 import { Routes } from '@mec/web/app/routing'
 
-export const MunicipalityDashboard = asyncComponent(
+export const MunicipalityProjects = asyncComponent(
   async ({
     municipality,
     crte,
@@ -58,7 +58,7 @@ export const MunicipalityDashboard = asyncComponent(
             </div>
           </div>
         </div>
-        <div className="fr-container">
+        <div className="fr-px-4v">
           <WriteProjectsTable
             projects={projects}
             scope={{ municipality: { code: municipality.code } }}

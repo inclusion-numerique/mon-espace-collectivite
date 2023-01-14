@@ -1,4 +1,3 @@
-import { SessionUser } from '@mec/web/auth/sessionUser'
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { NoProjects } from '@mec/web/app/mon-espace/(intercommunality)/NoProjects'
 import Link from 'next/link'
@@ -12,7 +11,7 @@ import { Crte, Intercommunality } from '@prisma/client'
 import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadProjectsTable'
 import { Routes } from '@mec/web/app/routing'
 
-export const IntercommunalityDashboard = asyncComponent(
+export const IntercommunalityProjects = asyncComponent(
   async ({
     intercommunality,
     crte,
@@ -85,7 +84,7 @@ export const IntercommunalityDashboard = asyncComponent(
             </div>
           </div>
         </div>
-        <div key={intercommunality.code + '-table'} className="fr-container">
+        <div key={intercommunality.code + '-table'} className="fr-px-4v">
           <WriteProjectsTable
             projects={intercommunalityProjects}
             scope={{ intercommunality: { code: intercommunality.code } }}
@@ -109,7 +108,7 @@ export const IntercommunalityDashboard = asyncComponent(
         </div>
         <div
           key={intercommunality.code + '-municipalities--table'}
-          className="fr-container"
+          className="fr-px-4v"
         >
           <ReadProjectsTable
             scope={{ intercommunality: { code: intercommunality.code } }}
