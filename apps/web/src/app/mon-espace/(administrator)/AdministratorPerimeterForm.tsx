@@ -15,6 +15,8 @@ import {
   UrlProjectScope,
   urlProjectScopes,
 } from '@mec/web/project/project'
+import { useEffect, useState } from 'react'
+import { Spinner } from '@mec/web/ui/Spinner'
 
 const AdministratorPerimeterDataValidation = z.object({
   scope: z.enum(ProjectScopes, {
@@ -35,41 +37,42 @@ type AdministratorPerimeterData = z.infer<
 
 export const AdministratorPerimeterForm = () => {
   const router = useRouter()
-  const [urlScope, perimeter] = useSelectedLayoutSegments() as [
+  const [urlScope, urlPerimeter] = useSelectedLayoutSegments() as [
     UrlProjectScope,
     string,
   ]
-  const displayablePerimeter = perimeter ? decodeURIComponent(perimeter) : ''
+  const perimeter = urlPerimeter ? decodeURIComponent(urlPerimeter) : ''
+  const scope = reverseUrlProjectScopes[urlScope] ?? ''
   const { control, handleSubmit, reset } = useForm<AdministratorPerimeterData>({
     defaultValues: {
-      scope: reverseUrlProjectScopes[urlScope],
-      perimeter: displayablePerimeter,
+      scope,
+      perimeter,
     },
     resolver: zodResolver(AdministratorPerimeterDataValidation),
   })
 
-  const onSubmit = ({ perimeter, scope }: AdministratorPerimeterData) => {
+  // TODO remove this logic when _loading.tsx -> loading.tsx works with next versions for these components using css
+  const [isLoading, setIsLoading] = useState(false)
+  useEffect(() => {
+    setIsLoading(false)
+  }, [urlScope, urlPerimeter])
+
+  const onSubmit = (data: AdministratorPerimeterData) => {
+    // TODO Can remove no-op when loading logic is removed
+    // No-op
+    if (perimeter === data.perimeter && scope === data.scope) {
+      return
+    }
+
+    setIsLoading(true)
     router.push(
       Routes.MonEspace.Projets.Scope.Perimeter({
-        perimeter,
-        scope: urlProjectScopes[scope],
+        perimeter: data.perimeter,
+        scope: urlProjectScopes[data.scope],
       }),
     )
     // We allow the form to be submitted again but keep field values
-    reset(
-      { perimeter, scope },
-      //   {
-      //   keepIsSubmitted: false,
-      //   keepDefaultValues: false,
-      //   keepDirty: true,
-      //   keepDirtyValues: true,
-      //   keepIsValid: true,
-      //   keepErrors: true,
-      //   keepSubmitCount: true,
-      //   keepTouched: true,
-      //   keepValues: true,
-      // }
-    )
+    reset({ perimeter: data.perimeter, scope: data.scope })
   }
 
   return (
@@ -117,7 +120,7 @@ export const AdministratorPerimeterForm = () => {
             </div>
             <div className="fr-col-12 fr-col-lg-4 fr-col--bottom">
               <button type="submit" className="fr-btn fr-btn--secondary">
-                Appliquer le périmètre
+                {isLoading ? <Spinner size="sm" /> : 'Appliquer'}
               </button>
             </div>
           </div>
