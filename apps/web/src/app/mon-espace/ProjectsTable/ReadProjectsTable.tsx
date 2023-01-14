@@ -2,25 +2,31 @@ import { PropsWithChildren } from 'react'
 import { deserialize, Serialized } from '@mec/web/utils/serialization'
 import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
 import Link from 'next/link'
-import { ProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
+import {
+  ProjectForDashboard,
+  ProjectsForDashboard,
+} from '@mec/web/app/mon-espace/projectsForDashboard'
 import { ProjectNoteButton } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteButton'
 import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
 import { linkToAidesTerritoires } from '@mec/web/project/aidesTerritoires'
 
-const FieldCell = ({ children }: PropsWithChildren) => <td>{children}</td>
-
 export const ReadProjectsTable = ({
-  serializedProjects,
+  projects,
   scope,
 }: {
-  serializedProjects: Serialized<ProjectsForDashboard>
+  projects: ProjectsForDashboard
   scope: DashboardScope
 }) => {
-  const projects = deserialize(serializedProjects)
-
   return (
-    <div className="fr-table fr-table--bordered" style={{ width: '100%' }}>
-      <table>
+    <div
+      className="fr-table fr-table--bordered"
+      style={{ width: '100%' }}
+      data-fr-js-table="true"
+    >
+      <table
+        data-fr-js-table-element="true"
+        className="fr-table__shadow fr-table__shadow--right"
+      >
         <thead>
           <tr>
             <OneLineTh title="Référence" />
@@ -42,89 +48,97 @@ export const ReadProjectsTable = ({
             <th></th>
           </tr>
         </thead>
-        <tbody className="fr-table">
+        <tbody>
           {projects.length === 0 ? (
             <tr>
               <td colSpan={16}>Aucun projet n&apos;a été renseigné</td>
             </tr>
           ) : null}
-          {projects.map((project) => {
-            const {
-              id,
-              reference,
-              name,
-              municipality,
-              intercommunality,
-              totalAmount,
-              category,
-              contactEmail,
-              start,
-              end,
-              progress,
-              artificializedArea,
-              greenhouseGasEmissions,
-              waterConsumption,
-              selectiveSortingPercentage,
-              bikePathLength,
-              energyConsumption,
-              notes,
-            } = project
-            return (
-              <tr key={id}>
-                <FieldCell>{reference}</FieldCell>
-                <FieldCell>{name.replaceAll(' ', ' ')}</FieldCell>
-                <FieldCell>
-                  {' '}
-                  {(municipality ?? intercommunality)?.name.replaceAll(
-                    ' ',
-                    ' ',
-                  )}
-                </FieldCell>
-                <FieldCell>{`${totalAmount}`}</FieldCell>
-                <FieldCell>
-                  {category.theme.name.replaceAll(' ', ' ')}&nbsp;/&nbsp;
-                  {category.name.replaceAll(' ', ' ')}
-                </FieldCell>
-                <FieldCell>{contactEmail}</FieldCell>
-                <FieldCell>{start?.toLocaleDateString()}</FieldCell>
-                <FieldCell>{end?.toLocaleDateString()}</FieldCell>
-                <FieldCell>{progress}</FieldCell>
-                <FieldCell>{artificializedArea}</FieldCell>
-                <FieldCell>{greenhouseGasEmissions}</FieldCell>
-                <FieldCell>{waterConsumption}</FieldCell>
-                <FieldCell>{selectiveSortingPercentage}</FieldCell>
-                <FieldCell>{bikePathLength}</FieldCell>
-                <FieldCell>{energyConsumption}</FieldCell>
-                <td>
-                  {/*TODO class*/}
-                  <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
-                    <Link
-                      href={linkToAidesTerritoires(project)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="fr-btn fr-mr-4v"
-                    >
-                      Voir les aides
-                    </Link>
-                    <ProjectNoteButton
-                      project={{ id, name }}
-                      projectNote={
-                        notes[0]
-                          ? {
-                              id: notes[0].id,
-                              content: notes[0].content,
-                            }
-                          : null
-                      }
-                      scope={scope}
-                    />
-                  </div>
-                </td>
-              </tr>
-            )
-          })}
+          {projects.map((project) => (
+            <ReadProjectRow key={project.id} project={project} scope={scope} />
+          ))}
         </tbody>
       </table>
     </div>
   )
 }
+
+const ReadProjectRow = ({
+  scope,
+  project,
+}: {
+  project: ProjectForDashboard
+  scope: DashboardScope
+}) => {
+  const {
+    id,
+    reference,
+    name,
+    municipality,
+    intercommunality,
+    totalAmount,
+    category,
+    contactEmail,
+    start,
+    end,
+    progress,
+    artificializedArea,
+    greenhouseGasEmissions,
+    waterConsumption,
+    selectiveSortingPercentage,
+    bikePathLength,
+    energyConsumption,
+    notes,
+  } = project
+  return (
+    <tr key={id}>
+      <FieldCell>{reference}</FieldCell>
+      <FieldCell>{name.replaceAll(' ', ' ')}</FieldCell>
+      <FieldCell>
+        {(municipality ?? intercommunality)?.name.replaceAll(' ', ' ')}
+      </FieldCell>
+      <FieldCell>{`${totalAmount}`}</FieldCell>
+      <FieldCell>
+        {category.theme.name.replaceAll(' ', ' ')}&nbsp;/&nbsp;
+        {category.name.replaceAll(' ', ' ')}
+      </FieldCell>
+      <FieldCell>{contactEmail}</FieldCell>
+      <FieldCell>{start?.toLocaleDateString()}</FieldCell>
+      <FieldCell>{end?.toLocaleDateString()}</FieldCell>
+      <FieldCell>{progress}</FieldCell>
+      <FieldCell>{artificializedArea}</FieldCell>
+      <FieldCell>{greenhouseGasEmissions}</FieldCell>
+      <FieldCell>{waterConsumption}</FieldCell>
+      <FieldCell>{selectiveSortingPercentage}</FieldCell>
+      <FieldCell>{bikePathLength}</FieldCell>
+      <FieldCell>{energyConsumption}</FieldCell>
+      <td>
+        {/*TODO class*/}
+        <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
+          <Link
+            href={linkToAidesTerritoires(project)}
+            target="_blank"
+            rel="noreferrer"
+            className="fr-btn fr-mr-4v"
+          >
+            Voir&nbsp;les&nbsp;aides
+          </Link>
+          <ProjectNoteButton
+            project={{ id, name }}
+            projectNote={
+              notes[0]
+                ? {
+                    id: notes[0].id,
+                    content: notes[0].content,
+                  }
+                : null
+            }
+            scope={scope}
+          />
+        </div>
+      </td>
+    </tr>
+  )
+}
+
+const FieldCell = ({ children }: PropsWithChildren) => <td>{children}</td>

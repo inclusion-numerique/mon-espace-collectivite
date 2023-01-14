@@ -106,12 +106,7 @@ const PublicHeader = ({
             Fermer
           </button>
           {mobileMenuLinks}
-          <nav
-            role="navigation"
-            aria-label="Menu principal"
-            className="fr-nav"
-            data-fr-js-collapse="true"
-          >
+          <nav role="navigation" aria-label="Menu principal" className="fr-nav">
             <PublicHeaderNav />
           </nav>
         </div>

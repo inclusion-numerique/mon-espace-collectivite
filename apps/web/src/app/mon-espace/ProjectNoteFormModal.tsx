@@ -18,6 +18,7 @@ export const ProjectNoteFormModal = () => {
         id={modalId}
         className={`fr-modal ${open ? 'fr-modal--opened' : ''}`}
         role="dialog"
+        data-fr-js-modal="true"
       >
         <div className="fr-container fr-container--fluid fr-container-md">
           <div className="fr-grid-row fr-grid-row--center">

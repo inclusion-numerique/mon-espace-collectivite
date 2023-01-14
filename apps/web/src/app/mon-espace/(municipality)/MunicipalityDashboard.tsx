@@ -1,9 +1,7 @@
-import { SessionUser } from '@mec/web/auth/sessionUser'
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { NoProjects } from '@mec/web/app/mon-espace/(municipality)/NoProjects'
 import Link from 'next/link'
 import { asyncComponent } from '@mec/web/utils/asyncComponent'
-import { serialize } from '@mec/web/utils/serialization'
 import { WriteProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/WriteProjectsTable'
 import { getProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
 import { Crte, Municipality } from '@prisma/client'
@@ -11,11 +9,9 @@ import { Routes } from '@mec/web/app/routing'
 
 export const MunicipalityDashboard = asyncComponent(
   async ({
-    user,
     municipality,
     crte,
   }: {
-    user: SessionUser
     municipality: Municipality
     crte: Crte
   }) => {
@@ -34,8 +30,6 @@ export const MunicipalityDashboard = asyncComponent(
         </div>
       )
     }
-
-    const serializedProjects = serialize(projects)
 
     return (
       <>
@@ -66,7 +60,7 @@ export const MunicipalityDashboard = asyncComponent(
         </div>
         <div className="fr-container">
           <WriteProjectsTable
-            serializedProjects={serializedProjects}
+            projects={projects}
             scope={{ municipality: { code: municipality.code } }}
           />
         </div>

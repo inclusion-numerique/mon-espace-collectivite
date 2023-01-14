@@ -39,7 +39,7 @@ const ProjectsDashboardPage = async ({
       where,
     })
     if (county) {
-      return <PrefectureDashboard user={user} county={county} />
+      return <PrefectureDashboard county={county} />
     }
   }
 
@@ -48,7 +48,7 @@ const ProjectsDashboardPage = async ({
       where,
     })
     if (district) {
-      return <SubPrefectureDashboard user={user} district={district} />
+      return <SubPrefectureDashboard district={district} />
     }
   }
 

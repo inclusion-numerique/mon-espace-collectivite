@@ -4,9 +4,16 @@
 import { UrlProjectScope } from '@mec/web/project/project'
 
 const withSearchParams =
-  <T extends Record<string, string>>(base: string): ((params: T) => string) =>
+  <T extends Record<string, string | undefined>>(
+    base: string,
+  ): ((params: T) => string) =>
   (params: T) => {
-    const paramsString = new URLSearchParams(params).toString()
+    const definedParams = Object.fromEntries(
+      Object.entries(params).filter(
+        (entry): entry is [string, string] => entry[1] !== undefined,
+      ),
+    )
+    const paramsString = new URLSearchParams(definedParams).toString()
     if (!paramsString) {
       return base
     }
@@ -36,8 +43,10 @@ export const Routes = {
     },
     Projet: {
       Nouveau: '/mon-espace/projet/nouveau',
-      Modifier: (reference: string, params: { focus?: string } = {}) =>
-        withSearchParams(`/mon-espace/projet/${reference}`)(params),
+      Modifier: (
+        reference: string,
+        params: { focus?: string | undefined } = {},
+      ) => withSearchParams(`/mon-espace/projet/${reference}`)(params),
     },
   },
   Connexion: {

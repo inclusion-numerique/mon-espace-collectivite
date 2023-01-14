@@ -3,7 +3,6 @@ import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { NoProjects } from '@mec/web/app/mon-espace/(intercommunality)/NoProjects'
 import Link from 'next/link'
 import { asyncComponent } from '@mec/web/utils/asyncComponent'
-import { serialize } from '@mec/web/utils/serialization'
 import { WriteProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/WriteProjectsTable'
 import {
   getProjectsForDashboard,
@@ -15,11 +14,9 @@ import { Routes } from '@mec/web/app/routing'
 
 export const IntercommunalityDashboard = asyncComponent(
   async ({
-    user,
     intercommunality,
     crte,
   }: {
-    user: SessionUser
     intercommunality: Intercommunality
     crte: Crte
   }) => {
@@ -27,9 +24,6 @@ export const IntercommunalityDashboard = asyncComponent(
     // And Read access on All municipalities in this intercommunality
     // General case is 1 municipality and 1 CRTE but for data modeling ease, we iterate on array structure
     const projects = await getProjectsForDashboard({ intercommunality })
-    const title = ``
-    const subtitle = ``
-    const municipalitiesSubtitle = ``
 
     if (projects.length === 0) {
       return (
@@ -50,10 +44,6 @@ export const IntercommunalityDashboard = asyncComponent(
       }
       municipalitiesProjects.push(project)
     })
-    const serializedIntercommunalityProjects = serialize(
-      intercommunalityProjects,
-    )
-    const serializedMunicipalitiesProjects = serialize(municipalitiesProjects)
 
     return (
       <>
@@ -97,7 +87,7 @@ export const IntercommunalityDashboard = asyncComponent(
         </div>
         <div key={intercommunality.code + '-table'} className="fr-container">
           <WriteProjectsTable
-            serializedProjects={serializedIntercommunalityProjects}
+            projects={intercommunalityProjects}
             scope={{ intercommunality: { code: intercommunality.code } }}
           />
         </div>
@@ -123,7 +113,7 @@ export const IntercommunalityDashboard = asyncComponent(
         >
           <ReadProjectsTable
             scope={{ intercommunality: { code: intercommunality.code } }}
-            serializedProjects={serializedMunicipalitiesProjects}
+            projects={municipalitiesProjects}
           />
         </div>
       </>

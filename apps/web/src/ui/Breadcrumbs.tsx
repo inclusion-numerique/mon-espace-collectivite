@@ -12,6 +12,7 @@ export const Breadcrumbs = ({
       role="navigation"
       className="fr-breadcrumb"
       aria-label="vous êtes ici :"
+      data-fr-js-breadcrumb="true"
     >
       <button
         className="fr-breadcrumb__button"
@@ -21,7 +22,7 @@ export const Breadcrumbs = ({
       >
         Voir le fil d’Ariane
       </button>
-      <div className="fr-collapse" id="breadcrumbs">
+      <div className="fr-collapse" id="breadcrumbs" data-fr-js-collapse="true">
         <ol className="fr-breadcrumb__list">
           <li>
             <Link className="fr-breadcrumb__link" href="/">

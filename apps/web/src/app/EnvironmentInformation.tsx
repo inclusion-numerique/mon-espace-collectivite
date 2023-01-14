@@ -3,7 +3,9 @@ import { PrivateConfig, PublicConfig } from '@mec/web/config'
 export const EnvironmentInformation = () => {
   const branch = PrivateConfig.Branch
   const isMain = PrivateConfig.isMain
-  if (isMain) {
+
+  // Branch can be empty on dev env
+  if (isMain || !branch) {
     return null
   }
 

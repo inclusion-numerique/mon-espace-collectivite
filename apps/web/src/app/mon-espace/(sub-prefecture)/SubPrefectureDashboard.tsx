@@ -1,8 +1,6 @@
-import { SessionUser } from '@mec/web/auth/sessionUser'
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { asyncComponent } from '@mec/web/utils/asyncComponent'
 import { NoProjects } from '@mec/web/app/mon-espace/(sub-prefecture)/NoProjects'
-import { serialize } from '@mec/web/utils/serialization'
 import {
   getProjectsForDashboard,
   groupProjectsByCrte,
@@ -11,7 +9,7 @@ import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadPro
 import { District } from '@prisma/client'
 
 export const SubPrefectureDashboard = asyncComponent(
-  async ({ district }: { user: SessionUser; district: District }) => {
+  async ({ district }: { district: District }) => {
     const projects = await getProjectsForDashboard({ district })
 
     const title = `Projets de la sous-préfecture • ${district.name}`
@@ -33,7 +31,6 @@ export const SubPrefectureDashboard = asyncComponent(
           <h2 style={{ color: 'var(--blue-france-sun-113-625)' }}>{title}</h2>
         </div>
         {byCrte.map(({ crte, projects: crteProjects }) => {
-          const serializedProjects = serialize(crteProjects)
           return (
             <>
               <div key={crte.code + '-head'} className="fr-container">
@@ -49,7 +46,7 @@ export const SubPrefectureDashboard = asyncComponent(
               </div>
               <div className="fr-container">
                 <ReadProjectsTable
-                  serializedProjects={serializedProjects}
+                  projects={crteProjects}
                   scope={{ district: { code: district.code } }}
                 />
               </div>
