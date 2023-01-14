@@ -5,7 +5,7 @@ import {
   UrlProjectScope,
 } from '@mec/web/project/project'
 import { userIsAdmin } from '@mec/web/utils/user'
-import { notFound, useSearchParams } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { PrefectureProjects } from '@mec/web/app/mon-espace/(prefecture)/PrefectureProjects'
 import { prismaClient } from '@mec/web/prismaClient'
 import { SubPrefectureProjects } from '@mec/web/app/mon-espace/(sub-prefecture)/SubPrefectureProjects'
@@ -19,7 +19,6 @@ const ProjectsDashboardPage = async ({
 }: {
   params: { scope: UrlProjectScope; perimeter: string }
 }) => {
-  await new Promise((res) => setTimeout(res, 2000))
   const scope = reverseUrlProjectScopes[params.scope]
   const perimeter = decodeURIComponent(params.perimeter)
   // Validate that the scope is valid
