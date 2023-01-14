@@ -7,6 +7,8 @@ import { getCategoriesOptionsForProjectForm } from '@mec/web/app/mon-espace/Proj
 import { getProjectForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/projectForProjectForm'
 import ProjectForm from '@mec/web/app/mon-espace/ProjectForm/ProjectForm'
 
+export const revalidate = 0
+
 const EditCrtePage = async ({
   params: { reference },
 }: {

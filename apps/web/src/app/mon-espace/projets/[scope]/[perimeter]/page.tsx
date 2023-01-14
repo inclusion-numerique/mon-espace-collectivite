@@ -5,12 +5,14 @@ import {
   UrlProjectScope,
 } from '@mec/web/project/project'
 import { userIsAdmin } from '@mec/web/utils/user'
-import { notFound } from 'next/navigation'
+import { notFound, useSearchParams } from 'next/navigation'
 import { PrefectureProjects } from '@mec/web/app/mon-espace/(prefecture)/PrefectureProjects'
 import { prismaClient } from '@mec/web/prismaClient'
 import { SubPrefectureProjects } from '@mec/web/app/mon-espace/(sub-prefecture)/SubPrefectureProjects'
 import { IntercommunalityProjects } from '@mec/web/app/mon-espace/(intercommunality)/IntercommunalityProjects'
 import { MunicipalityProjects } from '@mec/web/app/mon-espace/(municipality)/MunicipalityProjects'
+
+export const revalidate = 0
 
 const ProjectsDashboardPage = async ({
   params,

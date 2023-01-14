@@ -4,8 +4,6 @@ import { Signin } from '@mec/web/app/(public)/connexion/login/Signin'
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { Routes } from '@mec/web/app/routing'
 
-export const revalidate = 0
-
 const SigninPage = async ({
   searchParams: { error } = {},
 }: {

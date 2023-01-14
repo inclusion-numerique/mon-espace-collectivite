@@ -17,6 +17,7 @@ import {
 } from '@mec/web/project/project'
 import { useEffect, useState } from 'react'
 import { Spinner } from '@mec/web/ui/Spinner'
+import Link from 'next/link'
 
 const AdministratorPerimeterDataValidation = z.object({
   scope: z.enum(ProjectScopes, {
@@ -90,12 +91,48 @@ export const AdministratorPerimeterForm = () => {
           pouvez consulter les projets sur le périmètre de votre choix sur 4
           niveaux de détail.
         </p>
-        <p className="fr-text--sm fr-mt-2v">Par exemple :</p>
+        <p className="fr-text--sm fr-mt-2v">Par exemple&nbsp;:</p>
         <ul className="fr-text--sm fr-mt-1v">
-          <li>Préfecture : Rhône (69)</li>
-          <li>Sous-Préfecture : Lyon (691)</li>
-          <li>EPCI : Métropole de Lyon (200046977)</li>
-          <li>Municipalité : Lyon 2e Arrondissement (69382)</li>
+          <li>
+            <Link
+              href={Routes.MonEspace.Projets.Scope.Perimeter({
+                perimeter: '69',
+                scope: 'prefecture',
+              })}
+            >
+              Préfecture&nbsp;: Rhône (69)
+            </Link>
+          </li>
+          <li>
+            <Link
+              href={Routes.MonEspace.Projets.Scope.Perimeter({
+                perimeter: '691',
+                scope: 'sous-prefecture',
+              })}
+            >
+              Sous-Préfecture&nbsp;: Lyon (691)
+            </Link>
+          </li>
+          <li>
+            <Link
+              href={Routes.MonEspace.Projets.Scope.Perimeter({
+                perimeter: '200046977',
+                scope: 'epci',
+              })}
+            >
+              EPCI&nbsp;: Métropole de Lyon (200046977)
+            </Link>
+          </li>
+          <li>
+            <Link
+              href={Routes.MonEspace.Projets.Scope.Perimeter({
+                perimeter: '69382',
+                scope: 'municipalite',
+              })}
+            >
+              Municipalité&nbsp;: Lyon 2e Arrondissement (69382)
+            </Link>
+          </li>
         </ul>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="fr-grid-row fr-grid-row--gutters fr-mt-4v">
