@@ -1,12 +1,11 @@
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { dashboardRootPath } from '@mec/web/dashboard/dashboard'
+import { Routes } from '@mec/web/app/routing'
 
 export const PublicHeaderNav = () => {
   return (
     <ul className="fr-nav__list">
       <li className="fr-nav__item">
-        <Link className="fr-nav__link" href={dashboardRootPath}>
+        <Link className="fr-nav__link" href={Routes.MonEspace.Index}>
           Gérer et voir mes CRTE
         </Link>
       </li>
@@ -21,8 +20,10 @@ export const PublicHeaderNav = () => {
         </a>
       </li>
       <li className="fr-nav__item">
-        {/*TODO link to stats*/}
-        <Link className="fr-nav__link" href={dashboardRootPath}>
+        <Link
+          className="fr-nav__link"
+          href={Routes.MonEspace.Indicateurs.Index}
+        >
           Indicateurs des collectivités
         </Link>
       </li>

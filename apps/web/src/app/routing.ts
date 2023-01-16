@@ -28,6 +28,9 @@ export const Routes = {
       createdProject?: string
       overridenRole?: string
     }>('/mon-espace'),
+    Indicateurs: {
+      Index: '/mon-espace/indicateurs',
+    },
     Projets: {
       Index: '/mon-espace/projets',
       Scale: {
