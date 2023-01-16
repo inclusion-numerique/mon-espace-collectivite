@@ -112,6 +112,18 @@ export const loadPreviewFixtures = async () => {
         lastName: 'Ripa',
       },
       {
+        email: 'clara@collectifco.com',
+        allowSignup: true,
+        role: 'Administrator',
+        firstName: 'Clara',
+      },
+      {
+        email: 'bernadette@collectifco.com',
+        allowSignup: true,
+        role: 'Administrator',
+        firstName: 'Bernadette',
+      },
+      {
         email: 'hugues+maire@kime.tech',
         allowSignup: true,
         level: 'Owner',
