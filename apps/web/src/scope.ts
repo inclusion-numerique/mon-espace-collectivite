@@ -44,6 +44,11 @@ export type Scope = {
   code: string
 }
 
+export type UrlScope = {
+  scale: UrlScale
+  code: string
+}
+
 // Validation for a valid Scope object
 export const ScopeDataValidation = z.object({
   scale: z.enum(Scales, {
@@ -66,8 +71,11 @@ export const ScopeDataValidation = z.object({
 
 export const scopeToString = (scope?: Scope): string =>
   scope ? `${scope.scale}:${scope.code}` : ''
+export function stringToScope(scopeString?: undefined): undefined
 
-export const stringToScope = (scopeString?: string): Scope | undefined => {
+export function stringToScope(scopeString: string): Scope
+
+export function stringToScope(scopeString?: string): Scope | undefined {
   if (!scopeString) {
     return undefined
   }
@@ -77,6 +85,16 @@ export const stringToScope = (scopeString?: string): Scope | undefined => {
   }
   return { scale: scale as Scale, code }
 }
+
+// Sometimes scope is passed through URL and is localized / transformed
+export const scopeToUrl = ({ scale, code }: Scope): UrlScope => ({
+  scale: urlScales[scale],
+  code,
+})
+export const urlToScope = ({ scale, code }: UrlScope): Scope => ({
+  scale: reverseUrlScales[scale] ?? '',
+  code: code ? decodeURIComponent(code) : '',
+})
 
 export const projetToScope = (
   project: Pick<Project, 'intercommunalityCode' | 'municipalityCode'>,
@@ -95,4 +113,16 @@ export const scopeFromPartial = (scope?: Partial<Scope>): Scope | undefined => {
   const scale = scope?.scale
 
   return code && scale ? { code, scale } : undefined
+}
+
+export const scopeToProjectCommunityCode = (
+  scope: Scope,
+): { municipalityCode: string } | { intercommunalityCode: string } => {
+  if (scope.scale === 'intercommunality') {
+    return { intercommunalityCode: scope.code }
+  }
+  if (scope.scale === 'municipality') {
+    return { municipalityCode: scope.code }
+  }
+  throw new Error('Invalid project community scope')
 }

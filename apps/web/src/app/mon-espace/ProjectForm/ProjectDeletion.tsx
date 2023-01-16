@@ -3,18 +3,22 @@
 import { Project } from '@prisma/client'
 import { trpc } from '@mec/web/trpc'
 import { useRouter } from 'next/navigation'
+import { Scope, scopeToUrl } from '@mec/web/scope'
+import { Routes } from '@mec/web/app/routing'
 
 export const ProjectDeletion = ({
   project: { id },
+  scope,
 }: {
   project: Pick<Project, 'id'>
+  scope: Scope
 }) => {
   const deletion = trpc.project.delete.useMutation()
   const disableButtons = deletion.isLoading || deletion.isSuccess
   const router = useRouter()
   const onConfirm = () => {
     deletion.mutateAsync({ id }).then(() => {
-      router.push('/mon-espace')
+      router.push(Routes.MonEspace.Projets.Scale.Code(scopeToUrl(scope)))
     })
   }
 
@@ -34,11 +38,12 @@ export const ProjectDeletion = ({
         id="fr-modal-project-deletion-confirm"
         className="fr-modal"
         role="dialog"
+        data-fr-js-modal="true"
       >
         <div className="fr-container fr-container--fluid fr-container-md">
           <div className="fr-grid-row fr-grid-row--center">
             <div className="fr-col-12 fr-col-md-8 fr-col-lg-6">
-              <div className="fr-modal__body">
+              <div className="fr-modal__body" data-fr-js-modal-body="true">
                 <div className="fr-modal__header">
                   <button
                     disabled={disableButtons}

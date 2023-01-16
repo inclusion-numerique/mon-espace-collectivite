@@ -6,7 +6,7 @@ import { SubPrefectureProjects } from '@mec/web/app/mon-espace/(sub-prefecture)/
 import { IntercommunalityProjects } from '@mec/web/app/mon-espace/(intercommunality)/IntercommunalityProjects'
 import { MunicipalityProjects } from '@mec/web/app/mon-espace/(municipality)/MunicipalityProjects'
 import { getAuthorizedCommunity } from '@mec/web/app/mon-espace/projets/[scale]/[code]/getPerimeter'
-import { reverseUrlScales, scaleLabels, Scope, UrlScale } from '@mec/web/scope'
+import { scaleLabels, UrlScale, urlToScope } from '@mec/web/scope'
 
 export const revalidate = 0
 
@@ -15,14 +15,13 @@ const ProjectsDashboardPage = async ({
 }: {
   params: { scale: UrlScale; code: string }
 }) => {
-  const scale = reverseUrlScales[params.scale]
-  const code = decodeURIComponent(params.code)
+  const scope = urlToScope(params)
+
   // Validate that the scope is valid
-  if (!scale || !code) {
+  if (!scope.scale || !scope.code) {
     notFound()
     return null
   }
-  const scope: Scope = { scale, code }
 
   const user = await getAuthenticatedSessionUser()
   const isAdmin = isUserAdmin(user)
@@ -67,11 +66,11 @@ const ProjectsDashboardPage = async ({
       <div className="fr-container">
         <div className="fr-alert fr-alert--info fr-mb-6v">
           <h3 className="fr-alert__title">
-            {scaleLabels[scale]} &#34;{code}&#34; introuvable.
+            {scaleLabels[scope.scale]} &#34;{scope.code}&#34; introuvable.
           </h3>
           <p>
-            Veuillez vérifier que &#34;{code}&#34; est un code INSEE valide ou
-            le nom exact du territoire que vous recherchez.
+            Veuillez vérifier que &#34;{scope.code}&#34; est un code INSEE
+            valide ou le nom exact du territoire que vous recherchez.
           </p>
         </div>
       </div>

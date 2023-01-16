@@ -51,6 +51,7 @@ const EditProjectPage = async ({
         <div className="fr-grid-row fr-grid-row--center">
           <div className="fr-col-12 fr-col-md-10 fr-col-lg-8 fr-mb-24v">
             <ProjectForm
+              scope={scope}
               serializedUser={serialize(user)}
               categoriesOptions={categoriesOptions}
               scopeOptions={scopeOptions}

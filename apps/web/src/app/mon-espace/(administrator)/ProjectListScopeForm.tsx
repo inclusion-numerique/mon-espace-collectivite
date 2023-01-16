@@ -11,25 +11,22 @@ import { useEffect, useState } from 'react'
 import { Spinner } from '@mec/web/ui/Spinner'
 import Link from 'next/link'
 import {
-  reverseUrlScales,
   scaleOptions,
   Scope,
   ScopeDataValidation,
+  scopeToUrl,
   UrlScale,
-  urlScales,
+  urlToScope,
 } from '@mec/web/scope'
 
 export const ProjectListScopeForm = () => {
   const router = useRouter()
   const [urlScale, urlCode] = useSelectedLayoutSegments() as [UrlScale, string]
 
-  const scale = reverseUrlScales[urlScale] ?? ''
-  const code = urlCode ? decodeURIComponent(urlCode) : ''
+  const scope = urlToScope({ scale: urlScale, code: urlCode })
+
   const { control, handleSubmit, reset } = useForm<Scope>({
-    defaultValues: {
-      scale,
-      code,
-    },
+    defaultValues: { scale: scope.scale ?? '', code: scope.code ?? '' },
     resolver: zodResolver(ScopeDataValidation),
   })
 
@@ -37,22 +34,17 @@ export const ProjectListScopeForm = () => {
   const [isLoading, setIsLoading] = useState(false)
   useEffect(() => {
     setIsLoading(false)
-  }, [scale, code])
+  }, [urlScale, urlCode])
 
   const onSubmit = (data: Scope) => {
     // TODO Can remove no-op when loading logic is removed
     // No-op
-    if (code === data.code && scale === data.scale) {
+    if (scope.code === data.code && scope.scale === data.scale) {
       return
     }
 
     setIsLoading(true)
-    router.push(
-      Routes.MonEspace.Projets.Scale.Code({
-        scale: urlScales[data.scale],
-        code: data.code,
-      }),
-    )
+    router.push(Routes.MonEspace.Projets.Scale.Code(scopeToUrl(data)))
     // We allow the form to be submitted again but keep field values
     reset({ scale: data.scale, code: data.code })
   }

@@ -53,7 +53,7 @@ export const MunicipalityProjects = asyncComponent(
               <div className="fr-btns-group fr-btns-group--icon-left">
                 <Link
                   className="fr-btn fr-icon-add-line"
-                  href={Routes.MonEspace.Projet.Nouveau}
+                  href={Routes.MonEspace.Projet.NouveauWithParams(scope)}
                 >
                   Ajouter un nouveau projet
                 </Link>

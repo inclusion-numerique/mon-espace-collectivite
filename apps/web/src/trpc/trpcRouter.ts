@@ -9,7 +9,7 @@ import {
   ProjectNoteCreationDataValidation,
   ProjectNoteEditionDataValidation,
 } from '@mec/web/project/projectNote'
-import { stringToScope } from '@mec/web/scope'
+import { scopeToProjectCommunityCode, stringToScope } from '@mec/web/scope'
 
 const userRouter = router({
   acknowledgeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
@@ -45,7 +45,9 @@ const projectRouter = router({
         // TODO Check rights / role for user on community project creation
         const id = v4()
         const reference = generateReference()
-        const scope = stringToScope(scopeString)
+        const communityCode = scopeToProjectCommunityCode(
+          stringToScope(scopeString),
+        )
 
         const project = await prismaClient.project.create({
           data: {
@@ -56,7 +58,7 @@ const projectRouter = router({
               connect: secondaryCategoryIds.map((id) => ({ id })),
             },
             ...data,
-            ...scope,
+            ...communityCode,
           },
           include: { attachments: true, municipality: true },
         })
@@ -73,7 +75,9 @@ const projectRouter = router({
       }) => {
         // TODO Check rights / role for user on community project creation
         // TODO Check right on write on this project
-        const scope = stringToScope(scopeString)
+        const communityCode = scopeToProjectCommunityCode(
+          stringToScope(scopeString),
+        )
         const alreadyConnectedSecondaryCategories =
           await prismaClient.project.findUnique({
             where: { id },
@@ -94,7 +98,7 @@ const projectRouter = router({
                 ),
             },
             ...data,
-            ...scope,
+            ...communityCode,
           },
           include: { attachments: true, municipality: true },
         })
