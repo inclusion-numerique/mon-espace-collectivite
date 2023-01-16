@@ -37,6 +37,6 @@ export const PublicConfig = {
   productTitle: 'Mon espace collectivité',
   mainLiveUrl: 'https://main.mec.gouv.kime.tech',
   repository: 'https://github.com/inclusion-numerique/mon-espace-collectivite',
-  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
-  sirenApiKey: process.env.NEXT_PUBLIC_SIREN_API_KEY,
+  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? '',
+  sirenApiKey: process.env.NEXT_PUBLIC_SIREN_API_KEY ?? '',
 }
