@@ -1,7 +1,7 @@
 'use client'
 
-import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
-import { useProjectNoteModalStore } from '@mec/web/app/mon-espace/useProjectNoteModalStore'
+import { Scope } from '@mec/web/scope'
+import { useProjectNoteModalStore } from '@mec/web/app/mon-espace/ProjectNote/useProjectNoteModalStore'
 
 export const ProjectNoteButton = ({
   project,
@@ -10,7 +10,7 @@ export const ProjectNoteButton = ({
 }: {
   project: { id: string; name: string }
   projectNote: { id: string; content: string } | null
-  scope: DashboardScope
+  scope: Scope
 }) => {
   const storeProjectNote = useProjectNoteModalStore(
     (state) => state.updatedProjectNotes[project.id],

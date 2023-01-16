@@ -1,8 +1,6 @@
-import { ProjectForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
+import { ProjectListItem } from '@mec/web/app/mon-espace/projets/projectsList'
 
-export const linkToAidesTerritoires = (
-  project: ProjectForDashboard,
-): string => {
+export const linkToAidesTerritoires = (project: ProjectListItem): string => {
   const targetedAudiences = project.intercommunality ? 'epci' : 'commune'
   const categories = [project.category, ...project.secondaryCategories]
     .map(({ slug }) => `&categories=${slug}`)

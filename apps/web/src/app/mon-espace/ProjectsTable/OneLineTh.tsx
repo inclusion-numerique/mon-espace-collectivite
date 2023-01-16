@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import styles from '@mec/web/app/mon-espace/OneLineTh.module.css'
+import styles from '@mec/web/app/mon-espace/ProjectsTable/OneLineTh.module.css'
 
 export const OneLineTh = ({
   title,

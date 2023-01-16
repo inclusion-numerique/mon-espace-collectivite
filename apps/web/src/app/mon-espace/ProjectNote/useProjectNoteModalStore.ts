@@ -1,11 +1,11 @@
 import { create } from 'zustand'
-import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
+import { Scope } from '@mec/web/scope'
 
 type ProjectNoteModalStoreState = {
   open: boolean
   projectNote: { id: string; content: string } | null
   project: { id: string; name: string } | null
-  scope: DashboardScope | null
+  scope: Scope | null
   // Project notes after create/update operations Indexed by project id
   updatedProjectNotes: Record<string, { id: string; content: string } | null>
   setProjectNote: (
@@ -14,7 +14,7 @@ type ProjectNoteModalStoreState = {
   ) => void
   createProjectNote: (input: {
     project: { id: string; name: string }
-    scope: DashboardScope
+    scope: Scope
   }) => void
   updateProjectNote: (input: {
     projectNote: { id: string; content: string }

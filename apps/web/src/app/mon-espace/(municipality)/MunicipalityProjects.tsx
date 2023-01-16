@@ -3,9 +3,10 @@ import { NoProjects } from '@mec/web/app/mon-espace/(municipality)/NoProjects'
 import Link from 'next/link'
 import { asyncComponent } from '@mec/web/utils/asyncComponent'
 import { WriteProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/WriteProjectsTable'
-import { getProjectsForDashboard } from '@mec/web/app/mon-espace/projectsForDashboard'
 import { Crte, Municipality } from '@prisma/client'
 import { Routes } from '@mec/web/app/routing'
+import { Scope } from '@mec/web/scope'
+import { getProjectsList } from '@mec/web/app/mon-espace/projets/projectsList'
 
 export const MunicipalityProjects = asyncComponent(
   async ({
@@ -15,8 +16,10 @@ export const MunicipalityProjects = asyncComponent(
     municipality: Municipality
     crte: Crte
   }) => {
+    const scope: Scope = { scale: 'municipality', code: municipality.code }
+
     // A municipality dashboard assumes write access on 1 municipality
-    const projects = await getProjectsForDashboard({ municipality })
+    const projects = await getProjectsList(scope)
     const title = `Projets ${crte.name}`
     const subtitle = `Municipalité • ${municipality.name}`
 
@@ -59,10 +62,7 @@ export const MunicipalityProjects = asyncComponent(
           </div>
         </div>
         <div className="fr-px-4v">
-          <WriteProjectsTable
-            projects={projects}
-            scope={{ municipality: { code: municipality.code } }}
-          />
+          <WriteProjectsTable projects={projects} scope={scope} />
         </div>
       </>
     )

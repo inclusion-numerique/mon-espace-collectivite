@@ -3,77 +3,58 @@
 import { useForm } from 'react-hook-form'
 import { SelectFormField } from '@mec/web/form/SelectFormField'
 import { InputFormField } from '@mec/web/form/InputFormField'
-import z from 'zod'
 import { useRouter, useSelectedLayoutSegments } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Routes } from '@mec/web/app/routing'
 import { PublicConfig } from '@mec/web/config'
-import {
-  projectScopeOptions,
-  ProjectScopes,
-  reverseUrlProjectScopes,
-  UrlProjectScope,
-  urlProjectScopes,
-} from '@mec/web/project/project'
 import { useEffect, useState } from 'react'
 import { Spinner } from '@mec/web/ui/Spinner'
 import Link from 'next/link'
+import {
+  reverseUrlScales,
+  scaleOptions,
+  Scope,
+  ScopeDataValidation,
+  UrlScale,
+  urlScales,
+} from '@mec/web/scope'
 
-const AdministratorPerimeterDataValidation = z.object({
-  scope: z.enum(ProjectScopes, {
-    errorMap: () => ({
-      message: 'Veuillez renseigner le niveau',
-    }),
-  }),
-  perimeter: z
-    .string({
-      required_error: 'Veuillez renseigner le périmètre',
-    })
-    .min(2, 'Veuillez renseigner un périmètre valide'),
-})
-
-type AdministratorPerimeterData = z.infer<
-  typeof AdministratorPerimeterDataValidation
->
-
-export const AdministratorPerimeterForm = () => {
+export const ProjectListScopeForm = () => {
   const router = useRouter()
-  const [urlScope, urlPerimeter] = useSelectedLayoutSegments() as [
-    UrlProjectScope,
-    string,
-  ]
-  const perimeter = urlPerimeter ? decodeURIComponent(urlPerimeter) : ''
-  const scope = reverseUrlProjectScopes[urlScope] ?? ''
-  const { control, handleSubmit, reset } = useForm<AdministratorPerimeterData>({
+  const [urlScale, urlCode] = useSelectedLayoutSegments() as [UrlScale, string]
+
+  const scale = reverseUrlScales[urlScale] ?? ''
+  const code = urlCode ? decodeURIComponent(urlCode) : ''
+  const { control, handleSubmit, reset } = useForm<Scope>({
     defaultValues: {
-      scope,
-      perimeter,
+      scale,
+      code,
     },
-    resolver: zodResolver(AdministratorPerimeterDataValidation),
+    resolver: zodResolver(ScopeDataValidation),
   })
 
   // TODO remove this logic when _loading.tsx -> loading.tsx works with next versions for these components using css
   const [isLoading, setIsLoading] = useState(false)
   useEffect(() => {
     setIsLoading(false)
-  }, [urlScope, urlPerimeter])
+  }, [scale, code])
 
-  const onSubmit = (data: AdministratorPerimeterData) => {
+  const onSubmit = (data: Scope) => {
     // TODO Can remove no-op when loading logic is removed
     // No-op
-    if (perimeter === data.perimeter && scope === data.scope) {
+    if (code === data.code && scale === data.scale) {
       return
     }
 
     setIsLoading(true)
     router.push(
-      Routes.MonEspace.Projets.Scope.Perimeter({
-        perimeter: data.perimeter,
-        scope: urlProjectScopes[data.scope],
+      Routes.MonEspace.Projets.Scale.Code({
+        scale: urlScales[data.scale],
+        code: data.code,
       }),
     )
     // We allow the form to be submitted again but keep field values
-    reset({ perimeter: data.perimeter, scope: data.scope })
+    reset({ scale: data.scale, code: data.code })
   }
 
   return (
@@ -85,7 +66,7 @@ export const AdministratorPerimeterForm = () => {
           backgroundColor: 'var(--background-alt-grey)',
         }}
       >
-        <h3 className="fr-callout__title">Périmètre des projets</h3>
+        <h3 className="fr-callout__title">Liste des projets</h3>
         <p>
           En tant qu&apos;administrateur de {PublicConfig.productTitle}, vous
           pouvez consulter les projets sur le périmètre de votre choix sur 4
@@ -94,43 +75,56 @@ export const AdministratorPerimeterForm = () => {
         <p className="fr-text--sm fr-mt-2v">Par exemple&nbsp;:</p>
         <ul className="fr-text--sm fr-mt-1v">
           <li>
+            Préfecture&nbsp;:{' '}
             <Link
-              href={Routes.MonEspace.Projets.Scope.Perimeter({
-                perimeter: '69',
-                scope: 'prefecture',
+              href={Routes.MonEspace.Projets.Scale.Code({
+                code: '69',
+                scale: 'prefecture',
               })}
             >
-              Préfecture&nbsp;: Rhône (69)
+              Rhône (69)
             </Link>
           </li>
           <li>
+            Sous-Préfecture&nbsp;:{' '}
             <Link
-              href={Routes.MonEspace.Projets.Scope.Perimeter({
-                perimeter: '691',
-                scope: 'sous-prefecture',
+              href={Routes.MonEspace.Projets.Scale.Code({
+                code: '691',
+                scale: 'sous-prefecture',
               })}
             >
-              Sous-Préfecture&nbsp;: Lyon (691)
+              Lyon (691)
             </Link>
           </li>
           <li>
+            EPCI&nbsp;:{' '}
             <Link
-              href={Routes.MonEspace.Projets.Scope.Perimeter({
-                perimeter: '200046977',
-                scope: 'epci',
+              href={Routes.MonEspace.Projets.Scale.Code({
+                code: '200046977',
+                scale: 'epci',
               })}
             >
-              EPCI&nbsp;: Métropole de Lyon (200046977)
+              Métropole de Lyon (200046977)
             </Link>
           </li>
           <li>
+            Municipalité&nbsp;:{' '}
             <Link
-              href={Routes.MonEspace.Projets.Scope.Perimeter({
-                perimeter: '69382',
-                scope: 'municipalite',
+              href={Routes.MonEspace.Projets.Scale.Code({
+                code: '69123',
+                scale: 'municipalite',
               })}
             >
-              Municipalité&nbsp;: Lyon 2e Arrondissement (69382)
+              Lyon (69123)
+            </Link>
+            ,{' '}
+            <Link
+              href={Routes.MonEspace.Projets.Scale.Code({
+                code: '69382',
+                scale: 'municipalite',
+              })}
+            >
+              Lyon 2e Arrondissement (69382)
             </Link>
           </li>
         </ul>
@@ -139,18 +133,18 @@ export const AdministratorPerimeterForm = () => {
             <div className="fr-col-md-6 fr-col-lg-4">
               <SelectFormField
                 control={control}
-                label="Niveau"
+                label="Échelle"
                 hint="Niveau de détail du département à la municipalité"
-                path="scope"
+                path="scale"
                 defaultOption
-                options={projectScopeOptions}
+                options={scaleOptions}
               />
             </div>
             <div className="fr-col-md-6 fr-col-lg-4">
               <InputFormField
                 control={control}
-                label="Périmètre"
-                path="perimeter"
+                label="Code"
+                path="code"
                 hint="E.g. Rhône, 69, 691, Métropole de Lyon, 200046977, 69382"
                 placeholder="Code INSEE ou nom exact"
               />

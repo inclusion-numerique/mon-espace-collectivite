@@ -24,7 +24,7 @@ export const NoProjects = () => {
         </p>
       </div>
       <div className="fr-grid-row fr-grid-row--center fr-mt-4v">
-        <Link href="/mon-espace/projet/nouveau" className="fr-btn fr-mb-0">
+        <Link href="" className="fr-btn fr-mb-0">
           Renseigner mon premier projet CRTE
         </Link>
       </div>

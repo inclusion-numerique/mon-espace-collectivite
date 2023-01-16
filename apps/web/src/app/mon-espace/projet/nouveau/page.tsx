@@ -5,11 +5,19 @@ import ProjectForm from '@mec/web/app/mon-espace/ProjectForm/ProjectForm'
 import { getUserWithCommunitiesForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/communitiesForProjectForm'
 import { getCategoriesOptionsForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/categoriesForProjectForm'
 import { Routes } from '@mec/web/app/routing'
+import { Scope, scopeFromPartial } from '@mec/web/scope'
 
-const NewCrtePage = async () => {
+const NewProjectPage = async ({
+  searchParams,
+}: {
+  searchParams?: Partial<Scope>
+}) => {
   const sessionToken = getAuthenticatedSessionToken()
-  const { user, communityOptions } = await getUserWithCommunitiesForProjectForm(
+
+  const scope = scopeFromPartial(searchParams)
+  const { user, scopeOptions } = await getUserWithCommunitiesForProjectForm(
     sessionToken,
+    scope,
   )
 
   const categoriesOptions = await getCategoriesOptionsForProjectForm()
@@ -34,7 +42,7 @@ const NewCrtePage = async () => {
           <div className="fr-col-12 fr-col-md-10 fr-col-lg-8 fr-mb-24v">
             <ProjectForm
               serializedUser={serialize(user)}
-              communityOptions={communityOptions}
+              scopeOptions={scopeOptions}
               categoriesOptions={categoriesOptions}
             />
           </div>
@@ -43,4 +51,4 @@ const NewCrtePage = async () => {
     </div>
   )
 }
-export default NewCrtePage
+export default NewProjectPage

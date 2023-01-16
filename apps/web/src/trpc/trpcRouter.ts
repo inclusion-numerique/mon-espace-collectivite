@@ -1,7 +1,4 @@
-import {
-  ownerCodeToPerimeter,
-  ProjectDataValidation,
-} from '@mec/web/project/project'
+import { ProjectDataValidation } from '@mec/web/project/project'
 import { prismaClient } from '@mec/web/prismaClient'
 import { v4 } from 'uuid'
 import z from 'zod'
@@ -12,6 +9,7 @@ import {
   ProjectNoteCreationDataValidation,
   ProjectNoteEditionDataValidation,
 } from '@mec/web/project/projectNote'
+import { stringToScope } from '@mec/web/scope'
 
 const userRouter = router({
   acknowledgeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
@@ -41,13 +39,13 @@ const projectRouter = router({
     .input(ProjectDataValidation)
     .mutation(
       async ({
-        input: { ownerCode, secondaryCategoryIds, ...data },
+        input: { scope: scopeString, secondaryCategoryIds, ...data },
         ctx: { user },
       }) => {
         // TODO Check rights / role for user on community project creation
         const id = v4()
         const reference = generateReference()
-        const perimeter = ownerCodeToPerimeter(ownerCode)
+        const scope = stringToScope(scopeString)
 
         const project = await prismaClient.project.create({
           data: {
@@ -58,7 +56,7 @@ const projectRouter = router({
               connect: secondaryCategoryIds.map((id) => ({ id })),
             },
             ...data,
-            ...perimeter,
+            ...scope,
           },
           include: { attachments: true, municipality: true },
         })
@@ -70,12 +68,12 @@ const projectRouter = router({
     .input(ProjectDataValidation.extend({ id: z.string().uuid() }))
     .mutation(
       async ({
-        input: { id, ownerCode, secondaryCategoryIds, ...data },
+        input: { id, scope: scopeString, secondaryCategoryIds, ...data },
         ctx: { user },
       }) => {
         // TODO Check rights / role for user on community project creation
         // TODO Check right on write on this project
-        const perimeter = ownerCodeToPerimeter(ownerCode)
+        const scope = stringToScope(scopeString)
         const alreadyConnectedSecondaryCategories =
           await prismaClient.project.findUnique({
             where: { id },
@@ -96,7 +94,7 @@ const projectRouter = router({
                 ),
             },
             ...data,
-            ...perimeter,
+            ...scope,
           },
           include: { attachments: true, municipality: true },
         })

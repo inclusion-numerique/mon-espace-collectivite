@@ -7,12 +7,12 @@ import { Routes } from '@mec/web/app/routing'
 const ProjectsIndexPage = async () => {
   const user = await getAuthenticatedSessionUser()
 
-  // If the user is administrator, he can stay on an empty index and change the scope with the PerimeterForm from projects layout
+  // If the user is administrator, he can stay on an empty index and change the scope with the ProjectListForm from projects layout
   if (user.roles.includes('Administrator')) {
     return null
   }
 
-  // Else we check the access levels of the user and redirect to correct scope/perimeter
+  // Else we check the access levels of the user and redirect to correct scope
   const userWithAccessLevels = await prismaClient.user.findUnique({
     where: { id: user.id },
     include: {
@@ -27,9 +27,9 @@ const ProjectsIndexPage = async () => {
   const countyAccessLevel = userWithAccessLevels.countyAccessLevels[0]
   if (countyAccessLevel) {
     redirect(
-      Routes.MonEspace.Projets.Scope.Perimeter({
-        scope: 'prefecture',
-        perimeter: countyAccessLevel.countyCode,
+      Routes.MonEspace.Projets.Scale.Code({
+        scale: 'prefecture',
+        code: countyAccessLevel.countyCode,
       }),
     )
   }
@@ -37,9 +37,9 @@ const ProjectsIndexPage = async () => {
   const districtAccessLevel = userWithAccessLevels.districtAccessLevels[0]
   if (districtAccessLevel) {
     redirect(
-      Routes.MonEspace.Projets.Scope.Perimeter({
-        scope: 'sous-prefecture',
-        perimeter: districtAccessLevel.districtCode,
+      Routes.MonEspace.Projets.Scale.Code({
+        scale: 'sous-prefecture',
+        code: districtAccessLevel.districtCode,
       }),
     )
   }
@@ -48,9 +48,9 @@ const ProjectsIndexPage = async () => {
     userWithAccessLevels.intercommunalityAccessLevels[0]
   if (intercommunalityAccessLevel) {
     redirect(
-      Routes.MonEspace.Projets.Scope.Perimeter({
-        scope: 'epci',
-        perimeter: intercommunalityAccessLevel.intercommunalityCode,
+      Routes.MonEspace.Projets.Scale.Code({
+        scale: 'epci',
+        code: intercommunalityAccessLevel.intercommunalityCode,
       }),
     )
   }
@@ -59,9 +59,9 @@ const ProjectsIndexPage = async () => {
     userWithAccessLevels.municipalityAccessLevels[0]
   if (municipalityAccessLevel) {
     redirect(
-      Routes.MonEspace.Projets.Scope.Perimeter({
-        scope: 'municipalite',
-        perimeter: municipalityAccessLevel.municipalityCode,
+      Routes.MonEspace.Projets.Scale.Code({
+        scale: 'municipalite',
+        code: municipalityAccessLevel.municipalityCode,
       }),
     )
   }

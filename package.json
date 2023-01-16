@@ -5,7 +5,7 @@
   "license": "AGPL-3.0-or-later",
   "private": true,
   "engines": {
-    "node": "^19.1"
+    "node": "^18.13"
   },
   "packageManager": "pnpm@7.20.0",
   "workspaces": {

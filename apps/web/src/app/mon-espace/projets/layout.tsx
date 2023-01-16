@@ -1,7 +1,7 @@
 import { getAuthenticatedSessionUser } from '@mec/web/auth/getSessionUser'
-import { AdministratorPerimeterForm } from '@mec/web/app/mon-espace/(administrator)/AdministratorPerimeterForm'
+import { ProjectListScopeForm } from '@mec/web/app/mon-espace/(administrator)/ProjectListScopeForm'
 import { PropsWithChildren } from 'react'
-import { ProjectNoteFormModal } from '@mec/web/app/mon-espace/ProjectNoteFormModal'
+import { ProjectNoteFormModal } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteFormModal'
 
 const ProjectsLayout = async ({ children }: PropsWithChildren) => {
   // For now only Administrators have access to all projects / projects scopes
@@ -11,7 +11,7 @@ const ProjectsLayout = async ({ children }: PropsWithChildren) => {
     // Administrators have access to all projects and can change scope and perimeter
     return (
       <>
-        <AdministratorPerimeterForm />
+        <ProjectListScopeForm />
         {children}
         <ProjectNoteFormModal />
       </>

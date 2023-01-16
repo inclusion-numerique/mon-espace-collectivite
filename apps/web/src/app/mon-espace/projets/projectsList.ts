@@ -1,32 +1,32 @@
 import { prismaClient } from '@mec/web/prismaClient'
-import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
+import { Scope } from '@mec/web/scope'
 
-export const getProjectsForDashboard = (scope: DashboardScope) =>
+export const getProjectsList = (scope: Scope) =>
   prismaClient.project.findMany({
     where:
-      'municipality' in scope
-        ? { municipalityCode: scope.municipality.code }
-        : 'intercommunality' in scope
+      scope.scale === 'municipality'
+        ? { municipalityCode: scope.code }
+        : scope.scale === 'intercommunality'
         ? // We get all projects done by interco OR a municipality inside this interco
           {
             OR: [
-              { intercommunalityCode: scope.intercommunality.code },
+              { intercommunalityCode: scope.code },
               {
                 municipality: {
-                  intercommunalityCode: scope.intercommunality.code,
+                  intercommunalityCode: scope.code,
                 },
               },
             ],
           }
-        : 'district' in scope
+        : scope.scale === 'district'
         ? {
             // Municipality is in district
-            municipality: { districtCode: scope.district.code },
+            municipality: { districtCode: scope.code },
           }
-        : // 'county' in scope
+        : // 'county'
           {
             // Municipality is in county
-            municipality: { district: { countyCode: scope.county.code } },
+            municipality: { district: { countyCode: scope.code } },
           },
     include: {
       attachments: true,
@@ -40,20 +40,7 @@ export const getProjectsForDashboard = (scope: DashboardScope) =>
       category: { include: { theme: true } },
       secondaryCategories: { include: { theme: true } },
       notes: {
-        where:
-          'municipality' in scope
-            ? { municipalityCode: scope.municipality.code }
-            : 'intercommunality' in scope
-            ? { intercommunalityCode: scope.intercommunality.code }
-            : 'district' in scope
-            ? {
-                // Municipality is in district
-                districtCode: scope.district.code,
-              }
-            : // 'county' in scope
-              {
-                countyCode: scope.county.code,
-              },
+        where: { [`${scope.scale}Code`]: scope.code },
       },
     },
     orderBy: [
@@ -65,11 +52,9 @@ export const getProjectsForDashboard = (scope: DashboardScope) =>
 
 type CrteProjects = {
   crte: { code: string; name: string }
-  projects: ProjectsForDashboard
+  projects: ProjectsList
 }
-export const groupProjectsByCrte = (
-  projects: ProjectsForDashboard,
-): CrteProjects[] => {
+export const groupProjectsByCrte = (projects: ProjectsList): CrteProjects[] => {
   const result = new Map<string, CrteProjects>()
 
   projects.forEach((project) => {
@@ -93,10 +78,10 @@ export const groupProjectsByCrte = (
 
 type MunicipalityProjects = {
   municipality: { code: string; name: string }
-  projects: ProjectsForDashboard
+  projects: ProjectsList
 }
 export const groupProjectsByMunicipality = (
-  projects: ProjectsForDashboard,
+  projects: ProjectsList,
 ): MunicipalityProjects[] => {
   const result = new Map<string, MunicipalityProjects>()
 
@@ -120,11 +105,11 @@ export const groupProjectsByMunicipality = (
 type IntercommunalityProjects = {
   intercommunality: { code: string; name: string }
   // Projects done directly by this intercommunality
-  projects: ProjectsForDashboard
+  projects: ProjectsList
   municipalities: MunicipalityProjects[]
 }
 export const groupProjectsByIntercommunality = (
-  projects: ProjectsForDashboard,
+  projects: ProjectsList,
 ): IntercommunalityProjects[] => {
   const result = new Map<string, IntercommunalityProjects>()
 
@@ -149,9 +134,9 @@ export const groupProjectsByIntercommunality = (
 
   return [...result.values()].map(({ projects, intercommunality }) => {
     // Projects directly done by interco
-    const intercommunalityProjects: ProjectsForDashboard = []
+    const intercommunalityProjects: ProjectsList = []
     // Projects done by municipalities in interco
-    const municipalitiesProjects: ProjectsForDashboard = []
+    const municipalitiesProjects: ProjectsList = []
     projects.forEach((project) => {
       if (project.intercommunality) {
         intercommunalityProjects.push(project)
@@ -168,8 +153,6 @@ export const groupProjectsByIntercommunality = (
   })
 }
 
-export type ProjectsForDashboard = Awaited<
-  ReturnType<typeof getProjectsForDashboard>
->
+export type ProjectsList = Awaited<ReturnType<typeof getProjectsList>>
 
-export type ProjectForDashboard = ProjectsForDashboard[number]
+export type ProjectListItem = ProjectsList[number]

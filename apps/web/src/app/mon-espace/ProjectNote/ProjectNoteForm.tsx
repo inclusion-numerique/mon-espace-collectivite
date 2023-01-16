@@ -14,26 +14,17 @@ import { DefaultValues } from 'react-hook-form/dist/types/form'
 import { withTrpc } from '@mec/web/withTrpc'
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { useRouter } from 'next/navigation'
-import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
-import { useProjectNoteModalStore } from '@mec/web/app/mon-espace/useProjectNoteModalStore'
+import { Scope } from '@mec/web/scope'
+import { useProjectNoteModalStore } from '@mec/web/app/mon-espace/ProjectNote/useProjectNoteModalStore'
 
 const defaultValuesFromExistingProjectNote = (
-  scope: DashboardScope,
+  scope: Scope,
   projectNote: { id: string; content: string } | null,
   projectId: string,
 ): DefaultValues<ProjectNoteCreationData | ProjectNoteEditionData> => {
   if (!projectNote) {
     // Creation with scope code
-    if ('county' in scope) {
-      return { projectId, countyCode: scope.county.code }
-    }
-    if ('district' in scope) {
-      return { projectId, districtCode: scope.district.code }
-    }
-    if ('intercommunality' in scope) {
-      return { projectId, intercommunalityCode: scope.intercommunality.code }
-    }
-    return { projectId, municipalityCode: scope.municipality.code }
+    return { projectId, [`${scope.scale}Code`]: scope.code }
   }
 
   return projectNote
@@ -49,7 +40,7 @@ export const ProjectNoteForm = withTrpc(
     project: { id: string; name: string }
     projectNote: { id: string; content: string } | null
     modalTitleId: string
-    scope: DashboardScope
+    scope: Scope
   }) => {
     const router = useRouter()
     const isCreation = !projectNote

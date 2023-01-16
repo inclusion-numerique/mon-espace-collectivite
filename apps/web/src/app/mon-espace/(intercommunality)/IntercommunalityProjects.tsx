@@ -3,13 +3,14 @@ import { NoProjects } from '@mec/web/app/mon-espace/(intercommunality)/NoProject
 import Link from 'next/link'
 import { asyncComponent } from '@mec/web/utils/asyncComponent'
 import { WriteProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/WriteProjectsTable'
-import {
-  getProjectsForDashboard,
-  ProjectsForDashboard,
-} from '@mec/web/app/mon-espace/projectsForDashboard'
 import { Crte, Intercommunality } from '@prisma/client'
 import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadProjectsTable'
 import { Routes } from '@mec/web/app/routing'
+import { Scope } from '@mec/web/scope'
+import {
+  getProjectsList,
+  ProjectsList,
+} from '@mec/web/app/mon-espace/projets/projectsList'
 
 export const IntercommunalityProjects = asyncComponent(
   async ({
@@ -22,7 +23,13 @@ export const IntercommunalityProjects = asyncComponent(
     // A intercommunality dashboard assumes write access on X (generally one) intercomunalities
     // And Read access on All municipalities in this intercommunality
     // General case is 1 municipality and 1 CRTE but for data modeling ease, we iterate on array structure
-    const projects = await getProjectsForDashboard({ intercommunality })
+
+    const scope = {
+      scale: 'intercommunality',
+      code: intercommunality.code,
+    } satisfies Scope
+
+    const projects = await getProjectsList(scope)
 
     if (projects.length === 0) {
       return (
@@ -34,8 +41,8 @@ export const IntercommunalityProjects = asyncComponent(
     }
 
     // We display a table of projects done by this intercommunality, and another read only for municipalities of this crte
-    const intercommunalityProjects: ProjectsForDashboard = []
-    const municipalitiesProjects: ProjectsForDashboard = []
+    const intercommunalityProjects: ProjectsList = []
+    const municipalitiesProjects: ProjectsList = []
     projects.forEach((project) => {
       if (!!project.intercommunalityCode) {
         intercommunalityProjects.push(project)
@@ -87,7 +94,7 @@ export const IntercommunalityProjects = asyncComponent(
         <div key={intercommunality.code + '-table'} className="fr-px-4v">
           <WriteProjectsTable
             projects={intercommunalityProjects}
-            scope={{ intercommunality: { code: intercommunality.code } }}
+            scope={scope}
           />
         </div>
         <div
@@ -110,10 +117,7 @@ export const IntercommunalityProjects = asyncComponent(
           key={intercommunality.code + '-municipalities--table'}
           className="fr-px-4v"
         >
-          <ReadProjectsTable
-            scope={{ intercommunality: { code: intercommunality.code } }}
-            projects={municipalitiesProjects}
-          />
+          <ReadProjectsTable scope={scope} projects={municipalitiesProjects} />
         </div>
       </>
     )

@@ -14,4 +14,9 @@ export const main = async () => {
   console.log('👍 Web container is ready')
 }
 
-main().then(() => process.exit(0))
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error)
+    process.exit(1)
+  })

@@ -36,5 +36,5 @@ export const userHasRole = (
   return !!user.roles.includes(role)
 }
 
-export const userIsAdmin = (user: Pick<SessionUser, 'roles'>) =>
+export const isUserAdmin = (user: Pick<SessionUser, 'roles'>) =>
   userHasRole(user, 'Administrator')

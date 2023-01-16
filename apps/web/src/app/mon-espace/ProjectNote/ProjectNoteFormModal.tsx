@@ -1,7 +1,7 @@
 'use client'
 
-import { useProjectNoteModalStore } from '@mec/web/app/mon-espace/useProjectNoteModalStore'
 import { ProjectNoteForm } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteForm'
+import { useProjectNoteModalStore } from '@mec/web/app/mon-espace/ProjectNote/useProjectNoteModalStore'
 
 export const ProjectNoteFormModal = () => {
   const modalId = `project-node-form-modal`

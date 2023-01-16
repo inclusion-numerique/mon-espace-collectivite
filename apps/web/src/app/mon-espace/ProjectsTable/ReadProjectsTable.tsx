@@ -1,21 +1,20 @@
 import { PropsWithChildren } from 'react'
-import { deserialize, Serialized } from '@mec/web/utils/serialization'
-import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
 import Link from 'next/link'
-import {
-  ProjectForDashboard,
-  ProjectsForDashboard,
-} from '@mec/web/app/mon-espace/projectsForDashboard'
 import { ProjectNoteButton } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteButton'
-import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
 import { linkToAidesTerritoires } from '@mec/web/project/aidesTerritoires'
+import { Scope } from '@mec/web/scope'
+import {
+  ProjectListItem,
+  ProjectsList,
+} from '@mec/web/app/mon-espace/projets/projectsList'
+import { OneLineTh } from '@mec/web/app/mon-espace/ProjectsTable/OneLineTh'
 
 export const ReadProjectsTable = ({
   projects,
   scope,
 }: {
-  projects: ProjectsForDashboard
-  scope: DashboardScope
+  projects: ProjectsList
+  scope: Scope
 }) => {
   return (
     <div
@@ -67,8 +66,8 @@ const ReadProjectRow = ({
   scope,
   project,
 }: {
-  project: ProjectForDashboard
-  scope: DashboardScope
+  project: ProjectListItem
+  scope: Scope
 }) => {
   const {
     id,

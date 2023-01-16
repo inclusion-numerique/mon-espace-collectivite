@@ -1,7 +1,8 @@
+import { Scope } from '@mec/web/scope'
+
 export const getUserAccessLevel = async ({
   user: { id },
 }: {
-  scope: string
-  perimeter: string
+  scope: Scope
   user: { id: string }
 }) => {}

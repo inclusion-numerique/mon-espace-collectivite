@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import styles from './styles.module.css'
+import styles from '@mec/web/app/(public)/styles.module.css'
 import { Routes } from '@mec/web/app/routing'
 
 export default function HomePage() {

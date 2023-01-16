@@ -1,23 +1,23 @@
 import Link from 'next/link'
 import { PropsWithChildren } from 'react'
-import type {
-  ProjectForDashboard,
-  ProjectsForDashboard,
-} from '@mec/web/app/mon-espace/projectsForDashboard'
-import { DashboardScope } from '@mec/web/app/mon-espace/dashboard'
-import { OneLineTh } from '@mec/web/app/mon-espace/OneLineTh'
 import { nonBreakable } from '@mec/web/utils/nonBreakable'
 import { linkToAidesTerritoires } from '@mec/web/project/aidesTerritoires'
 import { ProjectNoteButton } from '@mec/web/app/mon-espace/ProjectNote/ProjectNoteButton'
 import { Routes } from '@mec/web/app/routing'
 import styles from '@mec/web/app/mon-espace/ProjectsTable/WriteProjectsTable.module.css'
+import { Scope } from '@mec/web/scope'
+import {
+  ProjectListItem,
+  ProjectsList,
+} from '@mec/web/app/mon-espace/projets/projectsList'
+import { OneLineTh } from '@mec/web/app/mon-espace/ProjectsTable/OneLineTh'
 
 export const WriteProjectsTable = ({
   projects,
   scope,
 }: {
-  projects: ProjectsForDashboard
-  scope: DashboardScope
+  projects: ProjectsList
+  scope: Scope
 }) => {
   return (
     <div
@@ -69,8 +69,8 @@ const WriteProjectRow = ({
   scope,
   project,
 }: {
-  project: ProjectForDashboard
-  scope: DashboardScope
+  project: ProjectListItem
+  scope: Scope
 }) => {
   const {
     id,
@@ -92,7 +92,11 @@ const WriteProjectRow = ({
     energyConsumption,
   } = project
   const fieldHref = (field?: string) =>
-    Routes.MonEspace.Projet.Modifier(reference, { focus: field })
+    Routes.MonEspace.Projet.Modifier(reference, {
+      focus: field,
+      scale: scope.scale,
+      code: scope.code,
+    })
 
   return (
     <tr key={id}>

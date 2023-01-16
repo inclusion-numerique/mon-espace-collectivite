@@ -6,67 +6,8 @@ const intErrorMessage =
 
 const isoDateRegex = /^\d{4}-\d\d-\d\d$/
 
-export const ProjectScopes = [
-  'county',
-  'district',
-  'intercommunality',
-  'municipality',
-] as const
-
-export type ProjectScope = typeof ProjectScopes[number]
-
-export const projectScopeLabels: { [scope in ProjectScope]: string } = {
-  county: 'Préfecture',
-  district: 'Sous-préfecture',
-  intercommunality: 'EPCI',
-  municipality: 'Municipalité',
-}
-
-// Localized url representation of project scopes
-export const urlProjectScopes = {
-  county: 'prefecture',
-  district: 'sous-prefecture',
-  intercommunality: 'epci',
-  municipality: 'municipalite',
-} as const satisfies { [scope in ProjectScope]: string }
-export type UrlProjectScope = typeof urlProjectScopes[ProjectScope]
-
-export const reverseUrlProjectScopes: {
-  [urlScope in UrlProjectScope]: ProjectScope
-} = {
-  prefecture: 'county',
-  'sous-prefecture': 'district',
-  epci: 'intercommunality',
-  municipalite: 'municipality',
-}
-
-export const projectScopeOptions = labelsToOptions(projectScopeLabels)
-
-// An ownerCode can be a municipality or an intercomunality.
-// We can recognize them by their prefix: "m:{municipalityCode}" or "i:{intercommunalityCode}"
-
-type PerimeterCode =
-  | { municipalityCode: string; intercommunalityCode: null }
-  | { municipalityCode: null; intercommunalityCode: string }
-
-export const perimeterCodeToOwnerCode = (perimeter: {
-  intercommunalityCode?: undefined | null | string
-  municipalityCode?: undefined | null | string
-}) =>
-  perimeter.intercommunalityCode
-    ? `i:${perimeter.intercommunalityCode}`
-    : `m:${perimeter.municipalityCode}`
-
-export const ownerCodeToPerimeter = (code: string): PerimeterCode => {
-  const [prefix, modelCode] = code.split(':')
-  if (prefix === 'i') {
-    return { intercommunalityCode: modelCode, municipalityCode: null }
-  }
-  return { municipalityCode: modelCode, intercommunalityCode: null }
-}
-
 export const ProjectDataValidation = z.object({
-  ownerCode: z.string({
+  scope: z.string({
     required_error: 'Veuillez renseigner la collectivité porteuse du projet',
   }),
   name: z.string({

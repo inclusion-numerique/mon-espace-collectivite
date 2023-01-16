@@ -23,8 +23,7 @@
     "admin-data:setup": "pnpm admin-data:download && pnpm admin-data:update"
   },
   "engines": {
-    "node": ">=19",
-    "npm": ">=8"
+    "node": "^18.13"
   },
   "dependencies": {
     "@mec/web": "*",

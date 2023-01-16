@@ -7,12 +7,12 @@ orbs:
 executors:
   node:
     docker:
-      - image: cimg/node:19.3.0
+      - image: cimg/node:18.13.0
         environment:
           TZ: 'UTC'
   node-browsers:
     docker:
-      - image: cimg/node:19.3.0-browsers
+      - image: cimg/node:18.13.0-browsers
         environment:
           TZ: 'UTC'
 

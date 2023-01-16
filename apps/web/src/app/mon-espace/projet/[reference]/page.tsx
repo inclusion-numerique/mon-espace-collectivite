@@ -6,17 +6,24 @@ import { getUserWithCommunitiesForProjectForm } from '@mec/web/app/mon-espace/Pr
 import { getCategoriesOptionsForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/categoriesForProjectForm'
 import { getProjectForProjectForm } from '@mec/web/app/mon-espace/ProjectForm/projectForProjectForm'
 import ProjectForm from '@mec/web/app/mon-espace/ProjectForm/ProjectForm'
+import { Scope, scopeFromPartial } from '@mec/web/scope'
 
 export const revalidate = 0
 
-const EditCrtePage = async ({
+const EditProjectPage = async ({
   params: { reference },
+  searchParams,
 }: {
   params: { reference: string }
+  searchParams?: Partial<Scope>
 }) => {
   const sessionToken = getAuthenticatedSessionToken()
-  const { user, communityOptions } = await getUserWithCommunitiesForProjectForm(
+
+  const scope = scopeFromPartial(searchParams)
+
+  const { user, scopeOptions } = await getUserWithCommunitiesForProjectForm(
     sessionToken,
+    scope,
   )
 
   const categoriesOptions = await getCategoriesOptionsForProjectForm()
@@ -46,7 +53,7 @@ const EditCrtePage = async ({
             <ProjectForm
               serializedUser={serialize(user)}
               categoriesOptions={categoriesOptions}
-              communityOptions={communityOptions}
+              scopeOptions={scopeOptions}
               serializedProject={serialize(project)}
             />
           </div>
@@ -55,4 +62,4 @@ const EditCrtePage = async ({
     </div>
   )
 }
-export default EditCrtePage
+export default EditProjectPage

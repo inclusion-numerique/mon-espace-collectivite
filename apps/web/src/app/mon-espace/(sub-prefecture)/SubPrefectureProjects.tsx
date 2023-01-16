@@ -1,16 +1,19 @@
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
 import { asyncComponent } from '@mec/web/utils/asyncComponent'
 import { NoProjects } from '@mec/web/app/mon-espace/(sub-prefecture)/NoProjects'
-import {
-  getProjectsForDashboard,
-  groupProjectsByCrte,
-} from '@mec/web/app/mon-espace/projectsForDashboard'
 import { ReadProjectsTable } from '@mec/web/app/mon-espace/ProjectsTable/ReadProjectsTable'
 import { District } from '@prisma/client'
+import { Scope } from '@mec/web/scope'
+import {
+  getProjectsList,
+  groupProjectsByCrte,
+} from '@mec/web/app/mon-espace/projets/projectsList'
 
 export const SubPrefectureProjects = asyncComponent(
   async ({ district }: { district: District }) => {
-    const projects = await getProjectsForDashboard({ district })
+    const scope: Scope = { scale: 'district', code: district.code }
+
+    const projects = await getProjectsList(scope)
 
     const title = `Projets de la sous-préfecture • ${district.name}`
     if (projects.length === 0) {
@@ -45,10 +48,7 @@ export const SubPrefectureProjects = asyncComponent(
                 </div>
               </div>
               <div className="fr-px-4v">
-                <ReadProjectsTable
-                  projects={crteProjects}
-                  scope={{ district: { code: district.code } }}
-                />
+                <ReadProjectsTable projects={crteProjects} scope={scope} />
               </div>
             </>
           )
