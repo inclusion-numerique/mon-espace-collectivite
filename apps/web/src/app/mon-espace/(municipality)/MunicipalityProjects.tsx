@@ -29,7 +29,7 @@ export const MunicipalityProjects = asyncComponent(
           <Breadcrumbs currentPage="Gérer et voir mes CRTE" />
           <h2 style={{ color: 'var(--blue-france-sun-113-625)' }}>{title}</h2>
           <h3 className="fr-mb-4v">{subtitle}</h3>
-          <NoProjects />
+          <NoProjects scope={scope} canAdd />
         </div>
       )
     }

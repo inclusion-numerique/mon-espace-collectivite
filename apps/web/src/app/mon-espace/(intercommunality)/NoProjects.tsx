@@ -1,7 +1,14 @@
 import Link from 'next/link'
 import { Routes } from '@mec/web/app/routing'
+import { Scope } from '@mec/web/scope'
 
-export const NoProjects = () => {
+export const NoProjects = ({
+  scope,
+  canAdd,
+}: {
+  scope: Scope
+  canAdd?: boolean
+}) => {
   return (
     <div
       className="fr-grid-row fr-grid-row--center fr-mb-md-8v fr-mt-8v fr-px-4v fr-p-8v fr-p-md-14v"
@@ -24,11 +31,16 @@ export const NoProjects = () => {
           votre collectivité.
         </p>
       </div>
-      <div className="fr-grid-row fr-grid-row--center fr-mt-4v">
-        <Link href={Routes.MonEspace.Projet.Nouveau} className="fr-btn fr-mb-0">
-          Renseigner mon premier projet CRTE
-        </Link>
-      </div>
+      {canAdd ? (
+        <div className="fr-grid-row fr-grid-row--center fr-mt-4v">
+          <Link
+            href={Routes.MonEspace.Projet.NouveauWithParams(scope)}
+            className="fr-btn fr-mb-0"
+          >
+            Renseigner mon premier projet CRTE
+          </Link>
+        </div>
+      ) : null}
     </div>
   )
 }

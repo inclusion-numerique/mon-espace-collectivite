@@ -35,7 +35,7 @@ export const IntercommunalityProjects = asyncComponent(
       return (
         <div className="fr-container">
           <Breadcrumbs currentPage="Gérer et voir mes CRTE" />
-          <NoProjects />
+          <NoProjects scope={scope} />
         </div>
       )
     }

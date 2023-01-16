@@ -21,7 +21,7 @@ export const PrefectureProjects = asyncComponent(
         <div className="fr-container">
           <Breadcrumbs currentPage="Gérer et voir mes CRTE" />
           <h2 style={{ color: 'var(--blue-france-sun-113-625)' }}>{title}</h2>
-          <NoProjects />
+          <NoProjects scope={scope} />
         </div>
       )
     }

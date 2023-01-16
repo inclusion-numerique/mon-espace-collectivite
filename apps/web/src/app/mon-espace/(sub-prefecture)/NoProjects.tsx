@@ -1,6 +1,8 @@
 import Link from 'next/link'
+import { Scope } from '@mec/web/scope'
 
-export const NoProjects = () => {
+// TODO Factorize NoProjects components as they are 4 for now...
+export const NoProjects = ({}: { scope: Scope }) => {
   return (
     <div
       className="fr-grid-row fr-grid-row--center fr-mb-md-8v fr-mt-8v fr-px-4v fr-p-8v fr-p-md-14v"
@@ -19,10 +21,10 @@ export const NoProjects = () => {
       >
         <h2 style={{ maxWidth: 720 }}>
           Les maires de votre arrondissement n’ont pas encore renseignés leurs
-          projets CRTE
+          projets CRTE
         </h2>
         <p>
-          Vous retrouverez dans cet espace l’ensemble des projets CRTE de votre
+          Vous retrouverez dans cet espace l’ensemble des projets CRTE de votre
           arrondissement.
         </p>
       </div>

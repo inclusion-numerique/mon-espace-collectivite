@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import { Scope } from '@mec/web/scope'
 
-export const NoProjects = () => {
+export const NoProjects = ({ scope }: { scope: Scope }) => {
   return (
     <div
       className="fr-grid-row fr-grid-row--center fr-mb-md-8v fr-mt-8v fr-px-4v fr-p-8v fr-p-md-14v"
@@ -18,12 +19,12 @@ export const NoProjects = () => {
         style={{ textAlign: 'center' }}
       >
         <h2 style={{ maxWidth: 720 }}>
-          Les maires de votre arrondissement n’ont pas encore renseignés leurs
+          Les maires de votre département n’ont pas encore renseignés leurs
           projets CRTE
         </h2>
         <p>
           Vous retrouverez dans cet espace l’ensemble des projets CRTE de votre
-          arrondissement.
+          département.
         </p>
       </div>
       <div className="fr-grid-row fr-grid-row--center fr-mt-4v">
