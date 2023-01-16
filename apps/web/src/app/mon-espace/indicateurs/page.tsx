@@ -24,7 +24,7 @@ const IndicateursPage = () => {
         </p>
         <div className="fr-btns-group">
           <Link href="/" className="fr-btn fr-mb-0">
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Link>
         </div>
       </AuthCard>
