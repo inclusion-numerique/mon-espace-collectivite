@@ -36,13 +36,12 @@ const PrivateHeader = ({ user }: { user: SessionUser }) => {
               <UserMenu serializedUser={serializedUser} />
             </li>
             <li>
-              <Link
+              <a
                 href={Routes.Connexion.Logout}
-                target="_self"
                 className="fr-btn fr-btn--sm fr-btn--icon-left fr-icon-logout-box-r-line"
               >
                 Se déconnecter
-              </Link>
+              </a>
             </li>
           </ul>
         </div>

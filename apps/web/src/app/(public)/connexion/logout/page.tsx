@@ -1,13 +1,14 @@
 'use client'
 import { signOut } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import { AuthCard } from '@mec/web/app/(public)/connexion/AuthCard'
 import { useState } from 'react'
 import { Breadcrumbs } from '@mec/web/ui/Breadcrumbs'
+import Link from 'next/link'
+import { Routes } from '@mec/web/app/routing'
 
 const SignoutPage = () => {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+
   const onConfirm = () => {
     setIsLoading(true)
     signOut({ redirect: true, callbackUrl: '/' })
@@ -31,6 +32,9 @@ const SignoutPage = () => {
             </button>
           </li>
         </ul>
+        <div className="fr-grid-row fr-grid-row--center">
+          <Link href={Routes.MonEspace.Index}>Retour à mon espace</Link>
+        </div>
       </AuthCard>
     </>
   )

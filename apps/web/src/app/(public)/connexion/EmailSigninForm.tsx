@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { InputFormField } from '@mec/web/form/InputFormField'
+import Cookies from 'js-cookie'
 
 const SigninFormValidation = z.object({
   email: z
@@ -18,6 +19,8 @@ export const EmailSigninForm = ({ error }: { error?: string }) => {
   })
 
   const onSubmit = ({ email }: SigninFormData) => {
+    // Set the email in a cookie for usage in Verify page as redirections resets memory
+    Cookies.set('email-signin', email)
     return signIn('email', { email })
   }
 
