@@ -6,6 +6,7 @@ export type CdkOutput = {
   containerDomainName: string
   databaseName: string
   databaseUrl: string
+  databasePassword: string
   databaseUser: string
   databaseHost: string
   databasePort: number

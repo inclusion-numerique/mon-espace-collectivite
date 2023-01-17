@@ -236,6 +236,7 @@ export class WebAppStack extends TerraformStack {
     output('webBaseUrl', hostname)
     output('containerDomainName', container.domainName)
     output('databaseUrl', databaseUrl, 'sensitive')
+    output('databasePassword', dbConfig.password, 'sensitive')
     output(
       'webContainerStatus',
       container.status as CdkOutput['webContainerStatus'],
