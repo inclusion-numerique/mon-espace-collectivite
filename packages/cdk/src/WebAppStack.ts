@@ -43,7 +43,7 @@ export class WebAppStack extends TerraformStack {
     const isMain = namespace === 'main'
 
     const subDomain = namespace
-    const hostname = `${subDomain}.${domain}`
+    const hostname = isMain ? domain : `${subDomain}.${domain}`
 
     // Output helper function
     // ⚠️ When calling this function, do not forget to update typings in src/getCdkOutput.ts
@@ -216,7 +216,7 @@ export class WebAppStack extends TerraformStack {
         {
           type: 'CNAME',
           dnsZone: rootZone.domain,
-          name: `${namespace}.preview`,
+          name: namespace,
           data: `${container.domainName}.`,
           ttl: 60 * 5,
         }
