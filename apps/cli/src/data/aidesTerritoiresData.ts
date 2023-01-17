@@ -11,9 +11,9 @@ import { prismaClient } from '@mec/web/prismaClient'
 import { chunk } from 'lodash'
 import { dataDirectory } from '@mec/cli/data/data'
 import { stringify } from 'csv-stringify'
+import { isRecordToUpdateNotFoundError } from '@mec/web/src/data/prismaError'
 
-const dataSourceUrl =
-  'https://aides-terr-staging-pr1167.osc-fr1.scalingo.io/api/perimeters/'
+const dataSourceUrl = 'https://aides-territoires.beta.gouv.fr/api/perimeters/'
 
 // Api has pages 1 based
 const getPerimetersPageUrl = (page: number) => `${dataSourceUrl}?page=${page}`
@@ -22,7 +22,7 @@ const getPerimetersPageUrl = (page: number) => `${dataSourceUrl}?page=${page}`
 type PerimeterDataRow = [string, string, string, string, string | null, string]
 
 const destinationDirectory = dataDirectory
-const filename = 'aides-territoires_perimeters.json'
+const filename = 'aides-territoires_perimeters.csv'
 
 const destination = resolve(destinationDirectory, filename)
 
@@ -129,12 +129,19 @@ export const mergePerimeters = async (output: Output = consoleOutput) => {
       }`,
     )
     const chunkRows = epciPerimetersChunks[chunkIndex]
-    await prismaClient.$transaction(
+    await Promise.all(
       chunkRows.map(([id, _text, _name, _scale, _zipcodes, code]) =>
-        prismaClient.intercommunality.update({
-          where: { code },
-          data: { aidesTerritoiresId: id },
-        }),
+        prismaClient.intercommunality
+          .update({
+            where: { code },
+            data: { aidesTerritoiresId: id },
+          })
+          .catch((err) => {
+            if (isRecordToUpdateNotFoundError(err)) {
+              return
+            }
+            throw err
+          }),
       ),
     )
   }
@@ -148,12 +155,19 @@ export const mergePerimeters = async (output: Output = consoleOutput) => {
       }`,
     )
     const chunkRows = municipalityPerimetersChunks[chunkIndex]
-    await prismaClient.$transaction(
+    await Promise.all(
       chunkRows.map(([id, _text, _name, _scale, _zipcodes, code]) =>
-        prismaClient.municipality.update({
-          where: { code },
-          data: { aidesTerritoiresId: id },
-        }),
+        prismaClient.municipality
+          .update({
+            where: { code },
+            data: { aidesTerritoiresId: id },
+          })
+          .catch((err) => {
+            if (isRecordToUpdateNotFoundError(err)) {
+              return
+            }
+            throw err
+          }),
       ),
     )
   }

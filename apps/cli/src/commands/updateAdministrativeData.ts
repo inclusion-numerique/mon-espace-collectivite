@@ -4,6 +4,7 @@ import { mergeMunicipalitiesAndDistrictsData } from '@mec/cli/data/municipalitie
 import * as process from 'process'
 import { prismaClient } from '@mec/web/prismaClient'
 import { mergeCategories } from '@mec/cli/data/categoriesData'
+import { mergePerimeters } from '../data/aidesTerritoiresData'
 
 const main = async () => {
   if (process.argv.includes('--only-if-empty')) {
@@ -18,7 +19,7 @@ const main = async () => {
   await mergeEpciAndCrteData()
   await mergeMunicipalitiesAndDistrictsData()
   await mergeCategories()
-  // await mergePerimeters()
+  await mergePerimeters()
 }
 
 main().then(() => process.exit(0))
