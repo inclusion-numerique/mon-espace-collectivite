@@ -90,6 +90,7 @@ const WriteProjectRow = ({
     selectiveSortingPercentage,
     bikePathLength,
     energyConsumption,
+    notes,
   } = project
   const fieldHref = (field?: string) =>
     Routes.MonEspace.Projet.Modifier(reference, {
@@ -97,6 +98,10 @@ const WriteProjectRow = ({
       scale: scope.scale,
       code: scope.code,
     })
+  const projectNote = notes[0]
+    ? // Minimal data to pass to client component
+      { id: notes[0].id, content: notes[0].content }
+    : undefined
 
   return (
     <tr key={id}>
@@ -153,14 +158,7 @@ const WriteProjectRow = ({
           </Link>
           <ProjectNoteButton
             project={{ id: project.id, name: project.name }}
-            projectNote={
-              project.notes[0]
-                ? {
-                    id: project.notes[0].id,
-                    content: project.notes[0].content,
-                  }
-                : null
-            }
+            projectNote={projectNote}
             scope={scope}
           />
         </div>

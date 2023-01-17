@@ -18,6 +18,7 @@ import {
   UrlScale,
   urlToScope,
 } from '@mec/web/scope'
+import { useProjectNoteModalStore } from '@mec/web/app/mon-espace/ProjectNote/useProjectNoteModalStore'
 
 export const ProjectListScopeForm = () => {
   const router = useRouter()
@@ -30,10 +31,16 @@ export const ProjectListScopeForm = () => {
     resolver: zodResolver(ScopeDataValidation),
   })
 
+  const resetUpdatedProjectNotes = useProjectNoteModalStore(
+    (state) => state.resetUpdatedProjectNotes,
+  )
+
   // TODO remove this logic when _loading.tsx -> loading.tsx works with next versions for these components using css
   const [isLoading, setIsLoading] = useState(false)
   useEffect(() => {
     setIsLoading(false)
+    // As an admin, switching scope needs to invalidate project note cached store
+    resetUpdatedProjectNotes()
     reset(scope)
   }, [urlScale, urlCode])
 

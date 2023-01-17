@@ -9,7 +9,7 @@ export const ProjectNoteButton = ({
   scope,
 }: {
   project: { id: string; name: string }
-  projectNote: { id: string; content: string } | null
+  projectNote?: { id: string; content: string }
   scope: Scope
 }) => {
   const storeProjectNote = useProjectNoteModalStore(

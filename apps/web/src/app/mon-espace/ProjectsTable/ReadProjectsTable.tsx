@@ -89,6 +89,12 @@ const ReadProjectRow = ({
     energyConsumption,
     notes,
   } = project
+
+  const projectNote = notes[0]
+    ? // Minimal data to pass to client component
+      { id: notes[0].id, content: notes[0].content }
+    : undefined
+
   return (
     <tr key={id}>
       <FieldCell>{reference}</FieldCell>
@@ -124,14 +130,7 @@ const ReadProjectRow = ({
           </Link>
           <ProjectNoteButton
             project={{ id, name }}
-            projectNote={
-              notes[0]
-                ? {
-                    id: notes[0].id,
-                    content: notes[0].content,
-                  }
-                : null
-            }
+            projectNote={projectNote}
             scope={scope}
           />
         </div>

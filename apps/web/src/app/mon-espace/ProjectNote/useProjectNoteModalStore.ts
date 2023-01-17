@@ -21,6 +21,7 @@ type ProjectNoteModalStoreState = {
     project: { id: string; name: string }
   }) => void
   resetModal: () => void
+  resetUpdatedProjectNotes: () => void
 }
 export const useProjectNoteModalStore = create<ProjectNoteModalStoreState>(
   (set) => ({
@@ -39,6 +40,10 @@ export const useProjectNoteModalStore = create<ProjectNoteModalStoreState>(
         projectNote: null,
         project: null,
         scope: null,
+      }),
+    resetUpdatedProjectNotes: () =>
+      set({
+        updatedProjectNotes: {},
       }),
     setProjectNote: (projectId, projectNote) =>
       set((state) => ({
