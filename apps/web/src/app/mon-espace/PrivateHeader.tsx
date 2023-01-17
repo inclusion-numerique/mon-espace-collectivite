@@ -3,6 +3,7 @@ import { UserMenu } from '@mec/web/app/mon-espace/UserMenu'
 import { SessionUser } from '@mec/web/auth/sessionUser'
 import PublicHeader from '@mec/web/app/(public)/PublicHeader'
 import { serialize } from '@mec/web/utils/serialization'
+import { Routes } from '@mec/web/app/routing'
 
 const PrivateHeader = ({ user }: { user: SessionUser }) => {
   const serializedUser = serialize(user)
@@ -17,7 +18,7 @@ const PrivateHeader = ({ user }: { user: SessionUser }) => {
               </li>
               <li>
                 <Link
-                  href="/api/auth/signout"
+                  href={Routes.Connexion.Logout}
                   target="_self"
                   className="fr-btn fr-btn--sm fr-btn--icon-left fr-icon-logout-box-r-line"
                 >
@@ -36,7 +37,7 @@ const PrivateHeader = ({ user }: { user: SessionUser }) => {
             </li>
             <li>
               <Link
-                href="/api/auth/signout"
+                href={Routes.Connexion.Logout}
                 target="_self"
                 className="fr-btn fr-btn--sm fr-btn--icon-left fr-icon-logout-box-r-line"
               >

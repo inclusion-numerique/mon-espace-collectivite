@@ -56,7 +56,7 @@ export const Routes = {
   },
   Connexion: {
     Login: '/connexion/login',
-    Logout: '/connexion/logout',
+    Logout: '/api/auth/signout',
     Erreur: '/connexion/erreur',
     Verification: '/connexion/verification',
   },

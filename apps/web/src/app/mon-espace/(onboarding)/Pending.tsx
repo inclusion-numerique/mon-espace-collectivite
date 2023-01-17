@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { AuthCard } from '@mec/web/app/(public)/connexion/AuthCard'
+import { Routes } from '@mec/web/app/routing'
 
 export const Pending = () => (
   <AuthCard>
@@ -26,6 +27,11 @@ export const Pending = () => (
       <Link href="/" className="fr-btn fr-mb-0">
         J&apos;ai compris
       </Link>
+    </div>
+    <div className="fr-grid-row fr-grid-row--center">
+      <a href={Routes.Connexion.Logout} className="fr-mt-4v">
+        Se déconnecter
+      </a>
     </div>
   </AuthCard>
 )
