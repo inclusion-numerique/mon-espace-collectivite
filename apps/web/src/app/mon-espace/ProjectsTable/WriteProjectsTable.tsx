@@ -11,6 +11,7 @@ import {
   ProjectsList,
 } from '@mec/web/app/mon-espace/projets/projectsList'
 import { OneLineTh } from '@mec/web/app/mon-espace/ProjectsTable/OneLineTh'
+import { CategoryCellContent } from '@mec/web/app/mon-espace/ProjectsTable/CategoryCellContent'
 
 export const WriteProjectsTable = ({
   projects,
@@ -112,8 +113,7 @@ const WriteProjectRow = ({
       </FieldCell>
       <FieldCell href={fieldHref('totalAmount')}>{`${totalAmount}`}</FieldCell>
       <FieldCell href={fieldHref('categoryId')}>
-        {category.theme.name.replaceAll(' ', ' ')}&nbsp;/&nbsp;
-        {category.name.replaceAll(' ', ' ')}
+        <CategoryCellContent category={category} />
       </FieldCell>
       <FieldCell href={fieldHref('contactEmail')}>{contactEmail}</FieldCell>
       <FieldCell href={fieldHref('start')}>
@@ -139,19 +139,19 @@ const WriteProjectRow = ({
       <FieldCell href={fieldHref('energyConsumption')}>
         {energyConsumption}
       </FieldCell>
-      <td>
+      <td className="fr-px-4v fr-py-1v">
         <div className={styles.actionsContainer}>
           <Link
             href={linkToAidesTerritoires(project)}
             target="_blank"
             rel="noreferrer"
-            className="fr-btn"
+            className="fr-btn fr-btn--sm"
           >
             Voir&nbsp;les&nbsp;aides
           </Link>
           <Link
             prefetch={false}
-            className="fr-ml-4v  fr-mr-4v fr-btn fr-btn--icon-left fr-btn--secondary fr-icon-pencil-line"
+            className="fr-ml-4v  fr-mr-4v fr-btn fr-btn--icon-left fr-btn--secondary fr-icon-pencil-line fr-btn--sm"
             href={fieldHref()}
           >
             Éditer
@@ -169,7 +169,7 @@ const WriteProjectRow = ({
 
 const FieldCell = ({ children, href }: PropsWithChildren<{ href: string }>) => (
   <td className={`fr-p-0 ${styles.fieldCell}`}>
-    <Link className="fr-p-4v" href={href} prefetch={false}>
+    <Link className="fr-px-4v fr-py-1v" href={href} prefetch={false}>
       {children}
       <span
         className={`fr-icon--sm fr-icon-pencil-line fr-ml-1v ${styles.editIcon}`}

@@ -42,7 +42,7 @@ export const ProjectNoteButton = ({
 
   return (
     <>
-      <button className="fr-btn fr-btn--secondary" onClick={onClick}>
+      <button className="fr-btn fr-btn--secondary fr-btn--sm" onClick={onClick}>
         {label}
       </button>
     </>

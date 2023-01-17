@@ -30,9 +30,9 @@ export const Pending = ({ email }: { email: string }) => (
       </Link>
     </div>
     <div className="fr-grid-row fr-grid-row--center">
-      <a href={Routes.Connexion.Logout} className="fr-mt-4v">
+      <Link href={Routes.Connexion.Logout} className="fr-mt-4v">
         Se déconnecter
-      </a>
+      </Link>
     </div>
   </AuthCard>
 )

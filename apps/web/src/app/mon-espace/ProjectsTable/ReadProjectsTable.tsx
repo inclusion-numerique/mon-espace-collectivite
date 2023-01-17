@@ -8,6 +8,7 @@ import {
   ProjectsList,
 } from '@mec/web/app/mon-espace/projets/projectsList'
 import { OneLineTh } from '@mec/web/app/mon-espace/ProjectsTable/OneLineTh'
+import { CategoryCellContent } from '@mec/web/app/mon-espace/ProjectsTable/CategoryCellContent'
 
 export const ReadProjectsTable = ({
   projects,
@@ -104,8 +105,7 @@ const ReadProjectRow = ({
       </FieldCell>
       <FieldCell>{`${totalAmount}`}</FieldCell>
       <FieldCell>
-        {category.theme.name.replaceAll(' ', ' ')}&nbsp;/&nbsp;
-        {category.name.replaceAll(' ', ' ')}
+        <CategoryCellContent category={category} />
       </FieldCell>
       <FieldCell>{contactEmail}</FieldCell>
       <FieldCell>{start?.toLocaleDateString()}</FieldCell>
@@ -117,14 +117,14 @@ const ReadProjectRow = ({
       <FieldCell>{selectiveSortingPercentage}</FieldCell>
       <FieldCell>{bikePathLength}</FieldCell>
       <FieldCell>{energyConsumption}</FieldCell>
-      <td>
+      <td className="fr-px-4v fr-py-1v">
         {/*TODO class*/}
         <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
           <Link
             href={linkToAidesTerritoires(project)}
             target="_blank"
             rel="noreferrer"
-            className="fr-btn fr-mr-4v"
+            className="fr-btn fr-btn--sm fr-mr-4v"
           >
             Voir&nbsp;les&nbsp;aides
           </Link>
