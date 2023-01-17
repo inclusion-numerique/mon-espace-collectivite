@@ -34,6 +34,7 @@ export const ProjectListScopeForm = () => {
   const [isLoading, setIsLoading] = useState(false)
   useEffect(() => {
     setIsLoading(false)
+    reset(scope)
   }, [urlScale, urlCode])
 
   const onSubmit = (data: Scope) => {
