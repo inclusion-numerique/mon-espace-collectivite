@@ -87,48 +87,6 @@ const mergeOpenDataRows = async (output: Output, rows: string[][]) => {
     [...districts.values()],
   )
   output(`Updated ${districts.size} districts`)
-
-  //
-  //
-  // output(
-  //   `Updating ${cleanRows.length} municipalities, from ${
-  //     rows.length
-  //   } total municipalities (${
-  //     rows.length - cleanRows.length
-  //   } without valid intercommunality or district)`,
-  // )
-  //
-  // const dedupedMunicipalities = new Map(cleanRows.map((row) => [row[2], row]))
-  //
-  // output(
-  //   `Updating ${dedupedMunicipalities.size} deduplicated on ${rows.length} municipalities`,
-  // )
-  // const municipalityChunks = chunk([...dedupedMunicipalities.values()], 200)
-  // for (const chunkIndex in municipalityChunks) {
-  //   output(
-  //     `Updating municipalities batch ${parseInt(chunkIndex) + 1}/${
-  //       municipalityChunks.length
-  //     }`,
-  //   )
-  //   const chunkRows = municipalityChunks[chunkIndex].map(
-  //     ([
-  //       intercommunalityCode,
-  //       name,
-  //       code,
-  //       districtCode,
-  //       _districtName,
-  //       _countyCode,
-  //       siren,
-  //     ]) => [code, siren, name, intercommunalityCode, districtCode],
-  //   )
-  //   await upsert(
-  //     'Municipality',
-  //     'code',
-  //     ['siren', 'name', 'intercommunalityCode', 'districtCode'],
-  //     chunkRows,
-  //   )
-  // }
-  // output(`Updated ${dedupedMunicipalities.size} municipalities`)
 }
 
 const mergeGristRows = async (output: Output, rows: string[][]) => {
@@ -259,7 +217,7 @@ const mergeGristRows = async (output: Output, rows: string[][]) => {
     } without valid intercommunality or district)`,
   )
 
-  const chunkSize = 10
+  const chunkSize = 1000
   // One indexed to match console output
   const debugChunk: number | null = null
   const municipalityChunks = chunk(municipalitiesWithoutParent, chunkSize)
