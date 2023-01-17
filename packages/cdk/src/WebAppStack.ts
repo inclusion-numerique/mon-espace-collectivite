@@ -24,10 +24,10 @@ import {
   namespacer,
 } from './utils'
 
-const databaseInstanceId = '7bd3aa2e-fdf4-4e5e-b6af-2ec2ec37cd75'
+const databaseInstanceId = '7857e02a-05a5-437a-a46d-5da289559d67'
 const containerNamespaceId = '99eb3592-9355-476f-ad0c-6db7b80bff87'
 const region = 'fr-par'
-const domain = 'mec.gouv.kime.tech'
+const domain = 'monespacecollectivite.incubateur.anct.gouv.fr'
 
 export class WebAppStack extends TerraformStack {
   constructor(scope: Construct, id: string, branch: string) {
@@ -197,7 +197,7 @@ export class WebAppStack extends TerraformStack {
     })
 
     const rootZone = new DataScalewayDomainZone(this, 'dnsZone', {
-      domain: 'mec.gouv.kime.tech',
+      domain,
     })
 
     const webDnsRecord = new DomainRecord(this, 'webDnsRecord', {
