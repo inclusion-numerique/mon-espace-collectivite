@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { AuthCard } from '@mec/web/app/(public)/connexion/AuthCard'
 import { Routes } from '@mec/web/app/routing'
 
-export const Pending = () => (
+export const Pending = ({ email }: { email: string }) => (
   <AuthCard>
     <div className="fr-grid-row fr-grid-row--center">
       <picture>
@@ -21,7 +21,8 @@ export const Pending = () => (
       Collectivité.
       <br />
       <br />
-      Vous serez informé par email dès que votre espace sera actif.
+      Vous serez informé par email à l&apos;adresse {email} dès que votre espace
+      sera actif.
     </p>
     <div className="fr-btns-group">
       <Link href="/" className="fr-btn fr-mb-0">

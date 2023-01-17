@@ -35,7 +35,7 @@ const PrivateLayout = async ({ children }: PropsWithChildren) => {
   if (!isActive) {
     return (
       <LoggedInUserWithoutFullAccess>
-        <Pending />
+        <Pending email={user.email} />
       </LoggedInUserWithoutFullAccess>
     )
   }
