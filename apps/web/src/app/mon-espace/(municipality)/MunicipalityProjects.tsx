@@ -7,6 +7,7 @@ import { Crte, Municipality } from '@prisma/client'
 import { Routes } from '@mec/web/app/routing'
 import { Scope } from '@mec/web/scope'
 import { getProjectsList } from '@mec/web/app/mon-espace/projets/projectsList'
+import { ProjectsTableContainer } from '@mec/web/app/mon-espace/projets/[scale]/[code]/ProjectsTableContainer'
 
 export const MunicipalityProjects = asyncComponent(
   async ({
@@ -61,9 +62,9 @@ export const MunicipalityProjects = asyncComponent(
             </div>
           </div>
         </div>
-        <div className="fr-px-4v">
+        <ProjectsTableContainer>
           <WriteProjectsTable projects={projects} scope={scope} />
-        </div>
+        </ProjectsTableContainer>
       </>
     )
   },

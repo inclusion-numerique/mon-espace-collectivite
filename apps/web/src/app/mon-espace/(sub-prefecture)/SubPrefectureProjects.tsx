@@ -8,6 +8,7 @@ import {
   getProjectsList,
   groupProjectsByCrte,
 } from '@mec/web/app/mon-espace/projets/projectsList'
+import { ProjectsTableContainer } from '@mec/web/app/mon-espace/projets/[scale]/[code]/ProjectsTableContainer'
 
 export const SubPrefectureProjects = asyncComponent(
   async ({ district }: { district: District }) => {
@@ -47,9 +48,9 @@ export const SubPrefectureProjects = asyncComponent(
                   </div>
                 </div>
               </div>
-              <div className="fr-px-4v">
+              <ProjectsTableContainer>
                 <ReadProjectsTable projects={crteProjects} scope={scope} />
-              </div>
+              </ProjectsTableContainer>
             </>
           )
         })}

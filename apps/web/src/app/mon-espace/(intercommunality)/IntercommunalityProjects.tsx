@@ -11,6 +11,7 @@ import {
   getProjectsList,
   ProjectsList,
 } from '@mec/web/app/mon-espace/projets/projectsList'
+import { ProjectsTableContainer } from '@mec/web/app/mon-espace/projets/[scale]/[code]/ProjectsTableContainer'
 
 export const IntercommunalityProjects = asyncComponent(
   async ({
@@ -91,12 +92,12 @@ export const IntercommunalityProjects = asyncComponent(
             </div>
           </div>
         </div>
-        <div key={intercommunality.code + '-table'} className="fr-px-4v">
+        <ProjectsTableContainer key={intercommunality.code + '-table'}>
           <WriteProjectsTable
             projects={intercommunalityProjects}
             scope={scope}
           />
-        </div>
+        </ProjectsTableContainer>
         <div
           key={intercommunality.code + '-municipalities-head'}
           className="fr-container fr-mt-4v"
@@ -113,12 +114,12 @@ export const IntercommunalityProjects = asyncComponent(
             </div>
           </div>
         </div>
-        <div
+        {/*TODO margin left calculation to match with fr-container*/}
+        <ProjectsTableContainer
           key={intercommunality.code + '-municipalities--table'}
-          className="fr-px-4v"
         >
           <ReadProjectsTable scope={scope} projects={municipalitiesProjects} />
-        </div>
+        </ProjectsTableContainer>
       </>
     )
   },
