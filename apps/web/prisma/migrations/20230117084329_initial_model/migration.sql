@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "UserRole" AS ENUM ('Public', 'Municipality', 'Intercommunality', 'Prefecture', 'SubPrefecture', 'Administrator');
+CREATE TYPE "UserRole" AS ENUM ('User', 'Administrator');
 
 -- CreateEnum
 CREATE TYPE "UserStatus" AS ENUM ('Active', 'Pending', 'Suspended', 'Rejected');
@@ -105,9 +105,9 @@ CREATE TABLE "PreRegistration" (
     "email" TEXT NOT NULL,
     "role" "UserRole" NOT NULL,
     "municipalityCode" TEXT,
-    "countyCode" TEXT,
-    "districtCode" TEXT,
     "intercommunalityCode" TEXT,
+    "districtCode" TEXT,
+    "countyCode" TEXT,
     "level" "AccessLevel",
     "allowSignup" BOOLEAN NOT NULL,
     "firstName" TEXT,
@@ -163,6 +163,10 @@ CREATE TABLE "Project" (
 CREATE TABLE "ProjectNote" (
     "id" UUID NOT NULL,
     "projectId" UUID NOT NULL,
+    "municipalityCode" TEXT,
+    "intercommunalityCode" TEXT,
+    "districtCode" TEXT,
+    "countyCode" TEXT,
     "createdById" UUID NOT NULL,
     "content" TEXT NOT NULL,
     "created" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -174,8 +178,9 @@ CREATE TABLE "ProjectNote" (
 -- CreateTable
 CREATE TABLE "Municipality" (
     "code" TEXT NOT NULL,
-    "siren" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "aidesTerritoiresId" TEXT,
+    "parentCode" TEXT,
     "intercommunalityCode" TEXT NOT NULL,
     "districtCode" TEXT NOT NULL,
 
@@ -187,6 +192,7 @@ CREATE TABLE "Intercommunality" (
     "code" TEXT NOT NULL,
     "crteCode" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "aidesTerritoiresId" TEXT,
 
     CONSTRAINT "Intercommunality_pkey" PRIMARY KEY ("code")
 );
@@ -322,13 +328,13 @@ ALTER TABLE "CountyAccessLevel" ADD CONSTRAINT "CountyAccessLevel_countyCode_fke
 ALTER TABLE "PreRegistration" ADD CONSTRAINT "PreRegistration_municipalityCode_fkey" FOREIGN KEY ("municipalityCode") REFERENCES "Municipality"("code") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PreRegistration" ADD CONSTRAINT "PreRegistration_countyCode_fkey" FOREIGN KEY ("countyCode") REFERENCES "County"("code") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "PreRegistration" ADD CONSTRAINT "PreRegistration_intercommunalityCode_fkey" FOREIGN KEY ("intercommunalityCode") REFERENCES "Intercommunality"("code") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PreRegistration" ADD CONSTRAINT "PreRegistration_districtCode_fkey" FOREIGN KEY ("districtCode") REFERENCES "District"("code") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PreRegistration" ADD CONSTRAINT "PreRegistration_intercommunalityCode_fkey" FOREIGN KEY ("intercommunalityCode") REFERENCES "Intercommunality"("code") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "PreRegistration" ADD CONSTRAINT "PreRegistration_countyCode_fkey" FOREIGN KEY ("countyCode") REFERENCES "County"("code") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Project" ADD CONSTRAINT "Project_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "ProjectCategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -346,6 +352,18 @@ ALTER TABLE "Project" ADD CONSTRAINT "Project_intercommunalityCode_fkey" FOREIGN
 ALTER TABLE "ProjectNote" ADD CONSTRAINT "ProjectNote_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "ProjectNote" ADD CONSTRAINT "ProjectNote_municipalityCode_fkey" FOREIGN KEY ("municipalityCode") REFERENCES "Municipality"("code") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectNote" ADD CONSTRAINT "ProjectNote_intercommunalityCode_fkey" FOREIGN KEY ("intercommunalityCode") REFERENCES "Intercommunality"("code") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectNote" ADD CONSTRAINT "ProjectNote_districtCode_fkey" FOREIGN KEY ("districtCode") REFERENCES "District"("code") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectNote" ADD CONSTRAINT "ProjectNote_countyCode_fkey" FOREIGN KEY ("countyCode") REFERENCES "County"("code") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "ProjectNote" ADD CONSTRAINT "ProjectNote_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -353,6 +371,9 @@ ALTER TABLE "Municipality" ADD CONSTRAINT "Municipality_intercommunalityCode_fke
 
 -- AddForeignKey
 ALTER TABLE "Municipality" ADD CONSTRAINT "Municipality_districtCode_fkey" FOREIGN KEY ("districtCode") REFERENCES "District"("code") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Municipality" ADD CONSTRAINT "Municipality_parentCode_fkey" FOREIGN KEY ("parentCode") REFERENCES "Municipality"("code") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Intercommunality" ADD CONSTRAINT "Intercommunality_crteCode_fkey" FOREIGN KEY ("crteCode") REFERENCES "Crte"("code") ON DELETE RESTRICT ON UPDATE CASCADE;
