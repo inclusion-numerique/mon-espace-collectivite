@@ -16,7 +16,10 @@ import { DataScalewayContainerNamespace } from '../.gen/providers/scaleway/data-
 import { Container } from '../.gen/providers/scaleway/container'
 import { CdkOutput } from './getCdkOutput'
 import { DataScalewayDomainZone } from '../.gen/providers/scaleway/data-scaleway-domain-zone'
-import { DomainRecord } from '../.gen/providers/scaleway/domain-record'
+import {
+  DomainRecord,
+  DomainRecordConfig,
+} from '../.gen/providers/scaleway/domain-record'
 import { ContainerDomain } from '../.gen/providers/scaleway/container-domain'
 import {
   computeBranchNamespace,
@@ -200,13 +203,29 @@ export class WebAppStack extends TerraformStack {
       domain,
     })
 
-    const webDnsRecord = new DomainRecord(this, 'webDnsRecord', {
-      type: 'CNAME',
-      dnsZone: rootZone.domain,
-      name: namespace,
-      data: `${container.domainName}.`,
-      ttl: 60 * 5,
-    })
+    const webDnsRecordConfig: DomainRecordConfig = isMain
+      ? // Main app is hosted on root domain name
+        {
+          type: 'ALIAS',
+          dnsZone: rootZone.domain,
+          name: '',
+          data: `${container.domainName}.`,
+          ttl: 60 * 5,
+        }
+      : // Preview apps are hosted on preview subdomains
+        {
+          type: 'CNAME',
+          dnsZone: rootZone.domain,
+          name: `${namespace}.preview`,
+          data: `${container.domainName}.`,
+          ttl: 60 * 5,
+        }
+
+    const webDnsRecord = new DomainRecord(
+      this,
+      'webDnsRecord',
+      webDnsRecordConfig,
+    )
 
     new ContainerDomain(this, 'webContainerDomain', {
       containerId: container.id,
