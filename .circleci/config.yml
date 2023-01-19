@@ -28,7 +28,7 @@ parameters:
     default: './pnpm-lock.yaml'
   registry:
     type: string
-    default: rg.fr-par.scw.cloud/mec-web
+    default: rg.fr-par.scw.cloud/mec-web-app
   image:
     type: string
     default: mec-web-<< pipeline.git.branch >> | sed -e 's/\//-/g'
