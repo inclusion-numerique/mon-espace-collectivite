@@ -140,7 +140,7 @@ export class WebAppStack extends TerraformStack {
     })
 
     const uploadsBucket = new ObjectBucket(this, 'uploads', {
-      name: namespaced('uploads'),
+      name: namespaced(`${projectSlug}-uploads`),
     })
 
     output('uploadsBucketName', uploadsBucket.name)
