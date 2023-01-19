@@ -29,6 +29,7 @@ import {
 
 const databaseInstanceId = '7857e02a-05a5-437a-a46d-5da289559d67'
 const containerNamespaceId = '99eb3592-9355-476f-ad0c-6db7b80bff87'
+const projectSlug = 'mec'
 const region = 'fr-par'
 const domain = 'monespacecollectivite.incubateur.anct.gouv.fr'
 
@@ -90,8 +91,8 @@ export class WebAppStack extends TerraformStack {
     // State of deployed infrastructure for each branch will be stored in the
     // same 'mec-terraform' bucket
     new S3Backend(this, {
-      bucket: 'mec-terraform',
-      key: `${namespaced('state')}.tfstate`,
+      bucket: `${projectSlug}-terraform`,
+      key: `${projectSlug}-${namespaced('state')}.tfstate`,
       // Credentials are provided with AWS_*** env variables
       endpoint: 'https://s3.fr-par.scw.cloud',
       skipCredentialsValidation: true,
@@ -102,18 +103,17 @@ export class WebAppStack extends TerraformStack {
     // but do not manage it through this stack
     const dbInstance = new DataScalewayRdbInstance(this, 'dbInstance', {
       instanceId: databaseInstanceId,
-      // name: 'mec-production',
     })
 
     output('databaseHost', dbInstance.endpointIp)
     output('databasePort', dbInstance.endpointPort)
 
     const dbConfig = {
-      name: namespaced('mec'),
-      user: namespaced('mec'),
+      name: namespaced(projectSlug),
+      user: namespaced(projectSlug),
       password: generateDatabasePassword(
         databasePasswordSalt.value,
-        namespaced('mec'),
+        namespaced(projectSlug),
       ),
     }
 
@@ -140,7 +140,7 @@ export class WebAppStack extends TerraformStack {
     })
 
     const uploadsBucket = new ObjectBucket(this, 'uploads', {
-      name: namespaced('mec-uploads'),
+      name: namespaced('uploads'),
     })
 
     output('uploadsBucketName', uploadsBucket.name)
