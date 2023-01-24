@@ -62,7 +62,7 @@ export default function HomePage() {
               transition écologique des territoires.
             </p>
             <Link
-              href="https://solutionsdelus.anct.gouv.fr/projets"
+              href="https://solutionsdelus.gouv.fr/projets"
               className="fr-link"
               target="_blank"
               rel="noreferrer"

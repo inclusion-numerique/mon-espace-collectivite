@@ -12,7 +12,7 @@ export const PublicHeaderNav = () => {
       <li className="fr-nav__item">
         <a
           className="fr-nav__link"
-          href="https://solutionsdelus.anct.gouv.fr"
+          href="https://solutionsdelus.gouv.fr"
           target="_blank"
           rel="noreferrer"
         >
